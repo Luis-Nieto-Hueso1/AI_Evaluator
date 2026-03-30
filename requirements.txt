@@ -1,0 +1,28 @@
+# LLM Evaluator - System Requirements
+#
+# This is a Node.js / React project. Dependencies are managed via npm.
+# Run `npm install` to install everything from package.json.
+#
+# Prerequisites:
+#   Node.js >= 18
+#   npm >= 9
+#
+# Runtime dependencies:
+#   react 19.x
+#   react-dom 19.x
+#   @anthropic-ai/sdk (optional, for Claude advisor)
+#
+# Dev dependencies:
+#   vite 8.x (build tool)
+#   typescript 5.9.x
+#   tailwindcss 4.x
+#   vitest 4.x (testing)
+#   eslint 9.x
+#
+# Optional environment variables (.env.local):
+#   VITE_HF_TOKEN=hf_... (HuggingFace token, recommended)
+#   VITE_ANTHROPIC_API_KEY=sk-... (Anthropic API key, optional)
+#
+# Quick start:
+#   npm install
+#   npm run dev

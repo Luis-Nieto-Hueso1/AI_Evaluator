@@ -5,11 +5,19 @@ import type {
   CompatibleModel,
 } from "../types";
 import { streamAdvisorResponse } from "../lib/advisor";
+import { streamHfAdvisorResponse } from "../lib/hf-advisor";
+
+const HAS_CLAUDE = Boolean(import.meta.env.VITE_ANTHROPIC_API_KEY);
+const HAS_HF = Boolean(import.meta.env.VITE_HF_TOKEN);
+
+// Auto-detect which backend to use
+type Backend = "claude" | "hf" | null;
+const BACKEND: Backend = HAS_CLAUDE ? "claude" : HAS_HF ? "hf" : null;
 
 interface Props {
   hardware: HardwareProfile;
   compatible: CompatibleModel[];
-  hasApiKey: boolean;
+  hasApiKey: boolean; // kept for parent compatibility — component auto-detects
 }
 
 const SUGGESTIONS = [
@@ -19,38 +27,42 @@ const SUGGESTIONS = [
   "Which model handles long documents best on my hardware?",
 ];
 
-export function AdvisorChat({ hardware, compatible, hasApiKey }: Props) {
+export function AdvisorChat({ hardware, compatible }: Props) {
   const [messages, setMessages] = useState<AdvisorMessage[]>([]);
   const [input, setInput] = useState("");
   const [isStreaming, setIsStreaming] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const bottomRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const lastSentRef = useRef<string>("");
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (messages.length === 0) return;
+    const el = messagesContainerRef.current;
+    if (el) el.scrollTop = el.scrollHeight;
   }, [messages]);
 
   async function sendMessage(text: string) {
-    if (!text.trim() || isStreaming || !hasApiKey) return;
+    if (!text.trim() || isStreaming || !BACKEND) return;
 
     const userMessage: AdvisorMessage = { role: "user", content: text.trim() };
     const updatedMessages = [...messages, userMessage];
+    lastSentRef.current = text.trim();
     setMessages(updatedMessages);
     setInput("");
     setIsStreaming(true);
     setError(null);
 
-    const assistantMessage: AdvisorMessage = { role: "assistant", content: "" };
-    setMessages([...updatedMessages, assistantMessage]);
+    setMessages([...updatedMessages, { role: "assistant", content: "" }]);
 
     try {
       let accumulated = "";
-      for await (const chunk of streamAdvisorResponse(
-        updatedMessages,
-        hardware,
-        compatible,
-      )) {
+      const stream =
+        BACKEND === "claude"
+          ? streamAdvisorResponse(updatedMessages, hardware, compatible)
+          : streamHfAdvisorResponse(updatedMessages, hardware, compatible);
+
+      for await (const chunk of stream) {
         accumulated += chunk;
         setMessages([
           ...updatedMessages,
@@ -74,7 +86,8 @@ export function AdvisorChat({ hardware, compatible, hasApiKey }: Props) {
     }
   }
 
-  if (!hasApiKey) {
+  // No API key at all
+  if (!BACKEND) {
     return (
       <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-6 shadow-sm">
         <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 mb-2">
@@ -83,16 +96,22 @@ export function AdvisorChat({ hardware, compatible, hasApiKey }: Props) {
         <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-4">
           Get personalised model recommendations for your use case.
         </p>
-        <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl p-4 text-sm text-amber-800 dark:text-amber-300">
-          Add your Anthropic API key to{" "}
-          <code className="font-mono bg-amber-100 dark:bg-amber-900/40 px-1 rounded">
-            .env.local
-          </code>{" "}
-          as{" "}
-          <code className="font-mono bg-amber-100 dark:bg-amber-900/40 px-1 rounded">
-            VITE_ANTHROPIC_API_KEY
-          </code>{" "}
-          to enable the advisor.
+        <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl p-4 text-sm text-amber-800 dark:text-amber-300 space-y-1">
+          <p>
+            Add a{" "}
+            <code className="font-mono bg-amber-100 dark:bg-amber-900/40 px-1 rounded">
+              VITE_HF_TOKEN
+            </code>{" "}
+            (free) or{" "}
+            <code className="font-mono bg-amber-100 dark:bg-amber-900/40 px-1 rounded">
+              VITE_ANTHROPIC_API_KEY
+            </code>{" "}
+            to{" "}
+            <code className="font-mono bg-amber-100 dark:bg-amber-900/40 px-1 rounded">
+              .env.local
+            </code>{" "}
+            to enable the advisor.
+          </p>
         </div>
       </div>
     );
@@ -118,12 +137,17 @@ export function AdvisorChat({ hardware, compatible, hasApiKey }: Props) {
           AI Advisor
         </h2>
         <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
-          Ask about use cases — powered by Claude
+          {BACKEND === "claude"
+            ? "Ask about use cases — powered by Claude"
+            : "Ask about use cases — powered by Qwen 2.5 (free via HuggingFace)"}
         </p>
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 min-h-[200px] max-h-[400px]">
+      <div
+        ref={messagesContainerRef}
+        className="flex-1 overflow-y-auto p-4 space-y-4 min-h-[200px] max-h-[400px]"
+      >
         {messages.length === 0 && (
           <div className="space-y-2">
             <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-3">
@@ -164,12 +188,21 @@ export function AdvisorChat({ hardware, compatible, hasApiKey }: Props) {
         ))}
 
         {error && (
-          <div className="text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 px-3 py-2 rounded-xl border border-red-200 dark:border-red-800">
-            {error}
+          <div className="bg-red-50 dark:bg-red-900/20 px-3 py-2.5 rounded-xl border border-red-200 dark:border-red-800 flex items-start justify-between gap-3">
+            <p className="text-sm text-red-600 dark:text-red-400 leading-snug">
+              {error}
+            </p>
+            <button
+              onClick={() => {
+                setError(null);
+                sendMessage(lastSentRef.current);
+              }}
+              className="shrink-0 text-xs px-2.5 py-1 rounded-lg bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-400 hover:bg-red-200 dark:hover:bg-red-900/60 transition-colors font-medium cursor-pointer border border-red-200 dark:border-red-800"
+            >
+              Retry
+            </button>
           </div>
         )}
-
-        <div ref={bottomRef} />
       </div>
 
       {/* Input */}

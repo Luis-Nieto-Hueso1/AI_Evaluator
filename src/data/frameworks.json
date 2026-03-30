@@ -1,0 +1,347 @@
+[
+  {
+    "id": "sklearn",
+    "name": "scikit-learn",
+    "icon": "🧪",
+    "url": "https://scikit-learn.org",
+    "tasks": ["classification", "regression", "clustering", "tabular"],
+    "production": true,
+    "research": false,
+    "teamSize": "any",
+    "hardware": ["cpu"],
+    "learnCurve": "low",
+    "ecosystem": "Mature, huge community, excellent docs",
+    "bestFor": "Classical ML on tabular data",
+    "pros": [
+      "Easiest API in ML",
+      "Massive algorithm library",
+      "Great docs & tutorials",
+      "Fast prototyping"
+    ],
+    "cons": [
+      "No GPU support",
+      "No deep learning",
+      "Not ideal for images/text/audio"
+    ],
+    "smallTeam": 3,
+    "largeTeam": 2,
+    "solo": 3,
+    "cpuFit": 3,
+    "gpuFit": 0,
+    "edgeFit": 1,
+    "cloudFit": 2
+  },
+  {
+    "id": "pytorch",
+    "name": "PyTorch",
+    "icon": "🔥",
+    "url": "https://pytorch.org",
+    "tasks": [
+      "classification",
+      "regression",
+      "nlp",
+      "cv",
+      "generative",
+      "rl",
+      "audio"
+    ],
+    "production": true,
+    "research": true,
+    "teamSize": "any",
+    "hardware": ["cpu", "gpu", "tpu"],
+    "learnCurve": "medium",
+    "ecosystem": "Dominant in research, strong production (TorchServe, ONNX)",
+    "bestFor": "Deep learning research & production",
+    "pros": [
+      "Most popular DL framework",
+      "Dynamic computation graph",
+      "Huge model zoo (HuggingFace)",
+      "Strong research community"
+    ],
+    "cons": [
+      "Steeper learning curve than sklearn",
+      "Verbose for simple tasks",
+      "Mobile support less mature than TFLite"
+    ],
+    "smallTeam": 3,
+    "largeTeam": 3,
+    "solo": 2,
+    "cpuFit": 2,
+    "gpuFit": 3,
+    "edgeFit": 1,
+    "cloudFit": 3
+  },
+  {
+    "id": "tensorflow",
+    "name": "TensorFlow / Keras",
+    "icon": "🧠",
+    "url": "https://tensorflow.org",
+    "tasks": [
+      "classification",
+      "regression",
+      "nlp",
+      "cv",
+      "generative",
+      "audio"
+    ],
+    "production": true,
+    "research": false,
+    "teamSize": "any",
+    "hardware": ["cpu", "gpu", "tpu", "edge"],
+    "learnCurve": "medium",
+    "ecosystem": "Best mobile/edge deployment (TFLite, TF.js), strong production",
+    "bestFor": "Production ML & edge/mobile deployment",
+    "pros": [
+      "Keras API is beginner-friendly",
+      "Best edge/mobile (TFLite, TF.js)",
+      "TFX for full ML pipelines",
+      "TPU first-class support"
+    ],
+    "cons": [
+      "Declining research adoption",
+      "More complex internals than PyTorch",
+      "Breaking changes between versions"
+    ],
+    "smallTeam": 2,
+    "largeTeam": 3,
+    "solo": 2,
+    "cpuFit": 2,
+    "gpuFit": 3,
+    "edgeFit": 3,
+    "cloudFit": 3
+  },
+  {
+    "id": "jax",
+    "name": "JAX",
+    "icon": "⚡",
+    "url": "https://github.com/google/jax",
+    "tasks": [
+      "classification",
+      "regression",
+      "nlp",
+      "cv",
+      "generative",
+      "rl",
+      "scientific"
+    ],
+    "production": false,
+    "research": true,
+    "teamSize": "any",
+    "hardware": ["cpu", "gpu", "tpu"],
+    "learnCurve": "high",
+    "ecosystem": "Growing fast — Flax, Optax, Equinox, Orbax",
+    "bestFor": "High-performance research & scientific computing",
+    "pros": [
+      "Fastest on TPUs",
+      "Functional + composable transforms (jit, vmap, grad)",
+      "Great for large-scale training",
+      "NumPy-compatible API"
+    ],
+    "cons": [
+      "Steep learning curve",
+      "Smaller community than PyTorch",
+      "Less production tooling",
+      "Functional paradigm unfamiliar to many"
+    ],
+    "smallTeam": 1,
+    "largeTeam": 2,
+    "solo": 1,
+    "cpuFit": 2,
+    "gpuFit": 3,
+    "edgeFit": 0,
+    "cloudFit": 3
+  },
+  {
+    "id": "huggingface",
+    "name": "HuggingFace Transformers",
+    "icon": "🤗",
+    "url": "https://huggingface.co/docs/transformers",
+    "tasks": ["nlp", "cv", "generative", "audio", "multimodal"],
+    "production": true,
+    "research": true,
+    "teamSize": "any",
+    "hardware": ["cpu", "gpu"],
+    "learnCurve": "low",
+    "ecosystem": "Largest model hub, Datasets, Tokenizers, PEFT, TRL",
+    "bestFor": "Using pre-trained LLMs and transformers",
+    "pros": [
+      "Largest pre-trained model library",
+      "Pipeline API for zero-code inference",
+      "Fine-tuning made easy",
+      "Active community & frequent updates"
+    ],
+    "cons": [
+      "Tied to transformer architectures",
+      "Can be heavy/slow for simple tasks",
+      "API changes frequently"
+    ],
+    "smallTeam": 3,
+    "largeTeam": 3,
+    "solo": 3,
+    "cpuFit": 2,
+    "gpuFit": 3,
+    "edgeFit": 1,
+    "cloudFit": 3
+  },
+  {
+    "id": "xgboost",
+    "name": "XGBoost / LightGBM",
+    "icon": "🌲",
+    "url": "https://xgboost.readthedocs.io",
+    "tasks": ["classification", "regression", "tabular"],
+    "production": true,
+    "research": false,
+    "teamSize": "any",
+    "hardware": ["cpu", "gpu"],
+    "learnCurve": "low",
+    "ecosystem": "Mature, Kaggle standard, sklearn-compatible API",
+    "bestFor": "Tabular data competitions & production",
+    "pros": [
+      "Best-in-class for tabular data",
+      "GPU training support",
+      "Handles missing values natively",
+      "Kaggle champion"
+    ],
+    "cons": [
+      "Only tree-based models",
+      "No deep learning",
+      "Hyperparameter tuning can be finicky"
+    ],
+    "smallTeam": 3,
+    "largeTeam": 2,
+    "solo": 3,
+    "cpuFit": 3,
+    "gpuFit": 2,
+    "edgeFit": 2,
+    "cloudFit": 2
+  },
+  {
+    "id": "fastai",
+    "name": "fast.ai",
+    "icon": "📚",
+    "url": "https://docs.fast.ai",
+    "tasks": ["classification", "regression", "nlp", "cv", "tabular"],
+    "production": false,
+    "research": false,
+    "teamSize": "any",
+    "hardware": ["cpu", "gpu"],
+    "learnCurve": "low",
+    "ecosystem": "Built on PyTorch, great course material",
+    "bestFor": "Learning deep learning & quick prototyping",
+    "pros": [
+      "Highest-level DL API",
+      "Excellent learning resources",
+      "Transfer learning made trivial",
+      "Built-in data augmentation"
+    ],
+    "cons": [
+      "Opinionated defaults can be limiting",
+      "Smaller community than PyTorch",
+      "Not ideal for custom architectures"
+    ],
+    "smallTeam": 2,
+    "largeTeam": 1,
+    "solo": 3,
+    "cpuFit": 1,
+    "gpuFit": 3,
+    "edgeFit": 0,
+    "cloudFit": 2
+  },
+  {
+    "id": "onnx",
+    "name": "ONNX Runtime",
+    "icon": "🔄",
+    "url": "https://onnxruntime.ai",
+    "tasks": ["classification", "regression", "nlp", "cv", "audio"],
+    "production": true,
+    "research": false,
+    "teamSize": "any",
+    "hardware": ["cpu", "gpu", "edge"],
+    "learnCurve": "medium",
+    "ecosystem": "Cross-framework inference, Microsoft-backed",
+    "bestFor": "Deploying models from any framework at high speed",
+    "pros": [
+      "Framework-agnostic inference",
+      "Highly optimized runtime",
+      "Supports CPU/GPU/edge",
+      "Model optimization built-in"
+    ],
+    "cons": [
+      "Inference only — no training",
+      "ONNX export can be tricky",
+      "Not all ops supported"
+    ],
+    "smallTeam": 2,
+    "largeTeam": 3,
+    "solo": 2,
+    "cpuFit": 3,
+    "gpuFit": 3,
+    "edgeFit": 3,
+    "cloudFit": 3
+  },
+  {
+    "id": "mlx",
+    "name": "MLX (Apple)",
+    "icon": "🍎",
+    "url": "https://ml-explore.github.io/mlx",
+    "tasks": ["nlp", "cv", "generative", "audio"],
+    "production": false,
+    "research": true,
+    "teamSize": "any",
+    "hardware": ["cpu"],
+    "learnCurve": "medium",
+    "ecosystem": "Young but growing — NumPy-like, Apple Silicon native",
+    "bestFor": "ML on Apple Silicon (M1/M2/M3/M4)",
+    "pros": [
+      "Unified memory = no CPU↔GPU copies",
+      "NumPy-like API",
+      "Great for local LLM inference",
+      "Lazy evaluation"
+    ],
+    "cons": [
+      "Apple Silicon only",
+      "Small ecosystem",
+      "Limited model zoo",
+      "No CUDA support"
+    ],
+    "smallTeam": 1,
+    "largeTeam": 1,
+    "solo": 2,
+    "cpuFit": 3,
+    "gpuFit": 0,
+    "edgeFit": 2,
+    "cloudFit": 0
+  },
+  {
+    "id": "llamacpp",
+    "name": "llama.cpp / GGML",
+    "icon": "🦙",
+    "url": "https://github.com/ggerganov/llama.cpp",
+    "tasks": ["nlp", "generative"],
+    "production": true,
+    "research": false,
+    "teamSize": "any",
+    "hardware": ["cpu", "gpu", "edge"],
+    "learnCurve": "low",
+    "ecosystem": "C++ inference, Ollama wraps it, huge GGUF model library",
+    "bestFor": "Running quantized LLMs locally on any hardware",
+    "pros": [
+      "Runs on CPU efficiently",
+      "Massive GGUF model library",
+      "Ollama makes it trivial",
+      "Low memory footprint with quantization"
+    ],
+    "cons": [
+      "Inference only",
+      "C++ codebase (hard to modify)",
+      "Limited to supported architectures"
+    ],
+    "smallTeam": 3,
+    "largeTeam": 2,
+    "solo": 3,
+    "cpuFit": 3,
+    "gpuFit": 3,
+    "edgeFit": 3,
+    "cloudFit": 2
+  }
+]

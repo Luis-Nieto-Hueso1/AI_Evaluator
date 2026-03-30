@@ -1,6 +1,7 @@
 [
   {
     "id": "llama-3.3-70b",
+    "huggingFace": "https://huggingface.co/meta-llama/Llama-3.3-70B-Instruct",
     "name": "Llama 3.3 70B",
     "family": "Llama",
     "parameters": 70,
@@ -28,10 +29,14 @@
     "contextLength": 131072,
     "description": "Meta's most capable open-weight model. Excellent reasoning and instruction following.",
     "strengths": ["Strong reasoning", "Code generation", "Long context"],
-    "license": "restricted"
+    "license": "restricted",
+    "benchmarks": { "mmlu": 86, "humanEval": 88, "mtBench": 9.0 },
+    "kvMBPerToken": 1.0,
+    "apiCost": { "provider": "Groq", "inputPer1M": 0.59, "outputPer1M": 0.79 }
   },
   {
     "id": "llama-3.1-8b",
+    "huggingFace": "https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct",
     "name": "Llama 3.1 8B",
     "family": "Llama",
     "parameters": 8,
@@ -59,10 +64,14 @@
     "contextLength": 131072,
     "description": "Versatile small model with strong instruction following and a huge context window.",
     "strengths": ["Long context (128K)", "Fast inference", "Good all-rounder"],
-    "license": "restricted"
+    "license": "restricted",
+    "benchmarks": { "mmlu": 73, "humanEval": 72, "mtBench": 8.2 },
+    "kvMBPerToken": 0.16,
+    "apiCost": { "provider": "Groq", "inputPer1M": 0.05, "outputPer1M": 0.08 }
   },
   {
     "id": "llama-3.2-3b",
+    "huggingFace": "https://huggingface.co/meta-llama/Llama-3.2-3B-Instruct",
     "name": "Llama 3.2 3B",
     "family": "Llama",
     "parameters": 3,
@@ -90,10 +99,14 @@
     "contextLength": 131072,
     "description": "Tiny but capable. Great for edge devices, quick tasks, and when speed matters most.",
     "strengths": ["Very fast", "Runs on anything", "Low memory"],
-    "license": "restricted"
+    "license": "restricted",
+    "benchmarks": { "mmlu": 63, "humanEval": 41 },
+    "kvMBPerToken": 0.1,
+    "apiCost": { "provider": "Groq", "inputPer1M": 0.06, "outputPer1M": 0.06 }
   },
   {
     "id": "llama-3.2-1b",
+    "huggingFace": "https://huggingface.co/meta-llama/Llama-3.2-1B-Instruct",
     "name": "Llama 3.2 1B",
     "family": "Llama",
     "parameters": 1,
@@ -115,10 +128,14 @@
     "contextLength": 131072,
     "description": "The smallest Llama. Minimal footprint for on-device and embedded use cases.",
     "strengths": ["Ultra-low memory", "Fastest possible", "Edge deployment"],
-    "license": "restricted"
+    "license": "restricted",
+    "benchmarks": { "mmlu": 49, "humanEval": 25 },
+    "kvMBPerToken": 0.06,
+    "apiCost": { "provider": "Groq", "inputPer1M": 0.04, "outputPer1M": 0.04 }
   },
   {
     "id": "mistral-7b",
+    "huggingFace": "https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.3",
     "name": "Mistral 7B",
     "family": "Mistral",
     "parameters": 7,
@@ -146,10 +163,18 @@
     "contextLength": 32768,
     "description": "Efficient European model with strong performance per parameter and sliding window attention.",
     "strengths": ["Efficient", "Good at RAG", "Apache 2.0 license"],
-    "license": "open"
+    "license": "open",
+    "benchmarks": { "mmlu": 62, "humanEval": 26, "mtBench": 7.6 },
+    "kvMBPerToken": 0.16,
+    "apiCost": {
+      "provider": "Together AI",
+      "inputPer1M": 0.1,
+      "outputPer1M": 0.1
+    }
   },
   {
     "id": "phi-4-14b",
+    "huggingFace": "https://huggingface.co/microsoft/phi-4",
     "name": "Phi-4 14B",
     "family": "Phi",
     "parameters": 14,
@@ -181,10 +206,14 @@
       "Strong STEM",
       "Synthetic data quality"
     ],
-    "license": "open"
+    "license": "open",
+    "benchmarks": { "mmlu": 84, "humanEval": 82, "mtBench": 8.6 },
+    "kvMBPerToken": 0.24,
+    "apiCost": { "provider": "Azure AI", "inputPer1M": 0.8, "outputPer1M": 0.8 }
   },
   {
     "id": "phi-3.5-mini",
+    "huggingFace": "https://huggingface.co/microsoft/Phi-3.5-mini-instruct",
     "name": "Phi-3.5 Mini",
     "family": "Phi",
     "parameters": 3.8,
@@ -212,10 +241,18 @@
     "contextLength": 131072,
     "description": "Small but highly capable model from Microsoft. Surprisingly strong at reasoning for its size.",
     "strengths": ["Strong for size", "128K context", "Fast inference"],
-    "license": "open"
+    "license": "open",
+    "benchmarks": { "mmlu": 69, "humanEval": 62, "mtBench": 8.0 },
+    "kvMBPerToken": 0.1,
+    "apiCost": {
+      "provider": "Azure AI",
+      "inputPer1M": 0.13,
+      "outputPer1M": 0.5
+    }
   },
   {
     "id": "gemma-2-27b",
+    "huggingFace": "https://huggingface.co/google/gemma-2-27b-it",
     "name": "Gemma 2 27B",
     "family": "Gemma",
     "parameters": 27,
@@ -237,10 +274,18 @@
     "contextLength": 8192,
     "description": "Google's strong open model with novel architecture improvements. Best Gemma for quality tasks.",
     "strengths": ["Strong reasoning", "Clean architecture", "Google quality"],
-    "license": "open"
+    "license": "open",
+    "benchmarks": { "mmlu": 78, "humanEval": 51, "mtBench": 8.8 },
+    "kvMBPerToken": 0.4,
+    "apiCost": {
+      "provider": "Google AI",
+      "inputPer1M": 0.27,
+      "outputPer1M": 0.54
+    }
   },
   {
     "id": "gemma-2-9b",
+    "huggingFace": "https://huggingface.co/google/gemma-2-9b-it",
     "name": "Gemma 2 9B",
     "family": "Gemma",
     "parameters": 9,
@@ -268,10 +313,18 @@
     "contextLength": 8192,
     "description": "Balanced Google model — strong performance at a fraction of the compute cost of 27B.",
     "strengths": ["Good balance", "Strong coding", "Reliable"],
-    "license": "open"
+    "license": "open",
+    "benchmarks": { "mmlu": 72, "humanEval": 40, "mtBench": 8.0 },
+    "kvMBPerToken": 0.18,
+    "apiCost": {
+      "provider": "Google AI",
+      "inputPer1M": 0.1,
+      "outputPer1M": 0.2
+    }
   },
   {
     "id": "gemma-2-2b",
+    "huggingFace": "https://huggingface.co/google/gemma-2-2b-it",
     "name": "Gemma 2 2B",
     "family": "Gemma",
     "parameters": 2,
@@ -299,10 +352,18 @@
     "contextLength": 8192,
     "description": "Tiny Google model with impressive quality for its size. Great for resource-constrained setups.",
     "strengths": ["Very small", "Good quality/size ratio", "Fast"],
-    "license": "open"
+    "license": "open",
+    "benchmarks": { "mmlu": 52, "humanEval": 19 },
+    "kvMBPerToken": 0.07,
+    "apiCost": {
+      "provider": "Google AI",
+      "inputPer1M": 0.04,
+      "outputPer1M": 0.04
+    }
   },
   {
     "id": "qwen-2.5-32b",
+    "huggingFace": "https://huggingface.co/Qwen/Qwen2.5-32B-Instruct",
     "name": "Qwen 2.5 32B",
     "family": "Qwen",
     "parameters": 32,
@@ -324,10 +385,18 @@
     "contextLength": 131072,
     "description": "Alibaba's top open model — exceptional at coding and math, strong multilingual support.",
     "strengths": ["Excellent coding", "Strong math", "Multilingual"],
-    "license": "open"
+    "license": "open",
+    "benchmarks": { "mmlu": 83, "humanEval": 85, "mtBench": 8.8 },
+    "kvMBPerToken": 0.55,
+    "apiCost": {
+      "provider": "Together AI",
+      "inputPer1M": 0.8,
+      "outputPer1M": 0.8
+    }
   },
   {
     "id": "qwen-2.5-14b",
+    "huggingFace": "https://huggingface.co/Qwen/Qwen2.5-14B-Instruct",
     "name": "Qwen 2.5 14B",
     "family": "Qwen",
     "parameters": 14,
@@ -355,10 +424,18 @@
     "contextLength": 131072,
     "description": "Mid-size Qwen model with strong coding and math capabilities. Great Llama 3.3 alternative.",
     "strengths": ["Coding", "Math", "128K context"],
-    "license": "open"
+    "license": "open",
+    "benchmarks": { "mmlu": 79, "humanEval": 74, "mtBench": 8.5 },
+    "kvMBPerToken": 0.24,
+    "apiCost": {
+      "provider": "Together AI",
+      "inputPer1M": 0.3,
+      "outputPer1M": 0.3
+    }
   },
   {
     "id": "qwen-2.5-7b",
+    "huggingFace": "https://huggingface.co/Qwen/Qwen2.5-7B-Instruct",
     "name": "Qwen 2.5 7B",
     "family": "Qwen",
     "parameters": 7,
@@ -386,10 +463,18 @@
     "contextLength": 131072,
     "description": "Compact Qwen with strong coding. One of the best small models for code tasks.",
     "strengths": ["Strong coding for size", "Multilingual", "Fast"],
-    "license": "open"
+    "license": "open",
+    "benchmarks": { "mmlu": 74, "humanEval": 72, "mtBench": 8.3 },
+    "kvMBPerToken": 0.16,
+    "apiCost": {
+      "provider": "Together AI",
+      "inputPer1M": 0.2,
+      "outputPer1M": 0.2
+    }
   },
   {
     "id": "deepseek-r1-7b",
+    "huggingFace": "https://huggingface.co/deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
     "name": "DeepSeek R1 7B",
     "family": "DeepSeek",
     "parameters": 7,
@@ -417,10 +502,18 @@
     "contextLength": 131072,
     "description": "DeepSeek's reasoning model distilled to 7B. Explicit chain-of-thought for harder problems.",
     "strengths": ["Reasoning chains", "Math", "Competitive pricing"],
-    "license": "open"
+    "license": "open",
+    "benchmarks": { "mmlu": 55, "humanEval": 55 },
+    "kvMBPerToken": 0.16,
+    "apiCost": {
+      "provider": "DeepSeek",
+      "inputPer1M": 0.14,
+      "outputPer1M": 0.55
+    }
   },
   {
     "id": "deepseek-r1-14b",
+    "huggingFace": "https://huggingface.co/deepseek-ai/DeepSeek-R1-Distill-Qwen-14B",
     "name": "DeepSeek R1 14B",
     "family": "DeepSeek",
     "parameters": 14,
@@ -442,10 +535,18 @@
     "contextLength": 131072,
     "description": "Larger reasoning distillation from DeepSeek R1. Better at complex multi-step problems.",
     "strengths": ["Strong reasoning", "Complex math", "Chain-of-thought"],
-    "license": "open"
+    "license": "open",
+    "benchmarks": { "mmlu": 69, "humanEval": 53 },
+    "kvMBPerToken": 0.24,
+    "apiCost": {
+      "provider": "DeepSeek",
+      "inputPer1M": 0.14,
+      "outputPer1M": 0.55
+    }
   },
   {
     "id": "codellama-7b",
+    "huggingFace": "https://huggingface.co/meta-llama/CodeLlama-7b-Instruct-hf",
     "name": "CodeLlama 7B",
     "family": "CodeLlama",
     "parameters": 7,
@@ -467,10 +568,13 @@
     "contextLength": 100000,
     "description": "Meta's code-specialized model. Fine-tuned on code with fill-in-the-middle support.",
     "strengths": ["Code completion", "Multi-language", "FIM support"],
-    "license": "restricted"
+    "license": "restricted",
+    "benchmarks": { "mmlu": 34, "humanEval": 33 },
+    "kvMBPerToken": 0.16
   },
   {
     "id": "llama-3.2-11b-vision",
+    "huggingFace": "https://huggingface.co/meta-llama/Llama-3.2-11B-Vision-Instruct",
     "name": "Llama 3.2 11B Vision",
     "family": "Llama",
     "parameters": 11,
@@ -492,10 +596,18 @@
     "contextLength": 131072,
     "description": "Llama with vision. Can understand and describe images, charts, and screenshots.",
     "strengths": ["Image understanding", "Multimodal", "OCR"],
-    "license": "restricted"
+    "license": "restricted",
+    "benchmarks": { "mmlu": 73, "humanEval": 40 },
+    "kvMBPerToken": 0.22,
+    "apiCost": {
+      "provider": "Together AI",
+      "inputPer1M": 0.18,
+      "outputPer1M": 0.18
+    }
   },
   {
     "id": "mistral-nemo-12b",
+    "huggingFace": "https://huggingface.co/mistralai/Mistral-Nemo-Instruct-2407",
     "name": "Mistral Nemo 12B",
     "family": "Mistral",
     "parameters": 12,
@@ -517,6 +629,1010 @@
     "contextLength": 131072,
     "description": "Mistral's mid-size model with a 128K context window. Great for long document tasks.",
     "strengths": ["Long context", "Function calling", "Good RAG"],
-    "license": "open"
+    "license": "open",
+    "benchmarks": { "mmlu": 68, "humanEval": 49, "mtBench": 7.9 },
+    "kvMBPerToken": 0.22,
+    "apiCost": {
+      "provider": "Mistral AI",
+      "inputPer1M": 0.15,
+      "outputPer1M": 0.15
+    }
+  },
+  {
+    "id": "gemma-3-27b",
+    "huggingFace": "https://huggingface.co/google/gemma-3-27b-it",
+    "name": "Gemma 3 27B",
+    "family": "Gemma",
+    "parameters": 27,
+    "variants": [
+      {
+        "quantization": "Q4_K_M",
+        "ramRequired": 15,
+        "vramRequired": 15,
+        "quality": "medium"
+      },
+      {
+        "quantization": "Q8_0",
+        "ramRequired": 26,
+        "vramRequired": 26,
+        "quality": "high"
+      }
+    ],
+    "useCases": ["chat", "writing", "reasoning", "analysis"],
+    "contextLength": 131072,
+    "description": "Google's largest Gemma 3 model with strong multilingual and reasoning capabilities.",
+    "strengths": ["Multilingual", "Strong reasoning", "Large context"],
+    "license": "open",
+    "benchmarks": { "mmlu": 81, "humanEval": 60 },
+    "kvMBPerToken": 0.4,
+    "apiCost": {
+      "provider": "Google AI",
+      "inputPer1M": 0.27,
+      "outputPer1M": 0.54
+    }
+  },
+  {
+    "id": "gemma-3-12b",
+    "huggingFace": "https://huggingface.co/google/gemma-3-12b-it",
+    "name": "Gemma 3 12B",
+    "family": "Gemma",
+    "parameters": 12,
+    "variants": [
+      {
+        "quantization": "Q4_K_M",
+        "ramRequired": 7,
+        "vramRequired": 7,
+        "quality": "medium"
+      },
+      {
+        "quantization": "Q8_0",
+        "ramRequired": 12,
+        "vramRequired": 12,
+        "quality": "high"
+      },
+      {
+        "quantization": "F16",
+        "ramRequired": 23,
+        "vramRequired": 23,
+        "quality": "best"
+      }
+    ],
+    "useCases": ["chat", "writing", "coding", "analysis"],
+    "contextLength": 131072,
+    "description": "Balanced Gemma 3 model with excellent performance-to-size ratio.",
+    "strengths": ["Balanced", "Multilingual", "Good coding"],
+    "license": "open",
+    "benchmarks": { "mmlu": 74, "humanEval": 52 },
+    "kvMBPerToken": 0.22,
+    "apiCost": {
+      "provider": "Google AI",
+      "inputPer1M": 0.1,
+      "outputPer1M": 0.2
+    }
+  },
+  {
+    "id": "gemma-3-4b",
+    "huggingFace": "https://huggingface.co/google/gemma-3-4b-it",
+    "name": "Gemma 3 4B",
+    "family": "Gemma",
+    "parameters": 4,
+    "variants": [
+      {
+        "quantization": "Q4_K_M",
+        "ramRequired": 3,
+        "vramRequired": 3,
+        "quality": "medium"
+      },
+      {
+        "quantization": "Q8_0",
+        "ramRequired": 5,
+        "vramRequired": 5,
+        "quality": "high"
+      },
+      {
+        "quantization": "F16",
+        "ramRequired": 8,
+        "vramRequired": 8,
+        "quality": "best"
+      }
+    ],
+    "useCases": ["chat", "writing", "coding"],
+    "contextLength": 131072,
+    "description": "Compact Gemma 3 model that runs well on consumer hardware.",
+    "strengths": ["Efficient", "Multilingual", "Fast on consumer GPU"],
+    "license": "open",
+    "benchmarks": { "mmlu": 59, "humanEval": 38 },
+    "kvMBPerToken": 0.1,
+    "apiCost": {
+      "provider": "Google AI",
+      "inputPer1M": 0.04,
+      "outputPer1M": 0.04
+    }
+  },
+  {
+    "id": "gemma-3-1b",
+    "huggingFace": "https://huggingface.co/google/gemma-3-1b-it",
+    "name": "Gemma 3 1B",
+    "family": "Gemma",
+    "parameters": 1,
+    "variants": [
+      {
+        "quantization": "Q4_K_M",
+        "ramRequired": 1,
+        "vramRequired": 1,
+        "quality": "medium"
+      },
+      {
+        "quantization": "Q8_0",
+        "ramRequired": 2,
+        "vramRequired": 2,
+        "quality": "high"
+      },
+      {
+        "quantization": "F16",
+        "ramRequired": 3,
+        "vramRequired": 3,
+        "quality": "best"
+      }
+    ],
+    "useCases": ["chat", "on-device"],
+    "contextLength": 32768,
+    "description": "Ultra-compact Gemma model for edge devices and rapid prototyping.",
+    "strengths": ["Ultra-fast", "Tiny footprint", "Edge deployment"],
+    "license": "open",
+    "benchmarks": { "mmlu": 35, "humanEval": 12 },
+    "kvMBPerToken": 0.06
+  },
+  {
+    "id": "qwen-3-32b",
+    "huggingFace": "https://huggingface.co/Qwen/Qwen3-32B",
+    "name": "Qwen 3 32B",
+    "family": "Qwen",
+    "parameters": 32,
+    "variants": [
+      {
+        "quantization": "Q4_K_M",
+        "ramRequired": 20,
+        "vramRequired": 20,
+        "quality": "medium"
+      },
+      {
+        "quantization": "Q8_0",
+        "ramRequired": 36,
+        "vramRequired": 36,
+        "quality": "high"
+      }
+    ],
+    "useCases": ["chat", "reasoning", "coding", "analysis"],
+    "contextLength": 32768,
+    "description": "Alibaba's flagship dense model with hybrid thinking mode and strong reasoning.",
+    "strengths": ["Hybrid thinking", "Strong reasoning", "Multilingual"],
+    "license": "open",
+    "benchmarks": { "mmlu": 85, "humanEval": 92 },
+    "kvMBPerToken": 0.55,
+    "apiCost": {
+      "provider": "Together AI",
+      "inputPer1M": 0.8,
+      "outputPer1M": 0.8
+    }
+  },
+  {
+    "id": "qwen-3-14b",
+    "huggingFace": "https://huggingface.co/Qwen/Qwen3-14B",
+    "name": "Qwen 3 14B",
+    "family": "Qwen",
+    "parameters": 14,
+    "variants": [
+      {
+        "quantization": "Q4_K_M",
+        "ramRequired": 9,
+        "vramRequired": 9,
+        "quality": "medium"
+      },
+      {
+        "quantization": "Q8_0",
+        "ramRequired": 16,
+        "vramRequired": 16,
+        "quality": "high"
+      },
+      {
+        "quantization": "F16",
+        "ramRequired": 28,
+        "vramRequired": 28,
+        "quality": "best"
+      }
+    ],
+    "useCases": ["chat", "reasoning", "coding", "analysis"],
+    "contextLength": 32768,
+    "description": "High-capability Qwen 3 model with excellent performance across benchmarks.",
+    "strengths": ["Hybrid thinking", "Strong coding", "Multilingual"],
+    "license": "open",
+    "benchmarks": { "mmlu": 80, "humanEval": 87 },
+    "kvMBPerToken": 0.24,
+    "apiCost": {
+      "provider": "Together AI",
+      "inputPer1M": 0.3,
+      "outputPer1M": 0.3
+    }
+  },
+  {
+    "id": "qwen-3-8b",
+    "huggingFace": "https://huggingface.co/Qwen/Qwen3-8B",
+    "name": "Qwen 3 8B",
+    "family": "Qwen",
+    "parameters": 8,
+    "variants": [
+      {
+        "quantization": "Q4_K_M",
+        "ramRequired": 5,
+        "vramRequired": 5,
+        "quality": "medium"
+      },
+      {
+        "quantization": "Q8_0",
+        "ramRequired": 9,
+        "vramRequired": 9,
+        "quality": "high"
+      },
+      {
+        "quantization": "F16",
+        "ramRequired": 16,
+        "vramRequired": 16,
+        "quality": "best"
+      }
+    ],
+    "useCases": ["chat", "coding", "reasoning"],
+    "contextLength": 32768,
+    "description": "Versatile Qwen 3 model that punches above its weight class.",
+    "strengths": ["Thinking mode", "Efficient", "Strong instruction following"],
+    "license": "open",
+    "benchmarks": { "mmlu": 77, "humanEval": 82 },
+    "kvMBPerToken": 0.16,
+    "apiCost": {
+      "provider": "Together AI",
+      "inputPer1M": 0.2,
+      "outputPer1M": 0.2
+    }
+  },
+  {
+    "id": "qwen-3-4b",
+    "huggingFace": "https://huggingface.co/Qwen/Qwen3-4B",
+    "name": "Qwen 3 4B",
+    "family": "Qwen",
+    "parameters": 4,
+    "variants": [
+      {
+        "quantization": "Q4_K_M",
+        "ramRequired": 3,
+        "vramRequired": 3,
+        "quality": "medium"
+      },
+      {
+        "quantization": "Q8_0",
+        "ramRequired": 5,
+        "vramRequired": 5,
+        "quality": "high"
+      },
+      {
+        "quantization": "F16",
+        "ramRequired": 8,
+        "vramRequired": 8,
+        "quality": "best"
+      }
+    ],
+    "useCases": ["chat", "coding", "writing"],
+    "contextLength": 32768,
+    "description": "Compact Qwen 3 model with thinking mode, ideal for everyday tasks.",
+    "strengths": ["Thinking mode", "Fast", "Good quality/size ratio"],
+    "license": "open",
+    "benchmarks": { "mmlu": 72, "humanEval": 71 },
+    "kvMBPerToken": 0.1,
+    "apiCost": {
+      "provider": "Together AI",
+      "inputPer1M": 0.1,
+      "outputPer1M": 0.1
+    }
+  },
+  {
+    "id": "qwen-3-1.7b",
+    "huggingFace": "https://huggingface.co/Qwen/Qwen3-1.7B",
+    "name": "Qwen 3 1.7B",
+    "family": "Qwen",
+    "parameters": 1.7,
+    "variants": [
+      {
+        "quantization": "Q4_K_M",
+        "ramRequired": 1,
+        "vramRequired": 1,
+        "quality": "medium"
+      },
+      {
+        "quantization": "Q8_0",
+        "ramRequired": 2,
+        "vramRequired": 2,
+        "quality": "high"
+      },
+      {
+        "quantization": "F16",
+        "ramRequired": 4,
+        "vramRequired": 4,
+        "quality": "best"
+      }
+    ],
+    "useCases": ["chat", "on-device"],
+    "contextLength": 32768,
+    "description": "Small but capable Qwen 3 model with thinking mode support.",
+    "strengths": ["Thinking mode", "Ultra-fast", "Tiny footprint"],
+    "license": "open",
+    "benchmarks": { "mmlu": 57, "humanEval": 46 },
+    "kvMBPerToken": 0.07
+  },
+  {
+    "id": "qwen-2.5-72b",
+    "huggingFace": "https://huggingface.co/Qwen/Qwen2.5-72B-Instruct",
+    "name": "Qwen 2.5 72B",
+    "family": "Qwen",
+    "parameters": 72,
+    "variants": [
+      {
+        "quantization": "Q4_K_M",
+        "ramRequired": 40,
+        "vramRequired": 40,
+        "quality": "medium"
+      },
+      {
+        "quantization": "Q8_0",
+        "ramRequired": 69,
+        "vramRequired": 69,
+        "quality": "high"
+      }
+    ],
+    "useCases": ["chat", "reasoning", "coding", "analysis", "writing"],
+    "contextLength": 131072,
+    "description": "Alibaba's flagship 72B model with near-frontier performance across all tasks.",
+    "strengths": [
+      "Near-frontier quality",
+      "Strong coding",
+      "128K context",
+      "Multilingual"
+    ],
+    "license": "open",
+    "benchmarks": { "mmlu": 86, "humanEval": 86, "mtBench": 9.1 },
+    "kvMBPerToken": 1.0,
+    "apiCost": {
+      "provider": "Together AI",
+      "inputPer1M": 0.9,
+      "outputPer1M": 0.9
+    }
+  },
+  {
+    "id": "qwen-2.5-coder-7b",
+    "huggingFace": "https://huggingface.co/Qwen/Qwen2.5-Coder-7B-Instruct",
+    "name": "Qwen 2.5 Coder 7B",
+    "family": "Qwen",
+    "parameters": 7,
+    "variants": [
+      {
+        "quantization": "Q4_K_M",
+        "ramRequired": 5,
+        "vramRequired": 5,
+        "quality": "medium"
+      },
+      {
+        "quantization": "Q8_0",
+        "ramRequired": 8,
+        "vramRequired": 8,
+        "quality": "high"
+      },
+      {
+        "quantization": "F16",
+        "ramRequired": 14,
+        "vramRequired": 14,
+        "quality": "best"
+      }
+    ],
+    "useCases": ["coding", "debugging", "code review"],
+    "contextLength": 131072,
+    "description": "Specialized coding model from Alibaba, competitive with much larger models on code tasks.",
+    "strengths": [
+      "Code completion",
+      "Bug fixing",
+      "Multi-language support",
+      "128K context"
+    ],
+    "license": "open",
+    "benchmarks": { "mmlu": 65, "humanEval": 85 },
+    "kvMBPerToken": 0.16,
+    "apiCost": {
+      "provider": "Together AI",
+      "inputPer1M": 0.2,
+      "outputPer1M": 0.2
+    }
+  },
+  {
+    "id": "qwen-2.5-coder-32b",
+    "huggingFace": "https://huggingface.co/Qwen/Qwen2.5-Coder-32B-Instruct",
+    "name": "Qwen 2.5 Coder 32B",
+    "family": "Qwen",
+    "parameters": 32,
+    "variants": [
+      {
+        "quantization": "Q4_K_M",
+        "ramRequired": 18,
+        "vramRequired": 18,
+        "quality": "medium"
+      },
+      {
+        "quantization": "Q8_0",
+        "ramRequired": 31,
+        "vramRequired": 31,
+        "quality": "high"
+      }
+    ],
+    "useCases": ["coding", "debugging", "code review", "architecture"],
+    "contextLength": 131072,
+    "description": "State-of-the-art coding model that rivals GPT-4 on many benchmarks.",
+    "strengths": [
+      "Best-in-class coding",
+      "Architecture planning",
+      "128K context"
+    ],
+    "license": "open",
+    "benchmarks": { "mmlu": 79, "humanEval": 92 },
+    "kvMBPerToken": 0.55,
+    "apiCost": {
+      "provider": "Together AI",
+      "inputPer1M": 0.8,
+      "outputPer1M": 0.8
+    }
+  },
+  {
+    "id": "mixtral-8x7b",
+    "huggingFace": "https://huggingface.co/mistralai/Mixtral-8x7B-Instruct-v0.1",
+    "name": "Mixtral 8x7B",
+    "family": "Mistral",
+    "parameters": 46.7,
+    "variants": [
+      {
+        "quantization": "Q4_K_M",
+        "ramRequired": 26,
+        "vramRequired": 26,
+        "quality": "medium"
+      },
+      {
+        "quantization": "Q8_0",
+        "ramRequired": 48,
+        "vramRequired": 48,
+        "quality": "high"
+      }
+    ],
+    "useCases": ["chat", "coding", "writing", "analysis"],
+    "contextLength": 32768,
+    "description": "Mixture-of-experts model from Mistral. Uses only 12.9B parameters per token despite having 46.7B total.",
+    "strengths": [
+      "MoE efficiency",
+      "Fast per-token",
+      "Strong multilingual",
+      "Good coding"
+    ],
+    "license": "open",
+    "benchmarks": { "mmlu": 70, "humanEval": 45, "mtBench": 8.3 },
+    "kvMBPerToken": 0.25,
+    "apiCost": {
+      "provider": "Mistral AI",
+      "inputPer1M": 0.4,
+      "outputPer1M": 0.4
+    }
+  },
+  {
+    "id": "mixtral-8x22b",
+    "huggingFace": "https://huggingface.co/mistralai/Mixtral-8x22B-Instruct-v0.1",
+    "name": "Mixtral 8x22B",
+    "family": "Mistral",
+    "parameters": 141,
+    "variants": [
+      {
+        "quantization": "Q4_K_M",
+        "ramRequired": 65,
+        "vramRequired": 65,
+        "quality": "medium"
+      },
+      {
+        "quantization": "Q8_0",
+        "ramRequired": 120,
+        "vramRequired": 120,
+        "quality": "high"
+      }
+    ],
+    "useCases": ["chat", "coding", "reasoning", "analysis"],
+    "contextLength": 65536,
+    "description": "Mistral's largest MoE model with 141B parameters and 39B active per token. Near-frontier quality.",
+    "strengths": [
+      "Near-frontier",
+      "MoE efficiency",
+      "Strong coding",
+      "Multilingual"
+    ],
+    "license": "open",
+    "benchmarks": { "mmlu": 78, "humanEval": 60 },
+    "kvMBPerToken": 0.6,
+    "apiCost": {
+      "provider": "Mistral AI",
+      "inputPer1M": 1.2,
+      "outputPer1M": 1.2
+    }
+  },
+  {
+    "id": "deepseek-r1-1.5b",
+    "huggingFace": "https://huggingface.co/deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+    "name": "DeepSeek R1 1.5B",
+    "family": "DeepSeek",
+    "parameters": 1.5,
+    "variants": [
+      {
+        "quantization": "Q4_K_M",
+        "ramRequired": 1,
+        "vramRequired": 1,
+        "quality": "medium"
+      },
+      {
+        "quantization": "Q8_0",
+        "ramRequired": 2,
+        "vramRequired": 2,
+        "quality": "high"
+      },
+      {
+        "quantization": "F16",
+        "ramRequired": 3,
+        "vramRequired": 3,
+        "quality": "best"
+      }
+    ],
+    "useCases": ["reasoning", "math", "coding"],
+    "contextLength": 131072,
+    "description": "Tiny DeepSeek R1 distill with chain-of-thought reasoning, surprisingly capable.",
+    "strengths": ["Chain-of-thought", "Math reasoning", "Tiny footprint"],
+    "license": "open",
+    "benchmarks": { "mmlu": 28, "humanEval": 28 },
+    "kvMBPerToken": 0.06,
+    "apiCost": {
+      "provider": "DeepSeek",
+      "inputPer1M": 0.14,
+      "outputPer1M": 0.55
+    }
+  },
+  {
+    "id": "deepseek-r1-32b",
+    "huggingFace": "https://huggingface.co/deepseek-ai/DeepSeek-R1-Distill-Qwen-32B",
+    "name": "DeepSeek R1 32B",
+    "family": "DeepSeek",
+    "parameters": 32,
+    "variants": [
+      {
+        "quantization": "Q4_K_M",
+        "ramRequired": 18,
+        "vramRequired": 18,
+        "quality": "medium"
+      },
+      {
+        "quantization": "Q8_0",
+        "ramRequired": 31,
+        "vramRequired": 31,
+        "quality": "high"
+      }
+    ],
+    "useCases": ["reasoning", "math", "coding", "analysis"],
+    "contextLength": 131072,
+    "description": "DeepSeek R1 distill at 32B — excellent reasoning with chain-of-thought, near frontier quality.",
+    "strengths": ["Advanced reasoning", "Math", "Coding", "128K context"],
+    "license": "open",
+    "benchmarks": { "mmlu": 72, "humanEval": 72 },
+    "kvMBPerToken": 0.55,
+    "apiCost": {
+      "provider": "DeepSeek",
+      "inputPer1M": 0.14,
+      "outputPer1M": 0.55
+    }
+  },
+  {
+    "id": "deepseek-v3",
+    "huggingFace": "https://huggingface.co/deepseek-ai/DeepSeek-V3",
+    "name": "DeepSeek V3",
+    "family": "DeepSeek",
+    "parameters": 671,
+    "variants": [
+      {
+        "quantization": "Q4_K_M",
+        "ramRequired": 380,
+        "vramRequired": 380,
+        "quality": "medium"
+      }
+    ],
+    "useCases": ["chat", "reasoning", "coding", "analysis"],
+    "contextLength": 65536,
+    "description": "DeepSeek's flagship MoE model with 671B parameters. Frontier-level quality, runs in cloud.",
+    "strengths": ["Frontier quality", "MoE architecture", "Strong coding"],
+    "license": "open",
+    "benchmarks": { "mmlu": 88, "humanEval": 91 },
+    "kvMBPerToken": 2.0,
+    "apiCost": {
+      "provider": "DeepSeek",
+      "inputPer1M": 0.27,
+      "outputPer1M": 1.1
+    }
+  },
+  {
+    "id": "mistral-small-24b",
+    "huggingFace": "https://huggingface.co/mistralai/Mistral-Small-3.1-24B-Instruct-2503",
+    "name": "Mistral Small 3.1 24B",
+    "family": "Mistral",
+    "parameters": 24,
+    "variants": [
+      {
+        "quantization": "Q4_K_M",
+        "ramRequired": 14,
+        "vramRequired": 14,
+        "quality": "medium"
+      },
+      {
+        "quantization": "Q8_0",
+        "ramRequired": 23,
+        "vramRequired": 23,
+        "quality": "high"
+      },
+      {
+        "quantization": "F16",
+        "ramRequired": 45,
+        "vramRequired": 45,
+        "quality": "best"
+      }
+    ],
+    "useCases": ["chat", "writing", "coding", "analysis"],
+    "contextLength": 131072,
+    "description": "Mistral's efficient 24B model with vision capabilities and strong instruction following.",
+    "strengths": [
+      "Vision support",
+      "128K context",
+      "Good quality/size ratio",
+      "Efficient"
+    ],
+    "license": "open",
+    "benchmarks": { "mmlu": 81, "humanEval": 72, "mtBench": 8.4 },
+    "kvMBPerToken": 0.4,
+    "apiCost": {
+      "provider": "Mistral AI",
+      "inputPer1M": 0.1,
+      "outputPer1M": 0.3
+    }
+  },
+  {
+    "id": "codestral-22b",
+    "huggingFace": "https://huggingface.co/mistralai/Codestral-22B-v0.1",
+    "name": "Codestral 22B",
+    "family": "Mistral",
+    "parameters": 22,
+    "variants": [
+      {
+        "quantization": "Q4_K_M",
+        "ramRequired": 13,
+        "vramRequired": 13,
+        "quality": "medium"
+      },
+      {
+        "quantization": "Q8_0",
+        "ramRequired": 22,
+        "vramRequired": 22,
+        "quality": "high"
+      }
+    ],
+    "useCases": ["coding", "debugging", "code completion"],
+    "contextLength": 32768,
+    "description": "Mistral's specialized coding model with strong performance across 80+ languages.",
+    "strengths": [
+      "Code completion",
+      "80+ languages",
+      "Fill-in-the-middle",
+      "Fast inference"
+    ],
+    "license": "restricted",
+    "benchmarks": { "mmlu": 81, "humanEval": 81 },
+    "kvMBPerToken": 0.4,
+    "apiCost": {
+      "provider": "Mistral AI",
+      "inputPer1M": 0.3,
+      "outputPer1M": 0.9
+    }
+  },
+  {
+    "id": "llama-3.1-70b",
+    "huggingFace": "https://huggingface.co/meta-llama/Llama-3.1-70B-Instruct",
+    "name": "Llama 3.1 70B",
+    "family": "Llama",
+    "parameters": 70,
+    "variants": [
+      {
+        "quantization": "Q4_K_M",
+        "ramRequired": 39,
+        "vramRequired": 39,
+        "quality": "medium"
+      },
+      {
+        "quantization": "Q8_0",
+        "ramRequired": 67,
+        "vramRequired": 67,
+        "quality": "high"
+      }
+    ],
+    "useCases": ["chat", "reasoning", "coding", "writing", "analysis"],
+    "contextLength": 131072,
+    "description": "Meta's 70B flagship with massive 128K context and strong multilingual support.",
+    "strengths": [
+      "128K context",
+      "Multilingual",
+      "Strong reasoning",
+      "Tool use"
+    ],
+    "license": "restricted",
+    "benchmarks": { "mmlu": 86, "humanEval": 80, "mtBench": 8.9 },
+    "kvMBPerToken": 1.0,
+    "apiCost": {
+      "provider": "Together AI",
+      "inputPer1M": 0.54,
+      "outputPer1M": 0.54
+    }
+  },
+  {
+    "id": "codellama-34b",
+    "huggingFace": "https://huggingface.co/meta-llama/CodeLlama-34b-Instruct-hf",
+    "name": "CodeLlama 34B",
+    "family": "CodeLlama",
+    "parameters": 34,
+    "variants": [
+      {
+        "quantization": "Q4_K_M",
+        "ramRequired": 19,
+        "vramRequired": 19,
+        "quality": "medium"
+      },
+      {
+        "quantization": "Q8_0",
+        "ramRequired": 33,
+        "vramRequired": 33,
+        "quality": "high"
+      }
+    ],
+    "useCases": ["coding", "debugging", "code review"],
+    "contextLength": 100000,
+    "description": "Meta's dedicated code model at 34B — strong at code generation and completion.",
+    "strengths": [
+      "Code generation",
+      "Infilling",
+      "100K context",
+      "Many languages"
+    ],
+    "license": "restricted",
+    "benchmarks": { "mmlu": 46, "humanEval": 48 },
+    "kvMBPerToken": 0.55
+  },
+  {
+    "id": "command-r-35b",
+    "huggingFace": "https://huggingface.co/CohereForAI/c4ai-command-r-v01",
+    "name": "Command R 35B",
+    "family": "Cohere",
+    "parameters": 35,
+    "variants": [
+      {
+        "quantization": "Q4_K_M",
+        "ramRequired": 20,
+        "vramRequired": 20,
+        "quality": "medium"
+      },
+      {
+        "quantization": "Q8_0",
+        "ramRequired": 34,
+        "vramRequired": 34,
+        "quality": "high"
+      }
+    ],
+    "useCases": ["chat", "RAG", "analysis", "writing"],
+    "contextLength": 131072,
+    "description": "Cohere's Command R model optimized for RAG and enterprise use cases.",
+    "strengths": [
+      "RAG optimized",
+      "128K context",
+      "Tool use",
+      "Enterprise-ready"
+    ],
+    "license": "open",
+    "benchmarks": { "mmlu": 68, "humanEval": 37 },
+    "kvMBPerToken": 0.55,
+    "apiCost": { "provider": "Cohere", "inputPer1M": 0.5, "outputPer1M": 1.5 }
+  },
+  {
+    "id": "llama-3.1-405b",
+    "huggingFace": "https://huggingface.co/meta-llama/Llama-3.1-405B-Instruct",
+    "name": "Llama 3.1 405B",
+    "family": "Llama",
+    "parameters": 405,
+    "variants": [
+      {
+        "quantization": "Q4_K_M",
+        "ramRequired": 230,
+        "vramRequired": 230,
+        "quality": "medium"
+      }
+    ],
+    "useCases": ["chat", "reasoning", "coding", "research"],
+    "contextLength": 131072,
+    "description": "Meta's frontier 405B model. Requires multi-GPU server setups or cloud inference.",
+    "strengths": [
+      "Frontier quality",
+      "Best-in-class reasoning",
+      "128K context"
+    ],
+    "license": "restricted",
+    "benchmarks": { "mmlu": 88, "humanEval": 89 },
+    "kvMBPerToken": 4.0,
+    "apiCost": {
+      "provider": "Together AI",
+      "inputPer1M": 3.5,
+      "outputPer1M": 3.5
+    }
+  },
+  {
+    "id": "tinyllama-1.1b",
+    "huggingFace": "https://huggingface.co/TinyLlama/TinyLlama-1.1B-Chat-v1.0",
+    "name": "TinyLlama 1.1B",
+    "family": "Llama",
+    "parameters": 1.1,
+    "variants": [
+      {
+        "quantization": "Q4_K_M",
+        "ramRequired": 1,
+        "vramRequired": 1,
+        "quality": "medium"
+      },
+      {
+        "quantization": "Q8_0",
+        "ramRequired": 2,
+        "vramRequired": 2,
+        "quality": "high"
+      },
+      {
+        "quantization": "F16",
+        "ramRequired": 3,
+        "vramRequired": 3,
+        "quality": "best"
+      }
+    ],
+    "useCases": ["chat", "on-device"],
+    "contextLength": 2048,
+    "description": "Ultra-small LLaMA architecture trained on 3 trillion tokens. Ideal for embedded and edge use.",
+    "strengths": ["Tiny size", "Very fast", "Edge deployment", "Low power"],
+    "license": "open",
+    "benchmarks": { "mmlu": 26, "humanEval": 8 },
+    "kvMBPerToken": 0.05
+  },
+  {
+    "id": "wizardlm-2-7b",
+    "huggingFace": "https://huggingface.co/microsoft/WizardLM-2-7B",
+    "name": "WizardLM 2 7B",
+    "family": "WizardLM",
+    "parameters": 7,
+    "variants": [
+      {
+        "quantization": "Q4_K_M",
+        "ramRequired": 5,
+        "vramRequired": 5,
+        "quality": "medium"
+      },
+      {
+        "quantization": "Q8_0",
+        "ramRequired": 9,
+        "vramRequired": 8,
+        "quality": "high"
+      },
+      {
+        "quantization": "F16",
+        "ramRequired": 15,
+        "vramRequired": 14,
+        "quality": "best"
+      }
+    ],
+    "useCases": [
+      "chat",
+      "reasoning",
+      "writing",
+      "analysis",
+      "instruction-following"
+    ],
+    "contextLength": 32768,
+    "description": "Microsoft's instruction-tuned model with strong reasoning and complex task following.",
+    "strengths": [
+      "Instruction following",
+      "Multi-turn reasoning",
+      "Writing quality"
+    ],
+    "license": "open",
+    "benchmarks": { "mmlu": 63, "humanEval": 45, "mtBench": 8.0 },
+    "kvMBPerToken": 0.16
+  },
+  {
+    "id": "granite-3.1-8b",
+    "huggingFace": "https://huggingface.co/ibm-granite/granite-3.1-8b-instruct",
+    "name": "Granite 3.1 8B",
+    "family": "Granite",
+    "parameters": 8,
+    "variants": [
+      {
+        "quantization": "Q4_K_M",
+        "ramRequired": 5,
+        "vramRequired": 5,
+        "quality": "medium"
+      },
+      {
+        "quantization": "Q8_0",
+        "ramRequired": 9,
+        "vramRequired": 9,
+        "quality": "high"
+      },
+      {
+        "quantization": "F16",
+        "ramRequired": 17,
+        "vramRequired": 16,
+        "quality": "best"
+      }
+    ],
+    "useCases": ["chat", "coding", "reasoning", "analysis", "summarization"],
+    "contextLength": 131072,
+    "description": "IBM's enterprise-grade instruct model. Strong at structured tasks, long context, and code.",
+    "strengths": [
+      "Enterprise tasks",
+      "128K context",
+      "Code understanding",
+      "Apache 2.0"
+    ],
+    "license": "open",
+    "benchmarks": { "mmlu": 62, "humanEval": 42 },
+    "kvMBPerToken": 0.16
+  },
+  {
+    "id": "granite-3.1-2b",
+    "huggingFace": "https://huggingface.co/ibm-granite/granite-3.1-2b-instruct",
+    "name": "Granite 3.1 2B",
+    "family": "Granite",
+    "parameters": 2,
+    "variants": [
+      {
+        "quantization": "Q4_K_M",
+        "ramRequired": 2,
+        "vramRequired": 2,
+        "quality": "medium"
+      },
+      {
+        "quantization": "Q8_0",
+        "ramRequired": 3,
+        "vramRequired": 3,
+        "quality": "high"
+      },
+      {
+        "quantization": "F16",
+        "ramRequired": 5,
+        "vramRequired": 4,
+        "quality": "best"
+      }
+    ],
+    "useCases": ["chat", "summarization", "analysis", "on-device"],
+    "contextLength": 131072,
+    "description": "IBM's compact enterprise model. Punches above its weight for on-device and edge deployment.",
+    "strengths": [
+      "Tiny footprint",
+      "128K context",
+      "Enterprise quality",
+      "Apache 2.0"
+    ],
+    "license": "open",
+    "benchmarks": { "mmlu": 42, "humanEval": 20 },
+    "kvMBPerToken": 0.07
   }
 ]

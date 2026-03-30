@@ -376,6 +376,49 @@ export interface GpuOption {
 }
 
 export const GPU_LIST: GpuOption[] = [
+  // ── NVIDIA RTX 50 ────────────────────────────────────────
+  {
+    id: "rtx-5090",
+    name: "RTX 5090",
+    brand: "NVIDIA",
+    series: "RTX 50",
+    vram: 32,
+  },
+  {
+    id: "rtx-5080",
+    name: "RTX 5080",
+    brand: "NVIDIA",
+    series: "RTX 50",
+    vram: 16,
+  },
+  {
+    id: "rtx-5070-ti",
+    name: "RTX 5070 Ti",
+    brand: "NVIDIA",
+    series: "RTX 50",
+    vram: 16,
+  },
+  {
+    id: "rtx-5070",
+    name: "RTX 5070",
+    brand: "NVIDIA",
+    series: "RTX 50",
+    vram: 12,
+  },
+  {
+    id: "rtx-5060-ti",
+    name: "RTX 5060 Ti",
+    brand: "NVIDIA",
+    series: "RTX 50",
+    vram: 16,
+  },
+  {
+    id: "rtx-5060",
+    name: "RTX 5060",
+    brand: "NVIDIA",
+    series: "RTX 50",
+    vram: 8,
+  },
   // ── NVIDIA RTX 40 ────────────────────────────────────────
   {
     id: "rtx-4090",
@@ -1090,6 +1133,13 @@ export const GPU_LIST: GpuOption[] = [
 
 /** Memory bandwidth in GB/s — used to estimate tokens/second */
 export const GPU_BANDWIDTH: Record<string, number> = {
+  // NVIDIA RTX 50
+  "rtx-5090": 1792,
+  "rtx-5080": 960,
+  "rtx-5070-ti": 896,
+  "rtx-5070": 672,
+  "rtx-5060-ti": 608,
+  "rtx-5060": 448,
   // NVIDIA RTX 40
   "rtx-4090": 1008,
   "rtx-4080-super": 736,
@@ -1203,7 +1253,16 @@ export const GPU_BANDWIDTH: Record<string, number> = {
 };
 
 // Internal lookup used during auto-detection
+// Order matters: more specific strings must come before less specific ones
 const GPU_VRAM_TABLE: Array<[string, number]> = [
+  // RTX 50 series
+  ["5090", 32],
+  ["5080", 16],
+  ["5070 ti", 16],
+  ["5070", 12],
+  ["5060 ti", 16],
+  ["5060", 8],
+  // RTX 40 series
   ["4090", 24],
   ["4080 super", 16],
   ["4080", 16],
@@ -1211,6 +1270,7 @@ const GPU_VRAM_TABLE: Array<[string, number]> = [
   ["4070 ti", 12],
   ["4070 super", 12],
   ["4070", 12],
+  ["4060 ti 16gb", 16],
   ["4060 ti", 8],
   ["4060", 8],
   ["4050", 6],
@@ -1318,6 +1378,27 @@ function detectDeviceModel(
   return null;
 }
 
+/**
+ * Strips WebGL ANGLE wrapper and technical suffixes from raw renderer strings.
+ * "ANGLE (Intel, Intel(R) Iris(R) Xe Graphics (0x0000A7A1) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+ * → "Intel Iris Xe Graphics"
+ */
+function cleanGpuName(raw: string): string {
+  let name = raw;
+  // Extract inner renderer from ANGLE (vendor, renderer, backend)
+  const angleMatch = raw.match(/^ANGLE \([^,]+,\s*(.+),\s*[^,]+$/);
+  if (angleMatch) name = angleMatch[1];
+  return name
+    .replace(/\(0x[0-9A-Fa-f]+\)/g, "") // hex device IDs
+    .replace(/\(R\)/gi, "") // trademark (R)
+    .replace(/\(TM\)/gi, "") // trademark (TM)
+    .replace(/Direct3D\S*/gi, "") // Direct3D11 etc
+    .replace(/vs_\d+_\d+/gi, "") // shader versions
+    .replace(/ps_\d+_\d+/gi, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 export function detectHardware(): DetectedHardware {
   const deviceMemory = (navigator as unknown as { deviceMemory?: number })
     .deviceMemory;
@@ -1336,11 +1417,13 @@ export function detectHardware(): DetectedHardware {
 
   const deviceModel = detectDeviceModel(renderer, isAppleSilicon, cpuCores);
 
+  const cleanedRenderer = renderer ? cleanGpuName(renderer) : null;
+
   if (isAppleSilicon) {
     return {
       ram,
       vram: null,
-      gpuName: renderer || null,
+      gpuName: cleanedRenderer,
       hasGpu: false,
       isAppleSilicon: true,
       ramCapped,
@@ -1353,11 +1436,88 @@ export function detectHardware(): DetectedHardware {
   return {
     ram,
     vram,
-    gpuName: renderer || null,
+    gpuName: cleanedRenderer,
     hasGpu: vram !== null,
     isAppleSilicon: false,
     ramCapped,
     deviceModel,
     cpuCores,
   };
+}
+
+/** Estimated RAM bandwidth in GB/s based on CPU generation (dual-channel) */
+export function getCpuBandwidth(cpu: CpuOption): number {
+  const map: Record<string, number> = {
+    "14th Gen": 77,
+    "13th Gen": 77,
+    "12th Gen": 51,
+    "14th Gen (laptop)": 68,
+    "13th Gen (laptop)": 51,
+    "9000": 83,
+    "7000": 83,
+    "5000": 51,
+    "7000 (laptop)": 68,
+  };
+  return map[cpu.series] ?? 51;
+}
+
+/**
+ * Async GPU detection using the WebGPU API (Chrome 113+, Edge 113+).
+ * Returns a more accurate GPU name than WebGL in browsers that anonymize renderer strings.
+ * Falls back to null if WebGPU is unavailable.
+ */
+export async function detectGpuAsync(): Promise<{
+  gpuName: string | null;
+  vram: number | null;
+}> {
+  try {
+    const nav = navigator as Navigator & {
+      gpu?: {
+        requestAdapter(): Promise<{
+          info?: { device?: string; description?: string };
+          requestAdapterInfo?: () => Promise<{
+            device?: string;
+            description?: string;
+          }>;
+        } | null>;
+      };
+    };
+    if (!nav.gpu) return { gpuName: null, vram: null };
+
+    const adapter = await nav.gpu.requestAdapter();
+    if (!adapter) return { gpuName: null, vram: null };
+
+    // requestAdapterInfo() is available in Chrome 121+
+    let gpuName: string | null = null;
+    if (
+      typeof (
+        adapter as {
+          requestAdapterInfo?: () => Promise<{
+            description?: string;
+            device?: string;
+          }>;
+        }
+      ).requestAdapterInfo === "function"
+    ) {
+      const info = await (
+        adapter as {
+          requestAdapterInfo: () => Promise<{
+            description?: string;
+            device?: string;
+          }>;
+        }
+      ).requestAdapterInfo();
+      gpuName = info?.description || info?.device || null;
+    }
+
+    // Fallback: try adapter.name (non-standard, exists in some runtimes)
+    if (!gpuName) {
+      gpuName = (adapter as { name?: string }).name ?? null;
+    }
+
+    const vram = gpuName ? getGpuVram(gpuName) : null;
+    return { gpuName, vram };
+  } catch {
+    return { gpuName: null, vram: null };
+  }
 }

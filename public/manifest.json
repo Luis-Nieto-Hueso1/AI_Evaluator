@@ -1,0 +1,17 @@
+{
+  "name": "LLM Evaluator",
+  "short_name": "LLM Eval",
+  "description": "Find which open-source LLMs your hardware can run locally, graded by performance.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#09090b",
+  "theme_color": "#7c3aed",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any",
+      "purpose": "any maskable"
+    }
+  ]
+}

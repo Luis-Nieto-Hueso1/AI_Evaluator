@@ -1,0 +1,1108 @@
+[
+  {
+    "id": "linear_regression",
+    "name": "Linear Regression",
+    "tasks": ["regression"],
+    "interpretable": true,
+    "highDimOk": false,
+    "smallData": 3,
+    "mediumData": 3,
+    "largeData": 2,
+    "requiresLabels": true,
+    "useCases": ["Price prediction", "Trend forecasting", "Risk scoring"],
+    "pros": [
+      "Highly interpretable coefficients",
+      "Fast training & inference",
+      "No hyperparameter tuning needed"
+    ],
+    "cons": [
+      "Assumes linear relationship",
+      "Sensitive to outliers",
+      "Requires feature engineering for non-linear data"
+    ],
+    "trainComplexity": "O(n·d²)",
+    "inferenceComplexity": "O(d)",
+    "docsUrl": "https://scikit-learn.org/stable/modules/linear_model.html#ordinary-least-squares",
+    "visualType": "scatter_line"
+  },
+  {
+    "id": "ridge",
+    "name": "Ridge Regression",
+    "tasks": ["regression"],
+    "interpretable": true,
+    "highDimOk": true,
+    "smallData": 3,
+    "mediumData": 3,
+    "largeData": 3,
+    "requiresLabels": true,
+    "useCases": [
+      "High-dimensional regression",
+      "Multicollinear features",
+      "Regularized prediction"
+    ],
+    "pros": [
+      "Handles multicollinearity",
+      "Works well in high dimensions",
+      "Stable coefficients"
+    ],
+    "cons": [
+      "Doesn't perform feature selection",
+      "Assumes linear relationship",
+      "Sensitive to feature scaling"
+    ],
+    "trainComplexity": "O(n·d²)",
+    "inferenceComplexity": "O(d)",
+    "docsUrl": "https://scikit-learn.org/stable/modules/linear_model.html#ridge-regression",
+    "visualType": "scatter_line"
+  },
+  {
+    "id": "lasso",
+    "name": "Lasso Regression",
+    "tasks": ["regression"],
+    "interpretable": true,
+    "highDimOk": true,
+    "smallData": 2,
+    "mediumData": 3,
+    "largeData": 3,
+    "requiresLabels": true,
+    "useCases": [
+      "Sparse feature selection",
+      "High-dimensional data",
+      "Gene expression analysis"
+    ],
+    "pros": [
+      "Automatic feature selection (sets weights to 0)",
+      "Interpretable sparse model",
+      "Handles high dimensions"
+    ],
+    "cons": [
+      "Picks one feature when correlated",
+      "Assumes linear relationship",
+      "Can be unstable with correlated features"
+    ],
+    "trainComplexity": "O(n·d·k) per iteration",
+    "inferenceComplexity": "O(d)",
+    "docsUrl": "https://scikit-learn.org/stable/modules/linear_model.html#lasso",
+    "visualType": "scatter_line"
+  },
+  {
+    "id": "elasticnet",
+    "name": "ElasticNet",
+    "tasks": ["regression"],
+    "interpretable": true,
+    "highDimOk": true,
+    "smallData": 2,
+    "mediumData": 3,
+    "largeData": 3,
+    "requiresLabels": true,
+    "useCases": [
+      "High-dimensional sparse data",
+      "Correlated features",
+      "Genomics"
+    ],
+    "pros": [
+      "Combines Ridge + Lasso benefits",
+      "Handles correlated features",
+      "Feature selection + stability"
+    ],
+    "cons": [
+      "Two hyperparameters to tune",
+      "Slower than Ridge/Lasso alone",
+      "Assumes linear relationship"
+    ],
+    "trainComplexity": "O(n·d·k) per iteration",
+    "inferenceComplexity": "O(d)",
+    "docsUrl": "https://scikit-learn.org/stable/modules/linear_model.html#elastic-net",
+    "visualType": "scatter_line"
+  },
+  {
+    "id": "svr",
+    "name": "SVR (Support Vector Regression)",
+    "tasks": ["regression"],
+    "interpretable": false,
+    "highDimOk": true,
+    "smallData": 3,
+    "mediumData": 2,
+    "largeData": 1,
+    "requiresLabels": true,
+    "useCases": [
+      "Non-linear regression",
+      "Small high-dimensional datasets",
+      "Robust to outliers"
+    ],
+    "pros": [
+      "Effective in high dimensions",
+      "Robust to outliers",
+      "Flexible with kernel trick"
+    ],
+    "cons": [
+      "Slow on large datasets O(n²-n³)",
+      "Hard to interpret",
+      "Sensitive to kernel/C/ε choice"
+    ],
+    "trainComplexity": "O(n² – n³)",
+    "inferenceComplexity": "O(n_sv · d)",
+    "docsUrl": "https://scikit-learn.org/stable/modules/svm.html#regression",
+    "visualType": "scatter_line"
+  },
+  {
+    "id": "random_forest_reg",
+    "name": "Random Forest (Regressor)",
+    "tasks": ["regression"],
+    "interpretable": false,
+    "highDimOk": true,
+    "smallData": 2,
+    "mediumData": 3,
+    "largeData": 2,
+    "requiresLabels": true,
+    "useCases": [
+      "Tabular regression",
+      "Feature importance ranking",
+      "Robust general-purpose prediction"
+    ],
+    "pros": [
+      "Handles non-linearity",
+      "Built-in feature importance",
+      "Robust to outliers & missing data"
+    ],
+    "cons": [
+      "Memory intensive (stores all trees)",
+      "Slower inference than linear models",
+      "Black box"
+    ],
+    "trainComplexity": "O(n·d·t·log n)",
+    "inferenceComplexity": "O(t·log n)",
+    "docsUrl": "https://scikit-learn.org/stable/modules/ensemble.html#random-forests",
+    "visualType": "forest"
+  },
+  {
+    "id": "gradient_boosting_reg",
+    "name": "Gradient Boosting (Regressor)",
+    "tasks": ["regression"],
+    "interpretable": false,
+    "highDimOk": true,
+    "smallData": 1,
+    "mediumData": 3,
+    "largeData": 3,
+    "requiresLabels": true,
+    "useCases": [
+      "Kaggle-style tabular data",
+      "Complex non-linear relationships",
+      "High-accuracy regression"
+    ],
+    "pros": [
+      "State-of-the-art accuracy on tabular data",
+      "Handles mixed feature types",
+      "Feature importance"
+    ],
+    "cons": [
+      "Prone to overfitting without tuning",
+      "Slower training than Random Forest",
+      "Many hyperparameters"
+    ],
+    "trainComplexity": "O(n·d·t·log n)",
+    "inferenceComplexity": "O(t·log n)",
+    "docsUrl": "https://scikit-learn.org/stable/modules/ensemble.html#gradient-boosting",
+    "visualType": "boosting"
+  },
+  {
+    "id": "xgboost_reg",
+    "name": "XGBoost (Regressor)",
+    "tasks": ["regression"],
+    "interpretable": false,
+    "highDimOk": true,
+    "smallData": 1,
+    "mediumData": 3,
+    "largeData": 3,
+    "requiresLabels": true,
+    "useCases": [
+      "Structured/tabular data",
+      "Competitive ML pipelines",
+      "Large-scale regression"
+    ],
+    "pros": [
+      "Fastest boosting implementation",
+      "GPU support",
+      "Built-in regularization & early stopping"
+    ],
+    "cons": [
+      "Many hyperparameters",
+      "Can overfit on small datasets",
+      "Not natively in scikit-learn"
+    ],
+    "trainComplexity": "O(n·d·t·log n) — faster than sklearn GB",
+    "inferenceComplexity": "O(t·log n)",
+    "docsUrl": "https://xgboost.readthedocs.io/en/stable/python/python_intro.html",
+    "visualType": "boosting"
+  },
+  {
+    "id": "logistic_regression",
+    "name": "Logistic Regression",
+    "tasks": ["classification"],
+    "interpretable": true,
+    "highDimOk": true,
+    "smallData": 3,
+    "mediumData": 3,
+    "largeData": 2,
+    "requiresLabels": true,
+    "useCases": [
+      "Binary classification",
+      "Text classification",
+      "Medical diagnosis (interpretable)"
+    ],
+    "pros": [
+      "Calibrated probabilities",
+      "Interpretable coefficients",
+      "Fast training & inference"
+    ],
+    "cons": [
+      "Assumes linear decision boundary",
+      "Requires feature engineering for non-linear problems",
+      "Can underfit complex data"
+    ],
+    "trainComplexity": "O(n·d·k) per iteration",
+    "inferenceComplexity": "O(d)",
+    "docsUrl": "https://scikit-learn.org/stable/modules/linear_model.html#logistic-regression",
+    "visualType": "sigmoid"
+  },
+  {
+    "id": "knn",
+    "name": "K-Nearest Neighbors (KNN)",
+    "tasks": ["classification"],
+    "interpretable": true,
+    "highDimOk": false,
+    "smallData": 3,
+    "mediumData": 2,
+    "largeData": 1,
+    "requiresLabels": true,
+    "useCases": [
+      "Recommendation baseline",
+      "Anomaly detection",
+      "Small labelled datasets"
+    ],
+    "pros": [
+      "No training phase",
+      "Naturally multi-class",
+      "Intuitive to explain"
+    ],
+    "cons": [
+      "Slow inference O(n·d) per query",
+      "Suffers from curse of dimensionality",
+      "Needs feature scaling"
+    ],
+    "trainComplexity": "O(1) — lazy learner",
+    "inferenceComplexity": "O(n·d) per query",
+    "docsUrl": "https://scikit-learn.org/stable/modules/neighbors.html",
+    "visualType": "knn_viz"
+  },
+  {
+    "id": "svm",
+    "name": "SVM (Support Vector Machine)",
+    "tasks": ["classification"],
+    "interpretable": false,
+    "highDimOk": true,
+    "smallData": 3,
+    "mediumData": 2,
+    "largeData": 1,
+    "requiresLabels": true,
+    "useCases": [
+      "Text classification",
+      "Image classification",
+      "High-dimensional small datasets"
+    ],
+    "pros": [
+      "Effective in high-dimensional spaces",
+      "Memory efficient (uses support vectors)",
+      "Versatile kernels"
+    ],
+    "cons": [
+      "Slow on large datasets",
+      "No direct probability estimates",
+      "Sensitive to kernel & C choice"
+    ],
+    "trainComplexity": "O(n² – n³)",
+    "inferenceComplexity": "O(n_sv · d)",
+    "docsUrl": "https://scikit-learn.org/stable/modules/svm.html#classification",
+    "visualType": "hyperplane"
+  },
+  {
+    "id": "decision_tree",
+    "name": "Decision Tree",
+    "tasks": ["classification", "regression"],
+    "interpretable": true,
+    "highDimOk": false,
+    "smallData": 3,
+    "mediumData": 3,
+    "largeData": 2,
+    "requiresLabels": true,
+    "useCases": [
+      "Rule extraction",
+      "Explainable AI",
+      "Feature interaction discovery"
+    ],
+    "pros": [
+      "Fully interpretable (visualizable)",
+      "No feature scaling needed",
+      "Handles mixed data types"
+    ],
+    "cons": [
+      "Prone to overfitting",
+      "Unstable (small data changes → different tree)",
+      "Poor on high-dimensional data"
+    ],
+    "trainComplexity": "O(n·d·log n)",
+    "inferenceComplexity": "O(log n)",
+    "docsUrl": "https://scikit-learn.org/stable/modules/tree.html",
+    "visualType": "tree"
+  },
+  {
+    "id": "random_forest_cls",
+    "name": "Random Forest (Classifier)",
+    "tasks": ["classification"],
+    "interpretable": false,
+    "highDimOk": true,
+    "smallData": 2,
+    "mediumData": 3,
+    "largeData": 2,
+    "requiresLabels": true,
+    "useCases": [
+      "General classification",
+      "Tabular data",
+      "Imbalanced classes"
+    ],
+    "pros": [
+      "Robust to overfitting",
+      "Feature importance",
+      "Handles missing values & outliers"
+    ],
+    "cons": [
+      "Memory heavy",
+      "Slow inference vs linear models",
+      "Not easily interpretable"
+    ],
+    "trainComplexity": "O(n·d·t·log n)",
+    "inferenceComplexity": "O(t·log n)",
+    "docsUrl": "https://scikit-learn.org/stable/modules/ensemble.html#random-forests",
+    "visualType": "forest"
+  },
+  {
+    "id": "gradient_boosting_cls",
+    "name": "Gradient Boosting (Classifier)",
+    "tasks": ["classification"],
+    "interpretable": false,
+    "highDimOk": true,
+    "smallData": 1,
+    "mediumData": 3,
+    "largeData": 3,
+    "requiresLabels": true,
+    "useCases": [
+      "High-accuracy tabular classification",
+      "Fraud detection",
+      "Click-through rate"
+    ],
+    "pros": [
+      "Top accuracy on tabular data",
+      "Handles class imbalance",
+      "Feature importance"
+    ],
+    "cons": [
+      "Many hyperparameters",
+      "Sequential training (not parallelizable)",
+      "Can overfit"
+    ],
+    "trainComplexity": "O(n·d·t·log n)",
+    "inferenceComplexity": "O(t·log n)",
+    "docsUrl": "https://scikit-learn.org/stable/modules/ensemble.html#gradient-boosting",
+    "visualType": "boosting"
+  },
+  {
+    "id": "xgboost_cls",
+    "name": "XGBoost (Classifier)",
+    "tasks": ["classification"],
+    "interpretable": false,
+    "highDimOk": true,
+    "smallData": 1,
+    "mediumData": 3,
+    "largeData": 3,
+    "requiresLabels": true,
+    "useCases": [
+      "Kaggle competitions",
+      "Large-scale classification",
+      "Structured data"
+    ],
+    "pros": [
+      "Industry-standard accuracy",
+      "GPU acceleration",
+      "Early stopping & regularization"
+    ],
+    "cons": [
+      "Not in scikit-learn (separate package)",
+      "Many hyperparameters",
+      "Overkill for simple tasks"
+    ],
+    "trainComplexity": "O(n·d·t·log n) — GPU accelerated",
+    "inferenceComplexity": "O(t·log n)",
+    "docsUrl": "https://xgboost.readthedocs.io/en/stable/",
+    "visualType": "boosting"
+  },
+  {
+    "id": "naive_bayes",
+    "name": "Naive Bayes",
+    "tasks": ["classification"],
+    "interpretable": true,
+    "highDimOk": true,
+    "smallData": 3,
+    "mediumData": 3,
+    "largeData": 3,
+    "requiresLabels": true,
+    "useCases": [
+      "Text / spam classification",
+      "Real-time prediction",
+      "Document categorization"
+    ],
+    "pros": [
+      "Very fast training & inference",
+      "Works well with small data",
+      "Excellent for text (bag-of-words)"
+    ],
+    "cons": [
+      "Assumes feature independence (naive)",
+      "Poor on correlated features",
+      "Not great for continuous features"
+    ],
+    "trainComplexity": "O(n·d)",
+    "inferenceComplexity": "O(d)",
+    "docsUrl": "https://scikit-learn.org/stable/modules/naive_bayes.html",
+    "visualType": "bayes"
+  },
+  {
+    "id": "kmeans",
+    "name": "K-Means",
+    "tasks": ["clustering"],
+    "interpretable": true,
+    "highDimOk": false,
+    "smallData": 3,
+    "mediumData": 3,
+    "largeData": 3,
+    "requiresLabels": false,
+    "useCases": [
+      "Customer segmentation",
+      "Image compression",
+      "Document clustering"
+    ],
+    "pros": [
+      "Fast and scalable",
+      "Simple to understand",
+      "Works well with spherical clusters"
+    ],
+    "cons": [
+      "Must specify k in advance",
+      "Assumes spherical clusters",
+      "Sensitive to outliers and initialization"
+    ],
+    "trainComplexity": "O(n·k·d·i) per iteration",
+    "inferenceComplexity": "O(k·d)",
+    "docsUrl": "https://scikit-learn.org/stable/modules/clustering.html#k-means",
+    "visualType": "clusters"
+  },
+  {
+    "id": "dbscan",
+    "name": "DBSCAN",
+    "tasks": ["clustering"],
+    "interpretable": false,
+    "highDimOk": false,
+    "smallData": 3,
+    "mediumData": 3,
+    "largeData": 2,
+    "requiresLabels": false,
+    "useCases": [
+      "Anomaly / outlier detection",
+      "Arbitrary-shaped clusters",
+      "Geospatial clustering"
+    ],
+    "pros": [
+      "No need to specify k",
+      "Finds arbitrary-shaped clusters",
+      "Identifies outliers natively"
+    ],
+    "cons": [
+      "Struggles with high dimensions",
+      "Sensitive to ε and min_samples",
+      "Variable-density clusters are hard"
+    ],
+    "trainComplexity": "O(n·log n) with index",
+    "inferenceComplexity": "O(log n) with index",
+    "docsUrl": "https://scikit-learn.org/stable/modules/clustering.html#dbscan",
+    "visualType": "density"
+  },
+  {
+    "id": "agglomerative",
+    "name": "Agglomerative Clustering",
+    "tasks": ["clustering"],
+    "interpretable": true,
+    "highDimOk": false,
+    "smallData": 3,
+    "mediumData": 2,
+    "largeData": 1,
+    "requiresLabels": false,
+    "useCases": [
+      "Hierarchical data exploration",
+      "Gene expression grouping",
+      "Document taxonomy"
+    ],
+    "pros": [
+      "Produces a dendrogram (visual hierarchy)",
+      "No k required upfront",
+      "Multiple linkage strategies"
+    ],
+    "cons": [
+      "O(n² – n³) — slow on large data",
+      "Greedy merges can't be undone",
+      "Struggles with high dimensions"
+    ],
+    "trainComplexity": "O(n² – n³)",
+    "inferenceComplexity": "N/A (batch only)",
+    "docsUrl": "https://scikit-learn.org/stable/modules/clustering.html#hierarchical-clustering",
+    "visualType": "dendrogram"
+  },
+  {
+    "id": "gmm",
+    "name": "Gaussian Mixture Model (GMM)",
+    "tasks": ["clustering"],
+    "interpretable": false,
+    "highDimOk": false,
+    "smallData": 3,
+    "mediumData": 3,
+    "largeData": 2,
+    "requiresLabels": false,
+    "useCases": [
+      "Soft cluster assignments",
+      "Density estimation",
+      "Generative modelling"
+    ],
+    "pros": [
+      "Soft probabilistic cluster membership",
+      "Handles elliptical clusters",
+      "Can model data distribution"
+    ],
+    "cons": [
+      "Must specify number of components",
+      "Can get stuck in local optima (EM)",
+      "Needs covariance regularization for high dims"
+    ],
+    "trainComplexity": "O(n·k·d²) per EM iteration",
+    "inferenceComplexity": "O(k·d²)",
+    "docsUrl": "https://scikit-learn.org/stable/modules/mixture.html",
+    "visualType": "ellipses"
+  },
+  {
+    "id": "pca",
+    "name": "PCA (Principal Component Analysis)",
+    "tasks": ["dimensionality_reduction"],
+    "interpretable": true,
+    "highDimOk": true,
+    "smallData": 3,
+    "mediumData": 3,
+    "largeData": 3,
+    "requiresLabels": false,
+    "useCases": [
+      "Preprocessing before ML",
+      "Noise reduction",
+      "Visualization of high-dimensional data"
+    ],
+    "pros": [
+      "Fast and scalable (randomized SVD)",
+      "Removes correlated features",
+      "Explainable variance ratio"
+    ],
+    "cons": [
+      "Only captures linear structure",
+      "Components are not interpretable as original features",
+      "Needs feature scaling"
+    ],
+    "trainComplexity": "O(n·d·k) randomized",
+    "inferenceComplexity": "O(d·k)",
+    "docsUrl": "https://scikit-learn.org/stable/modules/decomposition.html#pca",
+    "visualType": "pca_arrows"
+  },
+  {
+    "id": "tsne",
+    "name": "t-SNE",
+    "tasks": ["dimensionality_reduction"],
+    "interpretable": false,
+    "highDimOk": true,
+    "smallData": 3,
+    "mediumData": 2,
+    "largeData": 1,
+    "requiresLabels": false,
+    "useCases": [
+      "2D/3D visualization of embeddings",
+      "Exploratory data analysis",
+      "Cluster structure inspection"
+    ],
+    "pros": [
+      "Excellent 2D cluster visualization",
+      "Preserves local structure",
+      "Works with any distance metric"
+    ],
+    "cons": [
+      "Non-deterministic — different runs differ",
+      "Cannot generalize to new data",
+      "Slow O(n²) without approximation"
+    ],
+    "trainComplexity": "O(n²) exact, O(n·log n) Barnes-Hut",
+    "inferenceComplexity": "N/A — fit only, no transform",
+    "docsUrl": "https://scikit-learn.org/stable/modules/manifold.html#t-sne",
+    "visualType": "projection"
+  },
+  {
+    "id": "umap",
+    "name": "UMAP",
+    "tasks": ["dimensionality_reduction"],
+    "interpretable": false,
+    "highDimOk": true,
+    "smallData": 3,
+    "mediumData": 3,
+    "largeData": 2,
+    "requiresLabels": false,
+    "useCases": [
+      "Embedding visualization",
+      "Preprocessing for clustering",
+      "Single-cell RNA-seq analysis"
+    ],
+    "pros": [
+      "Faster than t-SNE",
+      "Can transform new data",
+      "Preserves both local and global structure"
+    ],
+    "cons": [
+      "Non-deterministic",
+      "Hyperparameter sensitive (n_neighbors)",
+      "Harder to install (requires umap-learn)"
+    ],
+    "trainComplexity": "O(n^1.14) approximate",
+    "inferenceComplexity": "O(k·log n) per point",
+    "docsUrl": "https://umap-learn.readthedocs.io/en/latest/",
+    "visualType": "projection"
+  },
+  {
+    "id": "lda",
+    "name": "LDA (Linear Discriminant Analysis)",
+    "tasks": ["dimensionality_reduction", "classification"],
+    "interpretable": true,
+    "highDimOk": false,
+    "smallData": 3,
+    "mediumData": 3,
+    "largeData": 2,
+    "requiresLabels": true,
+    "useCases": [
+      "Supervised dimensionality reduction",
+      "Face recognition preprocessing",
+      "Multi-class feature extraction"
+    ],
+    "pros": [
+      "Supervised — uses class labels for better separation",
+      "Fast and deterministic",
+      "Built into scikit-learn"
+    ],
+    "cons": [
+      "Assumes Gaussian class distributions",
+      "Max (n_classes − 1) components",
+      "Needs labels"
+    ],
+    "trainComplexity": "O(n·d²)",
+    "inferenceComplexity": "O(d·k)",
+    "docsUrl": "https://scikit-learn.org/stable/modules/lda_qda.html",
+    "visualType": "hyperplane"
+  },
+  {
+    "id": "arima",
+    "name": "ARIMA",
+    "tasks": ["time_series"],
+    "interpretable": true,
+    "highDimOk": false,
+    "smallData": 3,
+    "mediumData": 3,
+    "largeData": 2,
+    "requiresLabels": true,
+    "useCases": [
+      "Univariate time series forecasting",
+      "Economic & financial data",
+      "Short-term demand forecasting"
+    ],
+    "pros": [
+      "Strong theoretical foundation",
+      "Interpretable parameters (p,d,q)",
+      "Works with small datasets"
+    ],
+    "cons": [
+      "Univariate only (one series at a time)",
+      "Requires stationarity",
+      "Manual order selection"
+    ],
+    "trainComplexity": "O(n·p²)",
+    "inferenceComplexity": "O(p+q)",
+    "docsUrl": "https://www.statsmodels.org/stable/generated/statsmodels.tsa.arima.model.ARIMA.html",
+    "visualType": "timeseries"
+  },
+  {
+    "id": "prophet",
+    "name": "Prophet (Meta)",
+    "tasks": ["time_series"],
+    "interpretable": true,
+    "highDimOk": false,
+    "smallData": 3,
+    "mediumData": 3,
+    "largeData": 2,
+    "requiresLabels": true,
+    "useCases": [
+      "Business KPI forecasting",
+      "Seasonal & holiday patterns",
+      "Trend change-point detection"
+    ],
+    "pros": [
+      "Handles missing data & outliers",
+      "Automatic seasonality detection",
+      "Human-interpretable decomposition"
+    ],
+    "cons": [
+      "Univariate (one target series)",
+      "Slower than ARIMA",
+      "Can overfit on noisy data"
+    ],
+    "trainComplexity": "O(n) approximate (Stan)",
+    "inferenceComplexity": "O(n)",
+    "docsUrl": "https://facebook.github.io/prophet/",
+    "visualType": "timeseries"
+  },
+  {
+    "id": "lstm",
+    "name": "LSTM / Seq2Seq",
+    "tasks": ["time_series"],
+    "interpretable": false,
+    "highDimOk": true,
+    "smallData": 1,
+    "mediumData": 2,
+    "largeData": 3,
+    "requiresLabels": true,
+    "useCases": [
+      "Multivariate time series",
+      "Long-range dependency modelling",
+      "Anomaly detection in sequences"
+    ],
+    "pros": [
+      "Captures long-range dependencies",
+      "Multivariate inputs",
+      "Flexible architecture"
+    ],
+    "cons": [
+      "Needs large datasets to generalise",
+      "Slow to train",
+      "Hard to interpret"
+    ],
+    "trainComplexity": "O(n·h² · sequence_len)",
+    "inferenceComplexity": "O(h² · sequence_len)",
+    "docsUrl": "https://pytorch.org/docs/stable/generated/torch.nn.LSTM.html",
+    "visualType": "sequence"
+  },
+  {
+    "id": "mlp",
+    "name": "Neural Network (MLP)",
+    "tasks": ["classification", "regression"],
+    "interpretable": false,
+    "highDimOk": true,
+    "smallData": 1,
+    "mediumData": 2,
+    "largeData": 3,
+    "requiresLabels": true,
+    "useCases": [
+      "Image/text classification",
+      "Function approximation",
+      "Complex pattern recognition"
+    ],
+    "pros": [
+      "Universal function approximator",
+      "Scales with data",
+      "GPU accelerated"
+    ],
+    "cons": [
+      "Needs large datasets",
+      "Many hyperparameters",
+      "Black box — hard to interpret"
+    ],
+    "trainComplexity": "O(n·h·L) per epoch",
+    "inferenceComplexity": "O(h·L)",
+    "docsUrl": "https://scikit-learn.org/stable/modules/neural_networks_supervised.html",
+    "visualType": "neural"
+  },
+  {
+    "id": "adaboost",
+    "name": "AdaBoost",
+    "tasks": ["classification", "regression"],
+    "interpretable": false,
+    "highDimOk": false,
+    "smallData": 2,
+    "mediumData": 3,
+    "largeData": 2,
+    "requiresLabels": true,
+    "useCases": [
+      "Binary classification",
+      "Face detection",
+      "Ensemble boosting baseline"
+    ],
+    "pros": [
+      "Simple to implement",
+      "Less prone to overfitting than a single tree",
+      "No hyperparameter tuning needed for basic use"
+    ],
+    "cons": [
+      "Sensitive to noisy data and outliers",
+      "Slower than bagging",
+      "Weak with high-dimensional sparse data"
+    ],
+    "trainComplexity": "O(n·d·t)",
+    "inferenceComplexity": "O(t)",
+    "docsUrl": "https://scikit-learn.org/stable/modules/ensemble.html#adaboost",
+    "visualType": "boosting"
+  },
+  {
+    "id": "extra_trees",
+    "name": "Extra Trees",
+    "tasks": ["classification", "regression"],
+    "interpretable": false,
+    "highDimOk": true,
+    "smallData": 2,
+    "mediumData": 3,
+    "largeData": 3,
+    "requiresLabels": true,
+    "useCases": [
+      "Fast tabular classification",
+      "Feature importance",
+      "High-dimensional data"
+    ],
+    "pros": [
+      "Faster training than Random Forest (random splits)",
+      "Lower variance",
+      "Good for high-dimensional data"
+    ],
+    "cons": [
+      "Slightly less accurate than Random Forest",
+      "Black box",
+      "Memory intensive"
+    ],
+    "trainComplexity": "O(n·d·t) — faster than RF",
+    "inferenceComplexity": "O(t·log n)",
+    "docsUrl": "https://scikit-learn.org/stable/modules/ensemble.html#extremely-randomized-trees",
+    "visualType": "forest"
+  },
+  {
+    "id": "bayesian_ridge",
+    "name": "Bayesian Ridge Regression",
+    "tasks": ["regression"],
+    "interpretable": true,
+    "highDimOk": true,
+    "smallData": 3,
+    "mediumData": 3,
+    "largeData": 2,
+    "requiresLabels": true,
+    "useCases": [
+      "Uncertainty quantification",
+      "Small datasets with regularization",
+      "Probabilistic regression"
+    ],
+    "pros": [
+      "Returns confidence intervals",
+      "Automatic regularization (no manual tuning)",
+      "Works well with small data"
+    ],
+    "cons": [
+      "Slower than OLS",
+      "Assumes Gaussian noise",
+      "Computationally expensive for large d"
+    ],
+    "trainComplexity": "O(n·d²) per iteration",
+    "inferenceComplexity": "O(d)",
+    "docsUrl": "https://scikit-learn.org/stable/modules/linear_model.html#bayesian-regression",
+    "visualType": "scatter_line"
+  },
+  {
+    "id": "mean_shift",
+    "name": "Mean Shift",
+    "tasks": ["clustering"],
+    "interpretable": false,
+    "highDimOk": false,
+    "smallData": 3,
+    "mediumData": 2,
+    "largeData": 1,
+    "requiresLabels": false,
+    "useCases": [
+      "Image segmentation",
+      "Mode-seeking clustering",
+      "When k is unknown"
+    ],
+    "pros": [
+      "No need to specify k",
+      "Finds arbitrary-shaped clusters",
+      "Robust to outliers"
+    ],
+    "cons": [
+      "O(n²) — slow on large data",
+      "Bandwidth hyperparameter is critical",
+      "Struggles with high dimensions"
+    ],
+    "trainComplexity": "O(n²) per iteration",
+    "inferenceComplexity": "O(n)",
+    "docsUrl": "https://scikit-learn.org/stable/modules/clustering.html#mean-shift",
+    "visualType": "clusters"
+  },
+  {
+    "id": "spectral",
+    "name": "Spectral Clustering",
+    "tasks": ["clustering"],
+    "interpretable": false,
+    "highDimOk": false,
+    "smallData": 3,
+    "mediumData": 2,
+    "largeData": 1,
+    "requiresLabels": false,
+    "useCases": [
+      "Graph-based clustering",
+      "Non-convex clusters",
+      "Community detection"
+    ],
+    "pros": [
+      "Handles non-convex cluster shapes",
+      "Uses graph structure",
+      "Good for manifold data"
+    ],
+    "cons": [
+      "O(n³) eigendecomposition — very slow on large data",
+      "Must specify k",
+      "Sensitive to affinity matrix"
+    ],
+    "trainComplexity": "O(n³)",
+    "inferenceComplexity": "N/A — batch only",
+    "docsUrl": "https://scikit-learn.org/stable/modules/clustering.html#spectral-clustering",
+    "visualType": "density"
+  },
+  {
+    "id": "kernel_pca",
+    "name": "Kernel PCA",
+    "tasks": ["dimensionality_reduction"],
+    "interpretable": false,
+    "highDimOk": true,
+    "smallData": 3,
+    "mediumData": 2,
+    "largeData": 1,
+    "requiresLabels": false,
+    "useCases": [
+      "Non-linear dimensionality reduction",
+      "Preprocessing for non-linear data",
+      "Manifold unfolding"
+    ],
+    "pros": [
+      "Captures non-linear structure via kernel trick",
+      "Flexible kernels (RBF, poly)",
+      "No assumptions about data distribution"
+    ],
+    "cons": [
+      "O(n²) memory for kernel matrix",
+      "Not interpretable",
+      "Slow on large datasets"
+    ],
+    "trainComplexity": "O(n²·d) kernel + O(n³) eigen",
+    "inferenceComplexity": "O(n·d) per point",
+    "docsUrl": "https://scikit-learn.org/stable/modules/decomposition.html#kernel-pca",
+    "visualType": "pca_arrows"
+  },
+  {
+    "id": "nmf",
+    "name": "NMF (Non-negative Matrix Factorization)",
+    "tasks": ["dimensionality_reduction"],
+    "interpretable": true,
+    "highDimOk": true,
+    "smallData": 2,
+    "mediumData": 3,
+    "largeData": 2,
+    "requiresLabels": false,
+    "useCases": [
+      "Topic modelling",
+      "Image decomposition",
+      "Audio source separation"
+    ],
+    "pros": [
+      "Parts-based representation (interpretable components)",
+      "Works well for sparse non-negative data",
+      "Good for text/image"
+    ],
+    "cons": [
+      "Only works with non-negative data",
+      "Non-convex optimization (local optima)",
+      "Slow convergence"
+    ],
+    "trainComplexity": "O(n·d·k) per iteration",
+    "inferenceComplexity": "O(d·k)",
+    "docsUrl": "https://scikit-learn.org/stable/modules/decomposition.html#nmf",
+    "visualType": "pca_arrows"
+  },
+  {
+    "id": "exponential_smoothing",
+    "name": "Exponential Smoothing (Holt-Winters)",
+    "tasks": ["time_series"],
+    "interpretable": true,
+    "highDimOk": false,
+    "smallData": 3,
+    "mediumData": 3,
+    "largeData": 2,
+    "requiresLabels": true,
+    "useCases": [
+      "Short-term demand forecasting",
+      "Sales & inventory planning",
+      "Seasonal pattern forecasting"
+    ],
+    "pros": [
+      "Simple and fast",
+      "Handles trend and seasonality",
+      "Good with short series"
+    ],
+    "cons": [
+      "Only univariate",
+      "Poor for long-horizon forecasts",
+      "Cannot capture complex non-linear patterns"
+    ],
+    "trainComplexity": "O(n)",
+    "inferenceComplexity": "O(1)",
+    "docsUrl": "https://www.statsmodels.org/stable/generated/statsmodels.tsa.holtwinters.ExponentialSmoothing.html",
+    "visualType": "timeseries"
+  },
+  {
+    "id": "var",
+    "name": "VAR (Vector Autoregression)",
+    "tasks": ["time_series"],
+    "interpretable": true,
+    "highDimOk": false,
+    "smallData": 2,
+    "mediumData": 3,
+    "largeData": 2,
+    "requiresLabels": true,
+    "useCases": [
+      "Multivariate time series",
+      "Economic forecasting",
+      "Granger causality analysis"
+    ],
+    "pros": [
+      "Models multiple time series jointly",
+      "Captures inter-series dependencies",
+      "Interpretable lag coefficients"
+    ],
+    "cons": [
+      "Requires stationarity",
+      "Parameter count grows quadratically with series count",
+      "No non-linear relationships"
+    ],
+    "trainComplexity": "O(n·m²·p²) where m=series, p=lags",
+    "inferenceComplexity": "O(m·p)",
+    "docsUrl": "https://www.statsmodels.org/stable/generated/statsmodels.tsa.vector_ar.var_model.VAR.html",
+    "visualType": "timeseries"
+  }
+]

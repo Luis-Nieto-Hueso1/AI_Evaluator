@@ -1,0 +1,202 @@
+[
+  {
+    "id": "ollama",
+    "name": "Ollama",
+    "icon": "🦙",
+    "url": "https://ollama.com",
+    "targets": ["laptop", "gpu-server"],
+    "quantFormats": ["GGUF"],
+    "pros": [
+      "One-command install",
+      "Auto-downloads models",
+      "REST API built-in",
+      "Great for local dev"
+    ],
+    "cons": ["Limited batching", "Single-user focus", "No multi-GPU"],
+    "install": "curl -fsSL https://ollama.com/install.sh | sh",
+    "runCmd": "ollama run {model}",
+    "configFlags": [
+      "OLLAMA_HOST=0.0.0.0",
+      "OLLAMA_NUM_PARALLEL=4",
+      "OLLAMA_MAX_LOADED_MODELS=2"
+    ],
+    "memoryNote": "Uses llama.cpp under the hood; auto-offloads layers to GPU if available",
+    "bestFor": "Local development, prototyping, single-user apps",
+    "gpuRequired": false,
+    "complexity": "low"
+  },
+  {
+    "id": "llamacpp",
+    "name": "llama.cpp / llama-server",
+    "icon": "⚙️",
+    "url": "https://github.com/ggerganov/llama.cpp",
+    "targets": ["laptop", "gpu-server", "edge"],
+    "quantFormats": ["GGUF"],
+    "pros": [
+      "Maximum control",
+      "Lowest memory footprint",
+      "CPU-optimized",
+      "Partial GPU offload"
+    ],
+    "cons": ["Manual setup", "No model management", "C++ build required"],
+    "install": "git clone https://github.com/ggerganov/llama.cpp && cd llama.cpp && make -j",
+    "runCmd": "./llama-server -m {model_path} -c {context} --host 0.0.0.0 --port 8080",
+    "configFlags": [
+      "-ngl 99 (GPU layers)",
+      "-c 4096 (context)",
+      "--threads 8",
+      "-b 512 (batch size)",
+      "--mlock (lock memory)"
+    ],
+    "memoryNote": "Use -ngl to control GPU layer offloading; Q4_K_M is ~4.85 bits/weight",
+    "bestFor": "Edge devices, maximum performance tuning, embedded systems",
+    "gpuRequired": false,
+    "complexity": "medium"
+  },
+  {
+    "id": "vllm",
+    "name": "vLLM",
+    "icon": "🚀",
+    "url": "https://docs.vllm.ai",
+    "targets": ["gpu-server", "cloud"],
+    "quantFormats": ["GPTQ", "AWQ", "FP16", "BF16"],
+    "pros": [
+      "PagedAttention = highest throughput",
+      "OpenAI-compatible API",
+      "Continuous batching",
+      "Multi-GPU / tensor parallel"
+    ],
+    "cons": ["GPU required", "High VRAM usage", "Python-only"],
+    "install": "pip install vllm",
+    "runCmd": "vllm serve {model_id} --tensor-parallel-size {gpus}",
+    "configFlags": [
+      "--tensor-parallel-size N",
+      "--max-model-len 4096",
+      "--gpu-memory-utilization 0.9",
+      "--quantization awq",
+      "--enforce-eager (disable CUDA graphs)"
+    ],
+    "memoryNote": "PagedAttention reduces KV cache waste by ~60%; needs ~2× model size VRAM for serving",
+    "bestFor": "High-throughput production serving with multiple concurrent users",
+    "gpuRequired": true,
+    "complexity": "medium"
+  },
+  {
+    "id": "tgi",
+    "name": "TGI (Text Generation Inference)",
+    "icon": "🤗",
+    "url": "https://huggingface.co/docs/text-generation-inference",
+    "targets": ["gpu-server", "cloud"],
+    "quantFormats": ["GPTQ", "AWQ", "EETQ", "FP16", "BF16"],
+    "pros": [
+      "HuggingFace native",
+      "Flash Attention",
+      "Continuous batching",
+      "Docker-first deployment"
+    ],
+    "cons": [
+      "GPU required",
+      "Rust server (harder to modify)",
+      "Large Docker images"
+    ],
+    "install": "docker pull ghcr.io/huggingface/text-generation-inference:latest",
+    "runCmd": "docker run --gpus all -p 8080:80 ghcr.io/huggingface/text-generation-inference --model-id {model_id}",
+    "configFlags": [
+      "--max-input-length 4096",
+      "--max-total-tokens 8192",
+      "--max-batch-prefill-tokens 4096",
+      "--quantize awq",
+      "--num-shard N (multi-GPU)"
+    ],
+    "memoryNote": "Flash Attention 2 reduces memory by ~50% vs vanilla attention; use --quantize for smaller models",
+    "bestFor": "HuggingFace ecosystem production serving, Docker/Kubernetes deployments",
+    "gpuRequired": true,
+    "complexity": "medium"
+  },
+  {
+    "id": "tensorrt-llm",
+    "name": "TensorRT-LLM",
+    "icon": "🟢",
+    "url": "https://github.com/NVIDIA/TensorRT-LLM",
+    "targets": ["gpu-server", "cloud"],
+    "quantFormats": ["FP16", "FP8", "INT8", "INT4-AWQ"],
+    "pros": [
+      "Fastest NVIDIA inference",
+      "FP8 on Hopper GPUs",
+      "In-flight batching",
+      "Multi-node support"
+    ],
+    "cons": [
+      "NVIDIA GPUs only",
+      "Complex build pipeline",
+      "Model conversion required",
+      "Steep learning curve"
+    ],
+    "install": "pip install tensorrt-llm -U --extra-index-url https://pypi.nvidia.com",
+    "runCmd": "trtllm-build --model_dir {model} --output_dir ./engine && tritonserver --model-repository=./repo",
+    "configFlags": [
+      "--gemm_plugin float16",
+      "--max_batch_size 64",
+      "--max_input_len 4096",
+      "--tp_size N (tensor parallel)",
+      "--pp_size N (pipeline parallel)"
+    ],
+    "memoryNote": "FP8 halves VRAM vs FP16; requires model conversion to TRT engine format first",
+    "bestFor": "Maximum throughput on NVIDIA GPUs (A100, H100), large-scale production",
+    "gpuRequired": true,
+    "complexity": "high"
+  },
+  {
+    "id": "mlx-server",
+    "name": "MLX / mlx-lm",
+    "icon": "🍎",
+    "url": "https://ml-explore.github.io/mlx",
+    "targets": ["laptop"],
+    "quantFormats": ["MLX-quantized", "4-bit", "8-bit"],
+    "pros": [
+      "Apple Silicon native",
+      "Unified memory = no copies",
+      "Simple Python API",
+      "Fast local inference"
+    ],
+    "cons": ["Mac only", "Limited model support", "Small ecosystem"],
+    "install": "pip install mlx-lm",
+    "runCmd": "mlx_lm.server --model {model_id} --port 8080",
+    "configFlags": [
+      "--max-tokens 4096",
+      "--temp 0.7",
+      "--quantize (convert to 4-bit)"
+    ],
+    "memoryNote": "Unified memory means the full system RAM is available; M3 Max with 128GB can run 70B models",
+    "bestFor": "Local inference on MacBook / Mac Studio / Mac Pro with Apple Silicon",
+    "gpuRequired": false,
+    "complexity": "low"
+  },
+  {
+    "id": "exllamav2",
+    "name": "ExLlamaV2 + TabbyAPI",
+    "icon": "⚡",
+    "url": "https://github.com/turboderp/exllamav2",
+    "targets": ["gpu-server"],
+    "quantFormats": ["EXL2", "GPTQ"],
+    "pros": [
+      "Fastest single-GPU inference",
+      "EXL2 = best quality/size ratio",
+      "Low VRAM usage",
+      "Speculative decoding"
+    ],
+    "cons": ["NVIDIA only", "Single GPU only", "Niche community"],
+    "install": "pip install exllamav2 && pip install tabbyapi",
+    "runCmd": "python -m tabbyapi --model {model_path} --host 0.0.0.0 --port 5000",
+    "configFlags": [
+      "--max_seq_len 8192",
+      "--cache_mode Q4 (quantized KV cache)",
+      "--gpu_split auto",
+      "--draft_model {small_model} (speculative)"
+    ],
+    "memoryNote": "EXL2 3.5bpw ≈ Q3 quality at Q2 size; quantized KV cache cuts context memory ~75%",
+    "bestFor": "Single-GPU power users who want maximum tok/s and low VRAM usage",
+    "gpuRequired": true,
+    "complexity": "medium"
+  }
+]

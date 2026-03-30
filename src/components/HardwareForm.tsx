@@ -2,9 +2,11 @@ import { useState, useEffect, useRef } from "react";
 import type { HardwareProfile } from "../types";
 import {
   detectHardware,
+  detectGpuAsync,
   GPU_LIST,
   GPU_BANDWIDTH,
   CPU_LIST,
+  getCpuBandwidth,
   type GpuOption,
   type CpuOption,
 } from "../lib/hardware-detect";
@@ -31,10 +33,14 @@ const CPU_BRAND_COLORS: Record<string, string> = {
 const BRAND_ORDER = ["NVIDIA", "AMD", "Intel", "Apple"];
 const CPU_BRAND_ORDER = ["Intel", "AMD"];
 
+const VRAM_OPTIONS = [2, 4, 6, 8, 10, 12, 16, 20, 24, 32, 48, 80];
+
 export function HardwareForm({ onSubmit, initial }: Props) {
   const [ram, setRam] = useState(initial.ram);
+  const [vram, setVram] = useState<number | null>(null);
   const [selectedGpu, setSelectedGpu] = useState<GpuOption | null>(null);
   const [noGpu, setNoGpu] = useState(true);
+  const [isIntegratedGpu, setIsIntegratedGpu] = useState(false);
   const [search, setSearch] = useState("");
   const [showPicker, setShowPicker] = useState(false);
   const [selectedCpu, setSelectedCpu] = useState<CpuOption | null>(null);
@@ -42,7 +48,8 @@ export function HardwareForm({ onSubmit, initial }: Props) {
   const [showCpuPicker, setShowCpuPicker] = useState(false);
   const [detectedLabel, setDetectedLabel] = useState<string | null>(null);
   const [deviceModel, setDeviceModel] = useState<string | null>(null);
-  const [ramCapped, setRamCapped] = useState(false);
+  const [, setRamCapped] = useState(false);
+  const [ramNeedsConfirm, setRamNeedsConfirm] = useState(false);
   const searchRef = useRef<HTMLInputElement>(null);
   const cpuSearchRef = useRef<HTMLInputElement>(null);
 
@@ -53,56 +60,113 @@ export function HardwareForm({ onSubmit, initial }: Props) {
     if (d.deviceModel) setDeviceModel(d.deviceModel);
     if (d.ram !== null) {
       setRam(snapToNearest(d.ram, RAM_OPTIONS));
+      // deviceMemory is capped at 8 GB by browsers — always ask user to confirm
       setRamCapped(d.ramCapped);
+      setRamNeedsConfirm(d.ramCapped);
     }
 
-    if (d.isAppleSilicon && d.gpuName) {
-      const match = GPU_LIST.find(
-        (g) =>
-          g.brand === "Apple" &&
-          d.gpuName!.toLowerCase().includes(g.series.toLowerCase()),
-      );
-      if (match) {
-        setSelectedGpu(match);
-        setNoGpu(false);
-        setRam(match.vram);
-        setDetectedLabel(`Detected: ${d.gpuName} (unified memory)`);
-      } else {
-        setDetectedLabel(
-          `Detected: ${d.gpuName} — select your memory size below`,
-        );
-        setShowPicker(true);
-      }
-      return;
-    }
-
-    if (d.hasGpu && d.vram !== null && d.gpuName) {
-      const match =
-        GPU_LIST.find(
+    function applyGpuDetection(
+      gpuName: string | null,
+      vram: number | null,
+      isApple: boolean,
+    ) {
+      if (isApple && gpuName) {
+        const match = GPU_LIST.find(
           (g) =>
-            g.vram === d.vram &&
-            d
-              .gpuName!.toLowerCase()
-              .includes(
-                g.name
-                  .toLowerCase()
-                  .replace("rtx ", "")
-                  .replace("gtx ", "")
-                  .replace("rx ", "")
-                  .slice(0, 6),
-              ),
-        ) ?? GPU_LIST.find((g) => g.vram === d.vram && g.brand !== "Apple");
+            g.brand === "Apple" &&
+            gpuName.toLowerCase().includes(g.series.toLowerCase()),
+        );
+        if (match) {
+          setSelectedGpu(match);
+          setNoGpu(false);
+          setRam(match.vram);
+          setDetectedLabel(`Detected: ${gpuName} (unified memory)`);
+        } else {
+          setDetectedLabel(
+            `Detected: ${gpuName} — select your memory size below`,
+          );
+          setShowPicker(true);
+        }
+        return;
+      }
 
-      if (match) {
-        setSelectedGpu(match);
-        setNoGpu(false);
-        setDetectedLabel(`Detected: ${d.gpuName}`);
-      } else {
-        setDetectedLabel(`Detected GPU: ${d.gpuName} — select below`);
-        setNoGpu(false);
-        setShowPicker(true);
+      if (gpuName && vram !== null) {
+        const match =
+          GPU_LIST.find(
+            (g) =>
+              g.vram === vram &&
+              gpuName
+                .toLowerCase()
+                .includes(
+                  g.name
+                    .toLowerCase()
+                    .replace("rtx ", "")
+                    .replace("gtx ", "")
+                    .replace("rx ", "")
+                    .split(" ")
+                    .slice(0, 2)
+                    .join(" "),
+                ),
+          ) ?? GPU_LIST.find((g) => g.vram === vram && g.brand !== "Apple");
+
+        if (match) {
+          setSelectedGpu(match);
+          setVram(match.vram);
+          setNoGpu(false);
+          setIsIntegratedGpu(false);
+          setDetectedLabel(
+            `Detected: ${gpuName} · ${match.vram} GB VRAM — models scored by VRAM`,
+          );
+        } else {
+          const isIntegrated =
+            /iris|uhd graphics|hd graphics|vega integrated|radeon graphics/i.test(
+              gpuName,
+            );
+          setIsIntegratedGpu(isIntegrated);
+          if (isIntegrated) {
+            setNoGpu(true);
+            setDetectedLabel(
+              `Detected: ${gpuName} (integrated — no dedicated VRAM)`,
+            );
+          } else {
+            setNoGpu(false);
+            setShowPicker(true);
+            setDetectedLabel(
+              `Detected GPU: ${gpuName} — select below to set VRAM`,
+            );
+          }
+        }
+      } else if (gpuName) {
+        // GPU found but VRAM unknown
+        const isIntegrated =
+          /iris|uhd graphics|hd graphics|vega integrated|radeon graphics/i.test(
+            gpuName,
+          );
+        setIsIntegratedGpu(isIntegrated);
+        if (isIntegrated) {
+          setNoGpu(true);
+          setDetectedLabel(
+            `Detected: ${gpuName} (integrated — no dedicated VRAM)`,
+          );
+        } else {
+          setNoGpu(false);
+          setShowPicker(true);
+          setDetectedLabel(
+            `Detected GPU: ${gpuName} — select below to set VRAM`,
+          );
+        }
       }
     }
+
+    // Apply sync WebGL result first for instant feedback
+    applyGpuDetection(d.gpuName, d.vram, d.isAppleSilicon);
+
+    // Then try WebGPU for a more accurate name (async, Chrome 113+)
+    detectGpuAsync().then(({ gpuName, vram }) => {
+      if (gpuName && gpuName.length > 0) {
+        applyGpuDetection(gpuName, vram, /apple m\d/i.test(gpuName));
+      }
+    });
   }, []);
 
   useEffect(() => {
@@ -115,7 +179,9 @@ export function HardwareForm({ onSubmit, initial }: Props) {
 
   function handleGpuSelect(gpu: GpuOption) {
     setSelectedGpu(gpu);
+    setVram(gpu.vram);
     setNoGpu(false);
+    setIsIntegratedGpu(false);
     setShowPicker(false);
     setSearch("");
     if (gpu.unified) setRam(gpu.vram);
@@ -123,7 +189,9 @@ export function HardwareForm({ onSubmit, initial }: Props) {
 
   function handleClearGpu() {
     setSelectedGpu(null);
+    setVram(null);
     setNoGpu(true);
+    setIsIntegratedGpu(false);
     setShowPicker(false);
   }
 
@@ -135,25 +203,34 @@ export function HardwareForm({ onSubmit, initial }: Props) {
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const bandwidth = selectedGpu ? GPU_BANDWIDTH[selectedGpu.id] : undefined;
+    const gpuBandwidth = selectedGpu
+      ? GPU_BANDWIDTH[selectedGpu.id]
+      : undefined;
+    const effectiveVram = vram ?? 0;
     if (selectedGpu?.unified) {
       onSubmit({
         ram: selectedGpu.vram,
         vram: selectedGpu.vram,
         hasGpu: true,
-        bandwidth,
+        bandwidth: gpuBandwidth,
         gpuId: selectedGpu.id,
       });
-    } else if (selectedGpu) {
+    } else if (selectedGpu || effectiveVram > 0) {
       onSubmit({
         ram,
-        vram: selectedGpu.vram,
+        vram: effectiveVram,
         hasGpu: true,
-        bandwidth,
-        gpuId: selectedGpu.id,
+        bandwidth: gpuBandwidth,
+        gpuId: selectedGpu?.id,
       });
     } else {
-      onSubmit({ ram, vram: 0, hasGpu: false });
+      onSubmit({
+        ram,
+        vram: 0,
+        hasGpu: false,
+        bandwidth: selectedCpu ? getCpuBandwidth(selectedCpu) : undefined,
+        cpuId: selectedCpu?.id,
+      });
     }
   }
 
@@ -227,10 +304,7 @@ export function HardwareForm({ onSubmit, initial }: Props) {
                   clipRule="evenodd"
                 />
               </svg>
-              <span>
-                {detectedLabel}
-                {ramCapped && " · RAM capped at 8 GB — adjust if needed"}
-              </span>
+              <span>{detectedLabel}</span>
             </div>
           )}
         </div>
@@ -240,18 +314,30 @@ export function HardwareForm({ onSubmit, initial }: Props) {
         {/* RAM — hide for unified memory */}
         {!selectedGpu?.unified && (
           <div>
-            <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">
-              System RAM
-            </label>
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                System RAM
+              </label>
+              {ramNeedsConfirm && (
+                <span className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400">
+                  browser-capped — please confirm
+                </span>
+              )}
+            </div>
             <div className="flex flex-wrap gap-2">
               {RAM_OPTIONS.map((gb) => (
                 <button
                   key={gb}
                   type="button"
-                  onClick={() => setRam(gb)}
+                  onClick={() => {
+                    setRam(gb);
+                    setRamNeedsConfirm(false);
+                  }}
                   className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
                     ram === gb
-                      ? "bg-violet-600 text-white"
+                      ? ramNeedsConfirm
+                        ? "bg-amber-500 text-white ring-2 ring-amber-400 ring-offset-1"
+                        : "bg-violet-600 text-white"
                       : "bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700"
                   }`}
                 >
@@ -259,6 +345,11 @@ export function HardwareForm({ onSubmit, initial }: Props) {
                 </button>
               ))}
             </div>
+            {ramNeedsConfirm && (
+              <p className="text-[11px] text-amber-600 dark:text-amber-400 mt-1.5">
+                Browsers hide actual RAM — select your real amount above.
+              </p>
+            )}
           </div>
         )}
 
@@ -283,7 +374,17 @@ export function HardwareForm({ onSubmit, initial }: Props) {
           {selectedGpu ? (
             <div
               onClick={() => setShowPicker(!showPicker)}
-              className="flex items-center justify-between px-3 py-2.5 rounded-xl border border-violet-300 dark:border-violet-700 bg-violet-50 dark:bg-violet-900/20 cursor-pointer hover:border-violet-400 transition-colors"
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  setShowPicker(!showPicker);
+                }
+              }}
+              tabIndex={0}
+              role="button"
+              aria-expanded={showPicker}
+              aria-haspopup="listbox"
+              className="flex items-center justify-between px-3 py-2.5 rounded-xl border border-violet-300 dark:border-violet-700 bg-violet-50 dark:bg-violet-900/20 cursor-pointer hover:border-violet-400 transition-colors focus:outline-none focus:ring-2 focus:ring-violet-500"
             >
               <div>
                 <span
@@ -299,15 +400,25 @@ export function HardwareForm({ onSubmit, initial }: Props) {
                 <span className="text-sm font-bold text-violet-600 dark:text-violet-400">
                   {selectedGpu.vram} GB
                 </span>
-                <p className="text-xs text-zinc-400">
-                  {selectedGpu.unified ? "unified" : "VRAM"}
+                <p className="text-xs text-violet-500 dark:text-violet-400 font-medium">
+                  {selectedGpu.unified ? "unified" : "VRAM — AI limit"}
                 </p>
               </div>
             </div>
           ) : (
             <div
               onClick={() => setShowPicker(!showPicker)}
-              className="flex items-center justify-between px-3 py-2.5 rounded-xl border border-dashed border-zinc-300 dark:border-zinc-600 bg-zinc-50 dark:bg-zinc-800/50 cursor-pointer hover:border-violet-400 transition-colors"
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  setShowPicker(!showPicker);
+                }
+              }}
+              tabIndex={0}
+              role="button"
+              aria-expanded={showPicker}
+              aria-haspopup="listbox"
+              className="flex items-center justify-between px-3 py-2.5 rounded-xl border border-dashed border-zinc-300 dark:border-zinc-600 bg-zinc-50 dark:bg-zinc-800/50 cursor-pointer hover:border-violet-400 transition-colors focus:outline-none focus:ring-2 focus:ring-violet-500"
             >
               <span className="text-sm text-zinc-400 dark:text-zinc-500">
                 {noGpu ? "No dedicated GPU (CPU only)" : "Select your GPU…"}
@@ -372,7 +483,16 @@ export function HardwareForm({ onSubmit, initial }: Props) {
                         <div
                           key={gpu.id}
                           onClick={() => handleGpuSelect(gpu)}
-                          className={`flex items-center justify-between px-3 py-2 cursor-pointer text-sm transition-colors ${
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter" || e.key === " ") {
+                              e.preventDefault();
+                              handleGpuSelect(gpu);
+                            }
+                          }}
+                          tabIndex={0}
+                          role="option"
+                          aria-selected={selectedGpu?.id === gpu.id}
+                          className={`flex items-center justify-between px-3 py-2 cursor-pointer text-sm transition-colors focus:outline-none focus:bg-violet-50 dark:focus:bg-violet-900/20 ${
                             selectedGpu?.id === gpu.id
                               ? "bg-violet-50 dark:bg-violet-900/20 text-violet-700 dark:text-violet-300"
                               : "hover:bg-zinc-50 dark:hover:bg-zinc-800 text-zinc-700 dark:text-zinc-300"
@@ -400,6 +520,70 @@ export function HardwareForm({ onSubmit, initial }: Props) {
           </p>
         )}
 
+        {/* Integrated GPU warning */}
+        {isIntegratedGpu && (
+          <div className="px-3 py-2.5 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 text-xs text-amber-800 dark:text-amber-300">
+            <p className="font-semibold mb-0.5">
+              Integrated GPU — no dedicated VRAM
+            </p>
+            <p className="text-amber-700 dark:text-amber-400">
+              Integrated graphics share system RAM — there is no separate VRAM
+              pool for AI models. Results are based on your system RAM only.
+            </p>
+          </div>
+        )}
+
+        {/* VRAM picker — shown when a dedicated GPU is selected or manually set */}
+        {!selectedGpu?.unified && !isIntegratedGpu && (
+          <div>
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                GPU VRAM
+                <span className="ml-1.5 text-[10px] font-normal text-violet-500 dark:text-violet-400">
+                  AI memory limit
+                </span>
+              </label>
+              {vram !== null && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setVram(null);
+                    setSelectedGpu(null);
+                    setNoGpu(true);
+                  }}
+                  className="text-xs text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-colors cursor-pointer"
+                >
+                  Clear
+                </button>
+              )}
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {VRAM_OPTIONS.map((gb) => (
+                <button
+                  key={gb}
+                  type="button"
+                  onClick={() => {
+                    setVram(gb);
+                    setNoGpu(false);
+                  }}
+                  className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
+                    vram === gb
+                      ? "bg-violet-600 text-white"
+                      : "bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700"
+                  }`}
+                >
+                  {gb} GB
+                </button>
+              ))}
+            </div>
+            {vram === null && (
+              <p className="text-[11px] text-zinc-400 dark:text-zinc-500 mt-1.5">
+                No GPU selected — models will be scored by system RAM.
+              </p>
+            )}
+          </div>
+        )}
+
         {/* CPU section — hidden for Apple Silicon (chip already captured via GPU) */}
         {!selectedGpu?.unified && (
           <div>
@@ -421,7 +605,17 @@ export function HardwareForm({ onSubmit, initial }: Props) {
             {selectedCpu ? (
               <div
                 onClick={() => setShowCpuPicker(!showCpuPicker)}
-                className="flex items-center justify-between px-3 py-2.5 rounded-xl border border-violet-300 dark:border-violet-700 bg-violet-50 dark:bg-violet-900/20 cursor-pointer hover:border-violet-400 transition-colors"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    setShowCpuPicker(!showCpuPicker);
+                  }
+                }}
+                tabIndex={0}
+                role="button"
+                aria-expanded={showCpuPicker}
+                aria-haspopup="listbox"
+                className="flex items-center justify-between px-3 py-2.5 rounded-xl border border-violet-300 dark:border-violet-700 bg-violet-50 dark:bg-violet-900/20 cursor-pointer hover:border-violet-400 transition-colors focus:outline-none focus:ring-2 focus:ring-violet-500"
               >
                 <div>
                   <span
@@ -440,7 +634,17 @@ export function HardwareForm({ onSubmit, initial }: Props) {
             ) : (
               <div
                 onClick={() => setShowCpuPicker(!showCpuPicker)}
-                className="flex items-center justify-between px-3 py-2.5 rounded-xl border border-dashed border-zinc-300 dark:border-zinc-600 bg-zinc-50 dark:bg-zinc-800/50 cursor-pointer hover:border-violet-400 transition-colors"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    setShowCpuPicker(!showCpuPicker);
+                  }
+                }}
+                tabIndex={0}
+                role="button"
+                aria-expanded={showCpuPicker}
+                aria-haspopup="listbox"
+                className="flex items-center justify-between px-3 py-2.5 rounded-xl border border-dashed border-zinc-300 dark:border-zinc-600 bg-zinc-50 dark:bg-zinc-800/50 cursor-pointer hover:border-violet-400 transition-colors focus:outline-none focus:ring-2 focus:ring-violet-500"
               >
                 <span className="text-sm text-zinc-400 dark:text-zinc-500">
                   Select your CPU… (optional)
@@ -490,7 +694,16 @@ export function HardwareForm({ onSubmit, initial }: Props) {
                           <div
                             key={cpu.id}
                             onClick={() => handleCpuSelect(cpu)}
-                            className={`flex items-center justify-between px-3 py-2 cursor-pointer text-sm transition-colors ${
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter" || e.key === " ") {
+                                e.preventDefault();
+                                handleCpuSelect(cpu);
+                              }
+                            }}
+                            tabIndex={0}
+                            role="option"
+                            aria-selected={selectedCpu?.id === cpu.id}
+                            className={`flex items-center justify-between px-3 py-2 cursor-pointer text-sm transition-colors focus:outline-none focus:bg-violet-50 dark:focus:bg-violet-900/20 ${
                               selectedCpu?.id === cpu.id
                                 ? "bg-violet-50 dark:bg-violet-900/20 text-violet-700 dark:text-violet-300"
                                 : "hover:bg-zinc-50 dark:hover:bg-zinc-800 text-zinc-700 dark:text-zinc-300"

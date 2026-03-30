@@ -20,9 +20,9 @@ const QUANT_BITS: Record<string, number> = {
 /**
  * Estimate tokens/second based on memory bandwidth.
  * Formula: bandwidth (GB/s) × efficiency / bytes_per_token
- * GPU efficiency ~0.65, CPU ~0.12 (via ~50 GB/s RAM BW)
+ * GPU efficiency ~0.70, CPU ~0.12 (via RAM BW)
  */
-function estimateToksPerSec(
+export function estimateToksPerSec(
   params_B: number,
   quantization: string,
   runOnGpu: boolean,
@@ -32,36 +32,90 @@ function estimateToksPerSec(
   const bytesPerToken = (params_B * bits) / 8; // GB
 
   if (runOnGpu && bandwidth) {
-    return (bandwidth * 0.65) / bytesPerToken;
+    return (bandwidth * 0.7) / bytesPerToken;
   }
-  // CPU: ~50 GB/s RAM bandwidth × 12% efficiency
-  return (50 * 0.12) / bytesPerToken;
+  // CPU: RAM bandwidth × 12% efficiency (bandwidth defaults to 50 GB/s if not provided)
+  const cpuBw = bandwidth ?? 50;
+  return (cpuBw * 0.12) / bytesPerToken;
 }
 
-function toGrade(toks: number): Grade {
-  if (toks >= 40) return "S";
-  if (toks >= 20) return "A";
-  if (toks >= 10) return "B";
-  if (toks >= 4) return "C";
-  return "D";
+/**
+ * Composite 0-100 score combining speed, memory headroom, and model quality.
+ * Based on canirun.ai scoring algorithm.
+ */
+export function computeScore(
+  toks: number,
+  memPercent: number,
+  params_B: number,
+): number {
+  // Speed score (55% weight)
+  let speedScore: number;
+  if (toks >= 80) speedScore = 100;
+  else if (toks >= 40) speedScore = 85;
+  else if (toks >= 20) speedScore = 65;
+  else if (toks >= 10) speedScore = 45;
+  else if (toks >= 5) speedScore = 25;
+  else speedScore = 10;
+
+  // Memory headroom score (35% weight)
+  let memScore: number;
+  if (memPercent <= 0.3) memScore = 100;
+  else if (memPercent <= 0.5) memScore = 80;
+  else if (memPercent <= 0.7) memScore = 55;
+  else if (memPercent <= 0.85) memScore = 30;
+  else memScore = 10;
+
+  // Quality bonus — larger models produce better output (~10% weight, capped 15pts)
+  const qualityBonus = Math.min(15, Math.log2(params_B + 1) * 2.5);
+
+  let score =
+    speedScore * 0.55 + memScore * 0.35 + qualityBonus * (1 / 15) * 15 * 0.1;
+
+  // Tight fit penalty: model barely fits, lots of swapping pressure
+  if (memPercent > 0.85) score *= 0.65;
+
+  return Math.round(Math.min(100, Math.max(1, score)));
 }
+
+export function scoreToGrade(score: number): Grade {
+  if (score >= 85) return "S";
+  if (score >= 70) return "A";
+  if (score >= 55) return "B";
+  if (score >= 40) return "C";
+  if (score >= 20) return "D";
+  return "F";
+}
+
+export const GRADE_STATUS: Record<Grade, string> = {
+  S: "Runs great",
+  A: "Runs well",
+  B: "Decent",
+  C: "Tight fit",
+  D: "Barely runs",
+  F: "Too heavy",
+};
 
 export function getCompatibleModels(
   hardware: HardwareProfile,
+  extra: Model[] = [],
+): CompatibleModel[] {
+  return getAllModels(hardware, extra).filter((m) => m.fits);
+}
+
+export function getAllModels(
+  hardware: HardwareProfile,
+  extra: Model[] = [],
 ): CompatibleModel[] {
   const results: CompatibleModel[] = [];
-
-  for (const model of models) {
-    const best = getBestVariant(model, hardware);
-    if (best) results.push(best);
+  for (const model of [...models, ...extra]) {
+    const result = getBestVariant(model, hardware);
+    if (result) results.push(result);
   }
-
-  // Default sort: best grade first, then highest params
+  const gradeOrder: Grade[] = ["S", "A", "B", "C", "D", "F"];
   return results.sort((a, b) => {
-    const gradeOrder: Grade[] = ["S", "A", "B", "C", "D"];
     const gDiff = gradeOrder.indexOf(a.grade) - gradeOrder.indexOf(b.grade);
     if (gDiff !== 0) return gDiff;
-    return b.model.parameters - a.model.parameters;
+    return b.score - a.score;
   });
 }
 
@@ -69,12 +123,18 @@ function getBestVariant(
   model: Model,
   hardware: HardwareProfile,
 ): CompatibleModel | null {
+  if (!model.variants || model.variants.length === 0) return null;
+
   const qualityOrder: ModelVariant["quality"][] = [
     "best",
     "high",
     "medium",
     "low",
   ];
+
+  // Apple Silicon: unified memory pool, 75% usable
+  const isUnified =
+    hardware.hasGpu && hardware.vram > 0 && hardware.ram === hardware.vram;
 
   for (const quality of qualityOrder) {
     const variant = model.variants.find((v) => v.quality === quality);
@@ -87,12 +147,20 @@ function getBestVariant(
         true,
         hardware.bandwidth,
       );
+      const memAvailable = isUnified ? hardware.vram * 0.75 : hardware.vram;
+      const memPercent = variant.vramRequired / memAvailable;
+      const score = computeScore(toks, memPercent, model.parameters);
+      const grade = scoreToGrade(score);
       return {
         model,
         bestVariant: variant,
         runOnGpu: true,
         tokensPerSec: toks,
-        grade: toGrade(toks),
+        grade,
+        score,
+        memPercent,
+        memAvailable,
+        fits: true,
       };
     }
 
@@ -101,19 +169,48 @@ function getBestVariant(
         model.parameters,
         variant.quantization,
         false,
-        undefined,
+        hardware.bandwidth,
       );
+      const memPercent = variant.ramRequired / hardware.ram;
+      const score = computeScore(toks, memPercent, model.parameters);
+      const grade = scoreToGrade(score);
       return {
         model,
         bestVariant: variant,
         runOnGpu: false,
         tokensPerSec: toks,
-        grade: toGrade(toks),
+        grade,
+        score,
+        memPercent,
+        memAvailable: hardware.ram,
+        fits: true,
       };
     }
   }
 
-  return null;
+  // Nothing fits — return grade F entry using smallest variant
+  const smallest =
+    model.variants.find((v) => v.quality === "low") ??
+    model.variants.find((v) => v.quality === "medium") ??
+    model.variants[0];
+
+  const memPool = hardware.hasGpu ? hardware.vram : hardware.ram;
+  const memUsed = hardware.hasGpu
+    ? smallest.vramRequired
+    : smallest.ramRequired;
+  const memPercent = memPool > 0 ? memUsed / memPool : 999;
+
+  return {
+    model,
+    bestVariant: smallest,
+    runOnGpu: false,
+    tokensPerSec: 0,
+    grade: "F",
+    score: 0,
+    memPercent,
+    memAvailable: memPool,
+    fits: false,
+  };
 }
 
 export function formatMemory(gb: number): string {
@@ -144,6 +241,84 @@ export function getQualityLabel(quality: ModelVariant["quality"]): string {
     case "low":
       return "Compressed";
   }
+}
+
+export interface VariantScore {
+  variant: ModelVariant;
+  fits: boolean;
+  runOnGpu: boolean;
+  tokensPerSec: number;
+  score: number;
+  grade: Grade;
+  memPercent: number;
+  memUsedGb: number;
+}
+
+export function getVariantScores(
+  model: Model,
+  hardware: HardwareProfile,
+): VariantScore[] {
+  const isUnified =
+    hardware.hasGpu && hardware.vram > 0 && hardware.ram === hardware.vram;
+
+  return model.variants.map((variant) => {
+    if (hardware.hasGpu && hardware.vram >= variant.vramRequired) {
+      const toks = estimateToksPerSec(
+        model.parameters,
+        variant.quantization,
+        true,
+        hardware.bandwidth,
+      );
+      const memAvailable = isUnified ? hardware.vram * 0.75 : hardware.vram;
+      const memPercent = variant.vramRequired / memAvailable;
+      const score = computeScore(toks, memPercent, model.parameters);
+      return {
+        variant,
+        fits: true,
+        runOnGpu: true,
+        tokensPerSec: toks,
+        score,
+        grade: scoreToGrade(score),
+        memPercent,
+        memUsedGb: variant.vramRequired,
+      };
+    }
+    if (hardware.ram >= variant.ramRequired) {
+      const toks = estimateToksPerSec(
+        model.parameters,
+        variant.quantization,
+        false,
+        hardware.bandwidth,
+      );
+      const memPercent = variant.ramRequired / hardware.ram;
+      const score = computeScore(toks, memPercent, model.parameters);
+      return {
+        variant,
+        fits: true,
+        runOnGpu: false,
+        tokensPerSec: toks,
+        score,
+        grade: scoreToGrade(score),
+        memPercent,
+        memUsedGb: variant.ramRequired,
+      };
+    }
+    // Doesn't fit
+    const memPool = hardware.hasGpu ? hardware.vram : hardware.ram;
+    const memUsedGb = hardware.hasGpu
+      ? variant.vramRequired
+      : variant.ramRequired;
+    return {
+      variant,
+      fits: false,
+      runOnGpu: false,
+      tokensPerSec: 0,
+      score: 0,
+      grade: "F" as Grade,
+      memPercent: memPool > 0 ? memUsedGb / memPool : 999,
+      memUsedGb,
+    };
+  });
 }
 
 export { models };
