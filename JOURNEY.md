@@ -215,7 +215,7 @@ score = speedScore × 0.55 + memScore × 0.35 + qualityBonus × 0.10
 
 ### High priority
 
-- [ ] **Algorithm AI Advisor** — Chat sidebar scoped to algorithm selection (reuse HF/Claude backend); system prompt includes questionnaire answers + algorithm DB; questions like "I have 10K labelled samples, need to explain predictions to stakeholders".
+- [x] **Algorithm AI Advisor** ✅ Phase 9 — Collapsible chat sidebar in Algorithm Picker; HF-powered (Qwen 2.5); system prompt includes current questionnaire state (task, size, interp, features) + top 5 ranked results; suggested questions like "I have 10K labelled samples" and "Which is faster: Random Forest or XGBoost?".
 - [x] **Framework Picker** ✅ Phase 9 — New "Framework Picker" tab with 10 frameworks (scikit-learn, PyTorch, TensorFlow, JAX, HuggingFace, XGBoost, fast.ai, ONNX, MLX, llama.cpp); 4-step questionnaire (task type → goal → team size → hardware target); weighted scoring; expandable cards with pros/cons, ecosystem, learning curve, hardware tags, and docs links.
 - [x] **Deployment Guide tab** ✅ Phase 9 — New "Deploy Guide" tab with 7 inference stacks (Ollama, llama.cpp, vLLM, TGI, TensorRT-LLM, MLX, ExLlamaV2); 3-step questionnaire (target environment → GPU availability → priority); each card expands with install/run commands (copy buttons), config flags, memory notes, quant format tags, pros/cons, and docs links.
 - [x] **Share button on Algorithm Picker** ✅ Phase 9 — Encodes questionnaire state (`algo_task`, `algo_size`, `algo_interp`, `algo_feat`) in URL params; reads them back on load to restore state; "Share" button copies link to clipboard with "Copied!" feedback.
@@ -223,16 +223,16 @@ score = speedScore × 0.55 + memScore × 0.35 + qualityBonus × 0.10
 ### Medium priority
 
 - [x] **Model benchmark leaderboard** ✅ Phase 9 — New "Leaderboard" tab with sortable table: Rank, Model, Params, MMLU %, HumanEval %, MT-Bench /10. Color-coded scores (green/amber/red). Click column headers to toggle sort direction.
-- [ ] **Scikit-learn code snippets** — One-click copy of minimal sklearn quickstart code for each algorithm (fit + predict + metrics).
-- [ ] **Algorithm complexity comparison table** — Side-by-side train/inference complexity for all results in the current query.
-- [ ] **Onboarding tooltip tour** — First-visit walkthrough highlighting hardware form → grade badges → detail panel → advisor chat.
+- [x] **Scikit-learn code snippets** — One-click copy of minimal sklearn quickstart code for each algorithm (fit + predict + metrics). All 37 algorithms have "Quick Start" code blocks with copy button in expanded card.
+- [x] **Algorithm complexity comparison table** — Side-by-side train/inference complexity for all results in the current query. Toggle "Complexity" button in results header shows sortable table with color-coded Big-O notation.
+- [x] **Onboarding tooltip tour** — First-visit walkthrough highlighting hardware form → grade badges → detail panel → advisor chat. 4-step spotlight tour with skip/next, stored in localStorage.
 - [x] **Keyboard shortcut help modal** ✅ Phase 9 — Press `?` to show all shortcuts (`/` focus search, `?` toggle modal, `Esc` close). Styled overlay with kbd tags, closes on backdrop click or Escape.
 
 ### Low priority / Polish
 
-- [ ] **Algorithm interactive flowchart** — SVG decision tree mirroring the scikit-learn cheat sheet; user's current path highlighted; backtrack support; "Share this path" URL encoding.
-- [ ] **Model timeline enhancements** — Zoom to year, hover to expand detail card, horizontal scroll mode for widescreen.
-- [ ] **Cost calculator improvements** — Custom tokens/day slider, breakdown by input vs output cost, CSV export.
+- [x] **Algorithm interactive flowchart** — SVG decision tree with 25 nodes mirroring sklearn cheat sheet. Click to navigate, backtrack by clicking visited nodes, "Share path" URL encoding via `flowpath` param.
+- [x] **Model timeline enhancements** — Year zoom filter pills, hover-to-expand detail cards (vertical mode) and hover popup (horizontal mode), horizontal scroll toggle for widescreen.
+- [x] **Cost calculator improvements** — Tokens/day slider (10K–5M), input/output ratio selector (50/50, 80/20, 20/80), 3-column cost breakdown, CSV export button.
 
 ---
 

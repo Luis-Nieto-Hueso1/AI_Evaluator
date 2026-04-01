@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect } from "react";
 import algorithmsRaw from "../data/algorithms.json";
+import { AlgoAdvisorChat } from "./AlgoAdvisorChat";
 
 type TaskType =
   | "classification"
@@ -27,6 +28,7 @@ interface Algorithm {
   trainComplexity: string;
   inferenceComplexity: string;
   docsUrl: string;
+  sklearnSnippet?: string;
   visualType: string;
 }
 
@@ -1327,6 +1329,85 @@ function OptionButton({
   );
 }
 
+function SnippetBlock({ code }: { code: string }) {
+  const [copied, setCopied] = useState(false);
+  function copy() {
+    navigator.clipboard.writeText(code).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    });
+  }
+  return (
+    <div className="relative group">
+      <pre className="text-[11px] leading-relaxed bg-zinc-950 text-zinc-200 rounded-lg p-3 overflow-x-auto font-mono">
+        <code>{code}</code>
+      </pre>
+      <button
+        onClick={copy}
+        className="absolute top-2 right-2 text-[10px] px-2 py-0.5 rounded bg-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-700 transition-colors opacity-0 group-hover:opacity-100 cursor-pointer"
+      >
+        {copied ? "Copied!" : "Copy"}
+      </button>
+    </div>
+  );
+}
+
+function ComplexityTable({ results }: { results: Scored[] }) {
+  if (results.length === 0) return null;
+  return (
+    <div className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 overflow-hidden">
+      <div className="px-4 py-3 border-b border-zinc-100 dark:border-zinc-800">
+        <p className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">
+          Complexity Comparison
+        </p>
+      </div>
+      <div className="overflow-x-auto">
+        <table className="w-full text-xs">
+          <thead>
+            <tr className="border-b border-zinc-100 dark:border-zinc-800">
+              <th className="text-left px-4 py-2 font-medium text-zinc-400">
+                #
+              </th>
+              <th className="text-left px-4 py-2 font-medium text-zinc-400">
+                Algorithm
+              </th>
+              <th className="text-left px-4 py-2 font-medium text-zinc-400">
+                Train Complexity
+              </th>
+              <th className="text-left px-4 py-2 font-medium text-zinc-400">
+                Inference Complexity
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {results.map(({ algo }, i) => (
+              <tr
+                key={algo.id}
+                className="border-b border-zinc-50 dark:border-zinc-800/50 last:border-0 hover:bg-zinc-50 dark:hover:bg-zinc-800/30 transition-colors"
+              >
+                <td className="px-4 py-2 text-zinc-400 font-medium">{i + 1}</td>
+                <td className="px-4 py-2 font-medium text-zinc-700 dark:text-zinc-300">
+                  {algo.name}
+                </td>
+                <td className="px-4 py-2">
+                  <code className="text-violet-600 dark:text-violet-400 bg-violet-50 dark:bg-violet-900/20 px-1.5 py-0.5 rounded">
+                    {algo.trainComplexity}
+                  </code>
+                </td>
+                <td className="px-4 py-2">
+                  <code className="text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 px-1.5 py-0.5 rounded">
+                    {algo.inferenceComplexity}
+                  </code>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
 function AlgorithmCard({ algo, rank }: { algo: Algorithm; rank: number }) {
   const [open, setOpen] = useState(false);
 
@@ -1457,6 +1538,16 @@ function AlgorithmCard({ algo, rank }: { algo: Algorithm; rank: number }) {
             </div>
           </div>
 
+          {/* Sklearn snippet */}
+          {algo.sklearnSnippet && (
+            <div>
+              <p className="text-[10px] font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide mb-1.5">
+                Quick Start
+              </p>
+              <SnippetBlock code={algo.sklearnSnippet} />
+            </div>
+          )}
+
           {/* Docs link */}
           <a
             href={algo.docsUrl}
@@ -1510,6 +1601,7 @@ export function AlgorithmSelector() {
   const [interp, setInterp] = useState<Interpretability | null>(init.interp);
   const [features, setFeatures] = useState<FeatureCount | null>(init.features);
   const [shareCopied, setShareCopied] = useState(false);
+  const [showTable, setShowTable] = useState(false);
 
   // Keep URL in sync with questionnaire state
   useEffect(() => {
@@ -1668,6 +1760,15 @@ export function AlgorithmSelector() {
             Reset
           </button>
         )}
+
+        {/* AI Advisor */}
+        <AlgoAdvisorChat
+          task={task}
+          size={size}
+          interp={interp}
+          features={features}
+          topResults={results.slice(0, 5).map((r) => r.algo.name)}
+        />
       </div>
 
       {/* Right: Results */}
@@ -1695,6 +1796,12 @@ export function AlgorithmSelector() {
                   </span>
                 )}
                 <button
+                  onClick={() => setShowTable((v) => !v)}
+                  className={`text-xs px-2.5 py-1.5 rounded-lg transition-colors cursor-pointer font-medium ${showTable ? "bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-300" : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700"}`}
+                >
+                  Complexity
+                </button>
+                <button
                   onClick={handleShare}
                   className="text-xs px-2.5 py-1.5 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors cursor-pointer font-medium"
                 >
@@ -1702,6 +1809,7 @@ export function AlgorithmSelector() {
                 </button>
               </div>
             </div>
+            {showTable && <ComplexityTable results={results} />}
             <div className="space-y-2">
               {results.map(({ algo }, i) => (
                 <AlgorithmCard key={algo.id} algo={algo} rank={i + 1} />

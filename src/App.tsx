@@ -24,6 +24,8 @@ import { AddModelForm } from "./components/AddModelForm";
 import { Leaderboard } from "./components/Leaderboard";
 import { FrameworkPicker } from "./components/FrameworkPicker";
 import { DeploymentGuide } from "./components/DeploymentGuide";
+import { OnboardingTour } from "./components/OnboardingTour";
+import { AlgorithmFlowchart } from "./components/AlgorithmFlowchart";
 
 const DEFAULT_HARDWARE: HardwareProfile = { ram: 16, vram: 0, hasGpu: false };
 const HAS_API_KEY = Boolean(import.meta.env.VITE_ANTHROPIC_API_KEY);
@@ -416,6 +418,8 @@ export default function App() {
                 but interactive.
               </p>
             </div>
+            <AlgorithmFlowchart />
+            <div className="mt-8" />
             <AlgorithmSelector />
           </>
         ) : view === "frameworks" ? (
@@ -478,22 +482,26 @@ export default function App() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Left column */}
               <div className="lg:col-span-1 space-y-4">
-                <HardwareForm
-                  onSubmit={handleHardwareSubmit}
-                  initial={hardware}
-                />
+                <div data-tour="hardware-form">
+                  <HardwareForm
+                    onSubmit={handleHardwareSubmit}
+                    initial={hardware}
+                  />
+                </div>
                 <AddModelForm
                   customModels={customModels}
                   onChanged={handleCustomModelsChanged}
                 />
                 {view === "results" && (
-                  <ErrorBoundary>
-                    <AdvisorChat
-                      hardware={hardware}
-                      compatible={compatible}
-                      hasApiKey={HAS_API_KEY}
-                    />
-                  </ErrorBoundary>
+                  <div data-tour="advisor-chat">
+                    <ErrorBoundary>
+                      <AdvisorChat
+                        hardware={hardware}
+                        compatible={compatible}
+                        hasApiKey={HAS_API_KEY}
+                      />
+                    </ErrorBoundary>
+                  </div>
                 )}
               </div>
 
@@ -701,7 +709,10 @@ export default function App() {
                     </div>
 
                     {/* Grade filter pills */}
-                    <div className="flex flex-wrap gap-1.5 mb-3">
+                    <div
+                      data-tour="grade-badges"
+                      className="flex flex-wrap gap-1.5 mb-3"
+                    >
                       <button
                         onClick={() => setFilterGrade(null)}
                         className={`text-xs px-3 py-1 rounded-full font-medium transition-colors cursor-pointer ${
@@ -809,7 +820,10 @@ export default function App() {
                         </div>
                       </div>
                     ) : (
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div
+                        data-tour="detail-panel"
+                        className="grid grid-cols-1 sm:grid-cols-2 gap-3"
+                      >
                         {sorted.map((item) => (
                           <ModelCard
                             key={item.model.id}
@@ -891,6 +905,9 @@ export default function App() {
           </div>
         </div>
       )}
+
+      {/* Onboarding tooltip tour (first visit only) */}
+      <OnboardingTour />
     </div>
   );
 }

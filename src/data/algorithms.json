@@ -2,14 +2,20 @@
   {
     "id": "linear_regression",
     "name": "Linear Regression",
-    "tasks": ["regression"],
+    "tasks": [
+      "regression"
+    ],
     "interpretable": true,
     "highDimOk": false,
     "smallData": 3,
     "mediumData": 3,
     "largeData": 2,
     "requiresLabels": true,
-    "useCases": ["Price prediction", "Trend forecasting", "Risk scoring"],
+    "useCases": [
+      "Price prediction",
+      "Trend forecasting",
+      "Risk scoring"
+    ],
     "pros": [
       "Highly interpretable coefficients",
       "Fast training & inference",
@@ -23,12 +29,15 @@
     "trainComplexity": "O(n·d²)",
     "inferenceComplexity": "O(d)",
     "docsUrl": "https://scikit-learn.org/stable/modules/linear_model.html#ordinary-least-squares",
+    "sklearnSnippet": "from sklearn.linear_model import LinearRegression\nfrom sklearn.metrics import r2_score\n\nmodel = LinearRegression()\nmodel.fit(X_train, y_train)\ny_pred = model.predict(X_test)\nprint(f\"R² = {r2_score(y_test, y_pred):.3f}\")",
     "visualType": "scatter_line"
   },
   {
     "id": "ridge",
     "name": "Ridge Regression",
-    "tasks": ["regression"],
+    "tasks": [
+      "regression"
+    ],
     "interpretable": true,
     "highDimOk": true,
     "smallData": 3,
@@ -53,12 +62,15 @@
     "trainComplexity": "O(n·d²)",
     "inferenceComplexity": "O(d)",
     "docsUrl": "https://scikit-learn.org/stable/modules/linear_model.html#ridge-regression",
+    "sklearnSnippet": "from sklearn.linear_model import Ridge\nfrom sklearn.metrics import r2_score\n\nmodel = Ridge(alpha=1.0)\nmodel.fit(X_train, y_train)\ny_pred = model.predict(X_test)\nprint(f\"R² = {r2_score(y_test, y_pred):.3f}\")",
     "visualType": "scatter_line"
   },
   {
     "id": "lasso",
     "name": "Lasso Regression",
-    "tasks": ["regression"],
+    "tasks": [
+      "regression"
+    ],
     "interpretable": true,
     "highDimOk": true,
     "smallData": 2,
@@ -83,12 +95,15 @@
     "trainComplexity": "O(n·d·k) per iteration",
     "inferenceComplexity": "O(d)",
     "docsUrl": "https://scikit-learn.org/stable/modules/linear_model.html#lasso",
+    "sklearnSnippet": "from sklearn.linear_model import Lasso\nfrom sklearn.metrics import r2_score\n\nmodel = Lasso(alpha=0.1)\nmodel.fit(X_train, y_train)\ny_pred = model.predict(X_test)\nprint(f\"R² = {r2_score(y_test, y_pred):.3f}\")",
     "visualType": "scatter_line"
   },
   {
     "id": "elasticnet",
     "name": "ElasticNet",
-    "tasks": ["regression"],
+    "tasks": [
+      "regression"
+    ],
     "interpretable": true,
     "highDimOk": true,
     "smallData": 2,
@@ -113,12 +128,15 @@
     "trainComplexity": "O(n·d·k) per iteration",
     "inferenceComplexity": "O(d)",
     "docsUrl": "https://scikit-learn.org/stable/modules/linear_model.html#elastic-net",
+    "sklearnSnippet": "from sklearn.linear_model import ElasticNet\nfrom sklearn.metrics import r2_score\n\nmodel = ElasticNet(alpha=0.1, l1_ratio=0.5)\nmodel.fit(X_train, y_train)\ny_pred = model.predict(X_test)\nprint(f\"R² = {r2_score(y_test, y_pred):.3f}\")",
     "visualType": "scatter_line"
   },
   {
     "id": "svr",
     "name": "SVR (Support Vector Regression)",
-    "tasks": ["regression"],
+    "tasks": [
+      "regression"
+    ],
     "interpretable": false,
     "highDimOk": true,
     "smallData": 3,
@@ -143,12 +161,15 @@
     "trainComplexity": "O(n² – n³)",
     "inferenceComplexity": "O(n_sv · d)",
     "docsUrl": "https://scikit-learn.org/stable/modules/svm.html#regression",
+    "sklearnSnippet": "from sklearn.svm import SVR\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.metrics import r2_score\n\nscaler = StandardScaler()\nX_train_s = scaler.fit_transform(X_train)\nX_test_s = scaler.transform(X_test)\nmodel = SVR(kernel=\"rbf\")\nmodel.fit(X_train_s, y_train)\nprint(f\"R² = {r2_score(y_test, model.predict(X_test_s)):.3f}\")",
     "visualType": "scatter_line"
   },
   {
     "id": "random_forest_reg",
     "name": "Random Forest (Regressor)",
-    "tasks": ["regression"],
+    "tasks": [
+      "regression"
+    ],
     "interpretable": false,
     "highDimOk": true,
     "smallData": 2,
@@ -173,12 +194,15 @@
     "trainComplexity": "O(n·d·t·log n)",
     "inferenceComplexity": "O(t·log n)",
     "docsUrl": "https://scikit-learn.org/stable/modules/ensemble.html#random-forests",
+    "sklearnSnippet": "from sklearn.ensemble import RandomForestRegressor\nfrom sklearn.metrics import r2_score\n\nmodel = RandomForestRegressor(n_estimators=100, random_state=42)\nmodel.fit(X_train, y_train)\ny_pred = model.predict(X_test)\nprint(f\"R² = {r2_score(y_test, y_pred):.3f}\")",
     "visualType": "forest"
   },
   {
     "id": "gradient_boosting_reg",
     "name": "Gradient Boosting (Regressor)",
-    "tasks": ["regression"],
+    "tasks": [
+      "regression"
+    ],
     "interpretable": false,
     "highDimOk": true,
     "smallData": 1,
@@ -203,12 +227,15 @@
     "trainComplexity": "O(n·d·t·log n)",
     "inferenceComplexity": "O(t·log n)",
     "docsUrl": "https://scikit-learn.org/stable/modules/ensemble.html#gradient-boosting",
+    "sklearnSnippet": "from sklearn.ensemble import GradientBoostingRegressor\nfrom sklearn.metrics import r2_score\n\nmodel = GradientBoostingRegressor(n_estimators=100, learning_rate=0.1)\nmodel.fit(X_train, y_train)\ny_pred = model.predict(X_test)\nprint(f\"R² = {r2_score(y_test, y_pred):.3f}\")",
     "visualType": "boosting"
   },
   {
     "id": "xgboost_reg",
     "name": "XGBoost (Regressor)",
-    "tasks": ["regression"],
+    "tasks": [
+      "regression"
+    ],
     "interpretable": false,
     "highDimOk": true,
     "smallData": 1,
@@ -233,12 +260,15 @@
     "trainComplexity": "O(n·d·t·log n) — faster than sklearn GB",
     "inferenceComplexity": "O(t·log n)",
     "docsUrl": "https://xgboost.readthedocs.io/en/stable/python/python_intro.html",
+    "sklearnSnippet": "import xgboost as xgb\nfrom sklearn.metrics import r2_score\n\nmodel = xgb.XGBRegressor(n_estimators=100, learning_rate=0.1)\nmodel.fit(X_train, y_train)\ny_pred = model.predict(X_test)\nprint(f\"R² = {r2_score(y_test, y_pred):.3f}\")",
     "visualType": "boosting"
   },
   {
     "id": "logistic_regression",
     "name": "Logistic Regression",
-    "tasks": ["classification"],
+    "tasks": [
+      "classification"
+    ],
     "interpretable": true,
     "highDimOk": true,
     "smallData": 3,
@@ -263,12 +293,15 @@
     "trainComplexity": "O(n·d·k) per iteration",
     "inferenceComplexity": "O(d)",
     "docsUrl": "https://scikit-learn.org/stable/modules/linear_model.html#logistic-regression",
+    "sklearnSnippet": "from sklearn.linear_model import LogisticRegression\nfrom sklearn.metrics import accuracy_score\n\nmodel = LogisticRegression(max_iter=200)\nmodel.fit(X_train, y_train)\ny_pred = model.predict(X_test)\nprint(f\"Accuracy = {accuracy_score(y_test, y_pred):.3f}\")",
     "visualType": "sigmoid"
   },
   {
     "id": "knn",
     "name": "K-Nearest Neighbors (KNN)",
-    "tasks": ["classification"],
+    "tasks": [
+      "classification"
+    ],
     "interpretable": true,
     "highDimOk": false,
     "smallData": 3,
@@ -293,12 +326,15 @@
     "trainComplexity": "O(1) — lazy learner",
     "inferenceComplexity": "O(n·d) per query",
     "docsUrl": "https://scikit-learn.org/stable/modules/neighbors.html",
+    "sklearnSnippet": "from sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.metrics import accuracy_score\n\nmodel = KNeighborsClassifier(n_neighbors=5)\nmodel.fit(X_train, y_train)\ny_pred = model.predict(X_test)\nprint(f\"Accuracy = {accuracy_score(y_test, y_pred):.3f}\")",
     "visualType": "knn_viz"
   },
   {
     "id": "svm",
     "name": "SVM (Support Vector Machine)",
-    "tasks": ["classification"],
+    "tasks": [
+      "classification"
+    ],
     "interpretable": false,
     "highDimOk": true,
     "smallData": 3,
@@ -323,12 +359,16 @@
     "trainComplexity": "O(n² – n³)",
     "inferenceComplexity": "O(n_sv · d)",
     "docsUrl": "https://scikit-learn.org/stable/modules/svm.html#classification",
+    "sklearnSnippet": "from sklearn.svm import SVC\nfrom sklearn.metrics import accuracy_score\n\nmodel = SVC(kernel=\"rbf\", C=1.0)\nmodel.fit(X_train, y_train)\ny_pred = model.predict(X_test)\nprint(f\"Accuracy = {accuracy_score(y_test, y_pred):.3f}\")",
     "visualType": "hyperplane"
   },
   {
     "id": "decision_tree",
     "name": "Decision Tree",
-    "tasks": ["classification", "regression"],
+    "tasks": [
+      "classification",
+      "regression"
+    ],
     "interpretable": true,
     "highDimOk": false,
     "smallData": 3,
@@ -353,12 +393,15 @@
     "trainComplexity": "O(n·d·log n)",
     "inferenceComplexity": "O(log n)",
     "docsUrl": "https://scikit-learn.org/stable/modules/tree.html",
+    "sklearnSnippet": "from sklearn.tree import DecisionTreeClassifier\nfrom sklearn.metrics import accuracy_score\n\nmodel = DecisionTreeClassifier(max_depth=5, random_state=42)\nmodel.fit(X_train, y_train)\ny_pred = model.predict(X_test)\nprint(f\"Accuracy = {accuracy_score(y_test, y_pred):.3f}\")",
     "visualType": "tree"
   },
   {
     "id": "random_forest_cls",
     "name": "Random Forest (Classifier)",
-    "tasks": ["classification"],
+    "tasks": [
+      "classification"
+    ],
     "interpretable": false,
     "highDimOk": true,
     "smallData": 2,
@@ -383,12 +426,15 @@
     "trainComplexity": "O(n·d·t·log n)",
     "inferenceComplexity": "O(t·log n)",
     "docsUrl": "https://scikit-learn.org/stable/modules/ensemble.html#random-forests",
+    "sklearnSnippet": "from sklearn.ensemble import RandomForestClassifier\nfrom sklearn.metrics import accuracy_score\n\nmodel = RandomForestClassifier(n_estimators=100, random_state=42)\nmodel.fit(X_train, y_train)\ny_pred = model.predict(X_test)\nprint(f\"Accuracy = {accuracy_score(y_test, y_pred):.3f}\")",
     "visualType": "forest"
   },
   {
     "id": "gradient_boosting_cls",
     "name": "Gradient Boosting (Classifier)",
-    "tasks": ["classification"],
+    "tasks": [
+      "classification"
+    ],
     "interpretable": false,
     "highDimOk": true,
     "smallData": 1,
@@ -413,12 +459,15 @@
     "trainComplexity": "O(n·d·t·log n)",
     "inferenceComplexity": "O(t·log n)",
     "docsUrl": "https://scikit-learn.org/stable/modules/ensemble.html#gradient-boosting",
+    "sklearnSnippet": "from sklearn.ensemble import GradientBoostingClassifier\nfrom sklearn.metrics import accuracy_score\n\nmodel = GradientBoostingClassifier(n_estimators=100, learning_rate=0.1)\nmodel.fit(X_train, y_train)\ny_pred = model.predict(X_test)\nprint(f\"Accuracy = {accuracy_score(y_test, y_pred):.3f}\")",
     "visualType": "boosting"
   },
   {
     "id": "xgboost_cls",
     "name": "XGBoost (Classifier)",
-    "tasks": ["classification"],
+    "tasks": [
+      "classification"
+    ],
     "interpretable": false,
     "highDimOk": true,
     "smallData": 1,
@@ -443,12 +492,15 @@
     "trainComplexity": "O(n·d·t·log n) — GPU accelerated",
     "inferenceComplexity": "O(t·log n)",
     "docsUrl": "https://xgboost.readthedocs.io/en/stable/",
+    "sklearnSnippet": "import xgboost as xgb\nfrom sklearn.metrics import accuracy_score\n\nmodel = xgb.XGBClassifier(n_estimators=100, learning_rate=0.1)\nmodel.fit(X_train, y_train)\ny_pred = model.predict(X_test)\nprint(f\"Accuracy = {accuracy_score(y_test, y_pred):.3f}\")",
     "visualType": "boosting"
   },
   {
     "id": "naive_bayes",
     "name": "Naive Bayes",
-    "tasks": ["classification"],
+    "tasks": [
+      "classification"
+    ],
     "interpretable": true,
     "highDimOk": true,
     "smallData": 3,
@@ -473,12 +525,15 @@
     "trainComplexity": "O(n·d)",
     "inferenceComplexity": "O(d)",
     "docsUrl": "https://scikit-learn.org/stable/modules/naive_bayes.html",
+    "sklearnSnippet": "from sklearn.naive_bayes import GaussianNB\nfrom sklearn.metrics import accuracy_score\n\nmodel = GaussianNB()\nmodel.fit(X_train, y_train)\ny_pred = model.predict(X_test)\nprint(f\"Accuracy = {accuracy_score(y_test, y_pred):.3f}\")",
     "visualType": "bayes"
   },
   {
     "id": "kmeans",
     "name": "K-Means",
-    "tasks": ["clustering"],
+    "tasks": [
+      "clustering"
+    ],
     "interpretable": true,
     "highDimOk": false,
     "smallData": 3,
@@ -503,12 +558,15 @@
     "trainComplexity": "O(n·k·d·i) per iteration",
     "inferenceComplexity": "O(k·d)",
     "docsUrl": "https://scikit-learn.org/stable/modules/clustering.html#k-means",
+    "sklearnSnippet": "from sklearn.cluster import KMeans\nfrom sklearn.metrics import silhouette_score\n\nmodel = KMeans(n_clusters=3, random_state=42, n_init=10)\nlabels = model.fit_predict(X)\nprint(f\"Silhouette = {silhouette_score(X, labels):.3f}\")",
     "visualType": "clusters"
   },
   {
     "id": "dbscan",
     "name": "DBSCAN",
-    "tasks": ["clustering"],
+    "tasks": [
+      "clustering"
+    ],
     "interpretable": false,
     "highDimOk": false,
     "smallData": 3,
@@ -533,12 +591,15 @@
     "trainComplexity": "O(n·log n) with index",
     "inferenceComplexity": "O(log n) with index",
     "docsUrl": "https://scikit-learn.org/stable/modules/clustering.html#dbscan",
+    "sklearnSnippet": "from sklearn.cluster import DBSCAN\nfrom sklearn.metrics import silhouette_score\n\nmodel = DBSCAN(eps=0.5, min_samples=5)\nlabels = model.fit_predict(X)\nmask = labels != -1  # exclude noise\nprint(f\"Clusters: {len(set(labels[mask]))}\")\nprint(f\"Silhouette = {silhouette_score(X[mask], labels[mask]):.3f}\")",
     "visualType": "density"
   },
   {
     "id": "agglomerative",
     "name": "Agglomerative Clustering",
-    "tasks": ["clustering"],
+    "tasks": [
+      "clustering"
+    ],
     "interpretable": true,
     "highDimOk": false,
     "smallData": 3,
@@ -563,12 +624,15 @@
     "trainComplexity": "O(n² – n³)",
     "inferenceComplexity": "N/A (batch only)",
     "docsUrl": "https://scikit-learn.org/stable/modules/clustering.html#hierarchical-clustering",
+    "sklearnSnippet": "from sklearn.cluster import AgglomerativeClustering\nfrom sklearn.metrics import silhouette_score\n\nmodel = AgglomerativeClustering(n_clusters=3)\nlabels = model.fit_predict(X)\nprint(f\"Silhouette = {silhouette_score(X, labels):.3f}\")",
     "visualType": "dendrogram"
   },
   {
     "id": "gmm",
     "name": "Gaussian Mixture Model (GMM)",
-    "tasks": ["clustering"],
+    "tasks": [
+      "clustering"
+    ],
     "interpretable": false,
     "highDimOk": false,
     "smallData": 3,
@@ -593,12 +657,15 @@
     "trainComplexity": "O(n·k·d²) per EM iteration",
     "inferenceComplexity": "O(k·d²)",
     "docsUrl": "https://scikit-learn.org/stable/modules/mixture.html",
+    "sklearnSnippet": "from sklearn.mixture import GaussianMixture\nfrom sklearn.metrics import silhouette_score\n\nmodel = GaussianMixture(n_components=3, random_state=42)\nmodel.fit(X)\nlabels = model.predict(X)\nprint(f\"Silhouette = {silhouette_score(X, labels):.3f}\")",
     "visualType": "ellipses"
   },
   {
     "id": "pca",
     "name": "PCA (Principal Component Analysis)",
-    "tasks": ["dimensionality_reduction"],
+    "tasks": [
+      "dimensionality_reduction"
+    ],
     "interpretable": true,
     "highDimOk": true,
     "smallData": 3,
@@ -623,12 +690,15 @@
     "trainComplexity": "O(n·d·k) randomized",
     "inferenceComplexity": "O(d·k)",
     "docsUrl": "https://scikit-learn.org/stable/modules/decomposition.html#pca",
+    "sklearnSnippet": "from sklearn.decomposition import PCA\n\npca = PCA(n_components=2)\nX_reduced = pca.fit_transform(X)\nprint(f\"Explained variance: {pca.explained_variance_ratio_}\")\nprint(f\"Total: {sum(pca.explained_variance_ratio_):.1%}\")",
     "visualType": "pca_arrows"
   },
   {
     "id": "tsne",
     "name": "t-SNE",
-    "tasks": ["dimensionality_reduction"],
+    "tasks": [
+      "dimensionality_reduction"
+    ],
     "interpretable": false,
     "highDimOk": true,
     "smallData": 3,
@@ -653,12 +723,15 @@
     "trainComplexity": "O(n²) exact, O(n·log n) Barnes-Hut",
     "inferenceComplexity": "N/A — fit only, no transform",
     "docsUrl": "https://scikit-learn.org/stable/modules/manifold.html#t-sne",
+    "sklearnSnippet": "from sklearn.manifold import TSNE\nimport matplotlib.pyplot as plt\n\nX_2d = TSNE(n_components=2, perplexity=30, random_state=42).fit_transform(X)\nplt.scatter(X_2d[:, 0], X_2d[:, 1], c=labels, cmap=\"viridis\", s=5)\nplt.title(\"t-SNE projection\")\nplt.show()",
     "visualType": "projection"
   },
   {
     "id": "umap",
     "name": "UMAP",
-    "tasks": ["dimensionality_reduction"],
+    "tasks": [
+      "dimensionality_reduction"
+    ],
     "interpretable": false,
     "highDimOk": true,
     "smallData": 3,
@@ -683,12 +756,16 @@
     "trainComplexity": "O(n^1.14) approximate",
     "inferenceComplexity": "O(k·log n) per point",
     "docsUrl": "https://umap-learn.readthedocs.io/en/latest/",
+    "sklearnSnippet": "import umap\nimport matplotlib.pyplot as plt\n\nreducer = umap.UMAP(n_components=2, random_state=42)\nX_2d = reducer.fit_transform(X)\nplt.scatter(X_2d[:, 0], X_2d[:, 1], c=labels, cmap=\"viridis\", s=5)\nplt.title(\"UMAP projection\")\nplt.show()",
     "visualType": "projection"
   },
   {
     "id": "lda",
     "name": "LDA (Linear Discriminant Analysis)",
-    "tasks": ["dimensionality_reduction", "classification"],
+    "tasks": [
+      "dimensionality_reduction",
+      "classification"
+    ],
     "interpretable": true,
     "highDimOk": false,
     "smallData": 3,
@@ -713,12 +790,15 @@
     "trainComplexity": "O(n·d²)",
     "inferenceComplexity": "O(d·k)",
     "docsUrl": "https://scikit-learn.org/stable/modules/lda_qda.html",
+    "sklearnSnippet": "from sklearn.discriminant_analysis import LinearDiscriminantAnalysis\n\nlda = LinearDiscriminantAnalysis()\nX_lda = lda.fit_transform(X_train, y_train)\nprint(f\"Components: {X_lda.shape[1]}\")\nprint(f\"Explained variance: {lda.explained_variance_ratio_}\")",
     "visualType": "hyperplane"
   },
   {
     "id": "arima",
     "name": "ARIMA",
-    "tasks": ["time_series"],
+    "tasks": [
+      "time_series"
+    ],
     "interpretable": true,
     "highDimOk": false,
     "smallData": 3,
@@ -743,12 +823,15 @@
     "trainComplexity": "O(n·p²)",
     "inferenceComplexity": "O(p+q)",
     "docsUrl": "https://www.statsmodels.org/stable/generated/statsmodels.tsa.arima.model.ARIMA.html",
+    "sklearnSnippet": "from statsmodels.tsa.arima.model import ARIMA\n\nmodel = ARIMA(y_train, order=(5, 1, 0))\nfit = model.fit()\nforecast = fit.forecast(steps=10)\nprint(forecast)",
     "visualType": "timeseries"
   },
   {
     "id": "prophet",
     "name": "Prophet (Meta)",
-    "tasks": ["time_series"],
+    "tasks": [
+      "time_series"
+    ],
     "interpretable": true,
     "highDimOk": false,
     "smallData": 3,
@@ -773,12 +856,15 @@
     "trainComplexity": "O(n) approximate (Stan)",
     "inferenceComplexity": "O(n)",
     "docsUrl": "https://facebook.github.io/prophet/",
+    "sklearnSnippet": "from prophet import Prophet\nimport pandas as pd\n\ndf = pd.DataFrame({\"ds\": dates, \"y\": values})\nmodel = Prophet()\nmodel.fit(df)\nfuture = model.make_future_dataframe(periods=30)\nforecast = model.predict(future)\nprint(forecast[[\"ds\", \"yhat\"]].tail())",
     "visualType": "timeseries"
   },
   {
     "id": "lstm",
     "name": "LSTM / Seq2Seq",
-    "tasks": ["time_series"],
+    "tasks": [
+      "time_series"
+    ],
     "interpretable": false,
     "highDimOk": true,
     "smallData": 1,
@@ -803,12 +889,16 @@
     "trainComplexity": "O(n·h² · sequence_len)",
     "inferenceComplexity": "O(h² · sequence_len)",
     "docsUrl": "https://pytorch.org/docs/stable/generated/torch.nn.LSTM.html",
+    "sklearnSnippet": "import torch\nimport torch.nn as nn\n\nlstm = nn.LSTM(input_size=10, hidden_size=64, num_layers=2, batch_first=True)\nX = torch.randn(32, 50, 10)  # batch, seq_len, features\nout, (h_n, c_n) = lstm(X)\nprediction = nn.Linear(64, 1)(h_n[-1])\nprint(f\"Output shape: {prediction.shape}\")",
     "visualType": "sequence"
   },
   {
     "id": "mlp",
     "name": "Neural Network (MLP)",
-    "tasks": ["classification", "regression"],
+    "tasks": [
+      "classification",
+      "regression"
+    ],
     "interpretable": false,
     "highDimOk": true,
     "smallData": 1,
@@ -833,12 +923,16 @@
     "trainComplexity": "O(n·h·L) per epoch",
     "inferenceComplexity": "O(h·L)",
     "docsUrl": "https://scikit-learn.org/stable/modules/neural_networks_supervised.html",
+    "sklearnSnippet": "from sklearn.neural_network import MLPClassifier\nfrom sklearn.metrics import accuracy_score\n\nmodel = MLPClassifier(hidden_layer_sizes=(100, 50), max_iter=300)\nmodel.fit(X_train, y_train)\ny_pred = model.predict(X_test)\nprint(f\"Accuracy = {accuracy_score(y_test, y_pred):.3f}\")",
     "visualType": "neural"
   },
   {
     "id": "adaboost",
     "name": "AdaBoost",
-    "tasks": ["classification", "regression"],
+    "tasks": [
+      "classification",
+      "regression"
+    ],
     "interpretable": false,
     "highDimOk": false,
     "smallData": 2,
@@ -863,12 +957,16 @@
     "trainComplexity": "O(n·d·t)",
     "inferenceComplexity": "O(t)",
     "docsUrl": "https://scikit-learn.org/stable/modules/ensemble.html#adaboost",
+    "sklearnSnippet": "from sklearn.ensemble import AdaBoostClassifier\nfrom sklearn.metrics import accuracy_score\n\nmodel = AdaBoostClassifier(n_estimators=50, learning_rate=1.0)\nmodel.fit(X_train, y_train)\ny_pred = model.predict(X_test)\nprint(f\"Accuracy = {accuracy_score(y_test, y_pred):.3f}\")",
     "visualType": "boosting"
   },
   {
     "id": "extra_trees",
     "name": "Extra Trees",
-    "tasks": ["classification", "regression"],
+    "tasks": [
+      "classification",
+      "regression"
+    ],
     "interpretable": false,
     "highDimOk": true,
     "smallData": 2,
@@ -893,12 +991,15 @@
     "trainComplexity": "O(n·d·t) — faster than RF",
     "inferenceComplexity": "O(t·log n)",
     "docsUrl": "https://scikit-learn.org/stable/modules/ensemble.html#extremely-randomized-trees",
+    "sklearnSnippet": "from sklearn.ensemble import ExtraTreesClassifier\nfrom sklearn.metrics import accuracy_score\n\nmodel = ExtraTreesClassifier(n_estimators=100, random_state=42)\nmodel.fit(X_train, y_train)\ny_pred = model.predict(X_test)\nprint(f\"Accuracy = {accuracy_score(y_test, y_pred):.3f}\")",
     "visualType": "forest"
   },
   {
     "id": "bayesian_ridge",
     "name": "Bayesian Ridge Regression",
-    "tasks": ["regression"],
+    "tasks": [
+      "regression"
+    ],
     "interpretable": true,
     "highDimOk": true,
     "smallData": 3,
@@ -923,12 +1024,15 @@
     "trainComplexity": "O(n·d²) per iteration",
     "inferenceComplexity": "O(d)",
     "docsUrl": "https://scikit-learn.org/stable/modules/linear_model.html#bayesian-regression",
+    "sklearnSnippet": "from sklearn.linear_model import BayesianRidge\nfrom sklearn.metrics import r2_score\n\nmodel = BayesianRidge()\nmodel.fit(X_train, y_train)\ny_pred, y_std = model.predict(X_test, return_std=True)\nprint(f\"R² = {r2_score(y_test, y_pred):.3f}\")\nprint(f\"Mean uncertainty: ±{y_std.mean():.3f}\")",
     "visualType": "scatter_line"
   },
   {
     "id": "mean_shift",
     "name": "Mean Shift",
-    "tasks": ["clustering"],
+    "tasks": [
+      "clustering"
+    ],
     "interpretable": false,
     "highDimOk": false,
     "smallData": 3,
@@ -953,12 +1057,15 @@
     "trainComplexity": "O(n²) per iteration",
     "inferenceComplexity": "O(n)",
     "docsUrl": "https://scikit-learn.org/stable/modules/clustering.html#mean-shift",
+    "sklearnSnippet": "from sklearn.cluster import MeanShift\nfrom sklearn.metrics import silhouette_score\n\nmodel = MeanShift()\nlabels = model.fit_predict(X)\nprint(f\"Clusters found: {len(set(labels))}\")\nprint(f\"Silhouette = {silhouette_score(X, labels):.3f}\")",
     "visualType": "clusters"
   },
   {
     "id": "spectral",
     "name": "Spectral Clustering",
-    "tasks": ["clustering"],
+    "tasks": [
+      "clustering"
+    ],
     "interpretable": false,
     "highDimOk": false,
     "smallData": 3,
@@ -983,12 +1090,15 @@
     "trainComplexity": "O(n³)",
     "inferenceComplexity": "N/A — batch only",
     "docsUrl": "https://scikit-learn.org/stable/modules/clustering.html#spectral-clustering",
+    "sklearnSnippet": "from sklearn.cluster import SpectralClustering\nfrom sklearn.metrics import silhouette_score\n\nmodel = SpectralClustering(n_clusters=3, random_state=42)\nlabels = model.fit_predict(X)\nprint(f\"Silhouette = {silhouette_score(X, labels):.3f}\")",
     "visualType": "density"
   },
   {
     "id": "kernel_pca",
     "name": "Kernel PCA",
-    "tasks": ["dimensionality_reduction"],
+    "tasks": [
+      "dimensionality_reduction"
+    ],
     "interpretable": false,
     "highDimOk": true,
     "smallData": 3,
@@ -1013,12 +1123,15 @@
     "trainComplexity": "O(n²·d) kernel + O(n³) eigen",
     "inferenceComplexity": "O(n·d) per point",
     "docsUrl": "https://scikit-learn.org/stable/modules/decomposition.html#kernel-pca",
+    "sklearnSnippet": "from sklearn.decomposition import KernelPCA\n\nkpca = KernelPCA(n_components=2, kernel=\"rbf\", gamma=0.1)\nX_reduced = kpca.fit_transform(X)\nprint(f\"Reduced shape: {X_reduced.shape}\")",
     "visualType": "pca_arrows"
   },
   {
     "id": "nmf",
     "name": "NMF (Non-negative Matrix Factorization)",
-    "tasks": ["dimensionality_reduction"],
+    "tasks": [
+      "dimensionality_reduction"
+    ],
     "interpretable": true,
     "highDimOk": true,
     "smallData": 2,
@@ -1043,12 +1156,15 @@
     "trainComplexity": "O(n·d·k) per iteration",
     "inferenceComplexity": "O(d·k)",
     "docsUrl": "https://scikit-learn.org/stable/modules/decomposition.html#nmf",
+    "sklearnSnippet": "from sklearn.decomposition import NMF\n\nmodel = NMF(n_components=5, random_state=42)\nW = model.fit_transform(X)  # document-topic matrix\nH = model.components_          # topic-word matrix\nprint(f\"W shape: {W.shape}, H shape: {H.shape}\")",
     "visualType": "pca_arrows"
   },
   {
     "id": "exponential_smoothing",
     "name": "Exponential Smoothing (Holt-Winters)",
-    "tasks": ["time_series"],
+    "tasks": [
+      "time_series"
+    ],
     "interpretable": true,
     "highDimOk": false,
     "smallData": 3,
@@ -1073,12 +1189,15 @@
     "trainComplexity": "O(n)",
     "inferenceComplexity": "O(1)",
     "docsUrl": "https://www.statsmodels.org/stable/generated/statsmodels.tsa.holtwinters.ExponentialSmoothing.html",
+    "sklearnSnippet": "from statsmodels.tsa.holtwinters import ExponentialSmoothing\n\nmodel = ExponentialSmoothing(\n    y_train, trend=\"add\", seasonal=\"add\", seasonal_periods=12\n)\nfit = model.fit()\nforecast = fit.forecast(steps=12)\nprint(forecast)",
     "visualType": "timeseries"
   },
   {
     "id": "var",
     "name": "VAR (Vector Autoregression)",
-    "tasks": ["time_series"],
+    "tasks": [
+      "time_series"
+    ],
     "interpretable": true,
     "highDimOk": false,
     "smallData": 2,
@@ -1103,6 +1222,7 @@
     "trainComplexity": "O(n·m²·p²) where m=series, p=lags",
     "inferenceComplexity": "O(m·p)",
     "docsUrl": "https://www.statsmodels.org/stable/generated/statsmodels.tsa.vector_ar.var_model.VAR.html",
+    "sklearnSnippet": "from statsmodels.tsa.api import VAR\n\nmodel = VAR(df_train)  # DataFrame with multiple series columns\nfit = model.fit(maxlags=5, ic=\"aic\")\nforecast = fit.forecast(df_train.values[-fit.k_ar:], steps=10)\nprint(f\"Forecast shape: {forecast.shape}\")",
     "visualType": "timeseries"
   }
 ]

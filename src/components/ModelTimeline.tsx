@@ -325,6 +325,9 @@ export function ModelTimeline({ liveModels = [] }: Props) {
   const [filter, setFilter] = useState<string | null>(null);
   const [highlightOnly, setHighlightOnly] = useState(false);
   const [showLive, setShowLive] = useState(true);
+  const [yearZoom, setYearZoom] = useState<string | null>(null);
+  const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
+  const [horizontal, setHorizontal] = useState(false);
 
   // Convert live Model objects → TimelineEvent, skip ones with no date or already in static EVENTS
   const liveEvents = useMemo<TimelineEvent[]>(() => {
@@ -354,16 +357,22 @@ export function ModelTimeline({ liveModels = [] }: Props) {
     [allEvents],
   );
 
+  const years = useMemo(
+    () => Array.from(new Set(allEvents.map((e) => e.date.slice(0, 4)))).sort(),
+    [allEvents],
+  );
+
   const filtered = allEvents.filter((e) => {
     if (filter && e.org !== filter) return false;
     if (highlightOnly && !e.highlight) return false;
+    if (yearZoom && !e.date.startsWith(yearZoom)) return false;
     return true;
   });
 
   return (
     <div>
-      {/* Controls */}
-      <div className="flex flex-wrap gap-2 mb-6 items-center">
+      {/* Controls row 1: orgs */}
+      <div className="flex flex-wrap gap-2 mb-3 items-center">
         <button
           onClick={() => setFilter(null)}
           className={`text-xs px-3 py-1.5 rounded-full font-medium transition-colors cursor-pointer ${
@@ -392,7 +401,47 @@ export function ModelTimeline({ liveModels = [] }: Props) {
             {org}
           </button>
         ))}
+      </div>
+
+      {/* Controls row 2: year zoom + toggles */}
+      <div className="flex flex-wrap gap-2 mb-6 items-center">
+        <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wide mr-1">
+          Year:
+        </span>
+        <button
+          onClick={() => setYearZoom(null)}
+          className={`text-xs px-2.5 py-1 rounded-full font-medium transition-colors cursor-pointer ${
+            !yearZoom
+              ? "bg-zinc-800 dark:bg-zinc-100 text-white dark:text-zinc-900"
+              : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-700"
+          }`}
+        >
+          All
+        </button>
+        {years.map((yr) => (
+          <button
+            key={yr}
+            onClick={() => setYearZoom(yearZoom === yr ? null : yr)}
+            className={`text-xs px-2.5 py-1 rounded-full font-medium transition-colors cursor-pointer ${
+              yearZoom === yr
+                ? "bg-violet-600 text-white"
+                : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-700"
+            }`}
+          >
+            {yr}
+          </button>
+        ))}
         <div className="ml-auto flex gap-2">
+          <button
+            onClick={() => setHorizontal((v) => !v)}
+            className={`text-xs px-3 py-1.5 rounded-full font-medium transition-colors cursor-pointer border ${
+              horizontal
+                ? "bg-blue-600 text-white border-blue-600"
+                : "border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-400 hover:border-blue-400"
+            }`}
+          >
+            {horizontal ? "↕ Vertical" : "↔ Horizontal"}
+          </button>
           {liveModels.length > 0 && (
             <button
               onClick={() => setShowLive((v) => !v)}
@@ -419,95 +468,193 @@ export function ModelTimeline({ liveModels = [] }: Props) {
         </div>
       </div>
 
-      {/* Timeline */}
-      <div className="relative">
-        {/* Vertical line */}
-        <div className="absolute left-[88px] top-0 bottom-0 w-0.5 bg-zinc-200 dark:bg-zinc-700" />
+      {/* Timeline — vertical or horizontal */}
+      {horizontal ? (
+        <div className="overflow-x-auto pb-4">
+          <div
+            className="flex items-start gap-0 min-w-max relative"
+            style={{ paddingTop: 12 }}
+          >
+            {/* Horizontal line */}
+            <div className="absolute top-[18px] left-0 right-0 h-0.5 bg-zinc-200 dark:bg-zinc-700" />
 
-        <div className="space-y-1">
-          {filtered.map((event, i) => {
-            const color = ORG_COLORS[event.org] ?? "#8b5cf6";
-            return (
-              <div key={i} className="flex gap-0 items-start group">
-                {/* Date */}
-                <div className="w-20 shrink-0 pt-3 pr-3 text-right">
-                  <span className="text-[11px] text-zinc-400 dark:text-zinc-500 font-mono leading-none">
-                    {formatDate(event.date)}
-                  </span>
-                </div>
-
-                {/* Dot */}
-                <div className="shrink-0 relative z-10 mt-3.5">
+            {filtered.map((event, i) => {
+              const color = ORG_COLORS[event.org] ?? "#8b5cf6";
+              const isHovered = hoveredIdx === i;
+              return (
+                <div
+                  key={i}
+                  className="flex flex-col items-center relative shrink-0"
+                  style={{ width: 140 }}
+                  onMouseEnter={() => setHoveredIdx(i)}
+                  onMouseLeave={() => setHoveredIdx(null)}
+                >
+                  {/* Dot */}
                   <div
-                    className={`w-3 h-3 rounded-full border-2 border-white dark:border-zinc-950 ${event.highlight ? "ring-2 ring-offset-1 dark:ring-offset-zinc-950" : ""}`}
+                    className={`w-3 h-3 rounded-full border-2 border-white dark:border-zinc-950 z-10 ${event.highlight ? "ring-2 ring-offset-1 dark:ring-offset-zinc-950" : ""}`}
                     style={{
                       backgroundColor: color,
                       ...(event.highlight ? { ringColor: color } : {}),
                     }}
                   />
-                </div>
-
-                {/* Card */}
-                <div className="flex-1 ml-4 mb-2">
-                  <div
-                    className={`rounded-xl border px-4 py-3 transition-colors ${
-                      event.highlight
-                        ? "bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-700 shadow-sm"
-                        : "bg-zinc-50 dark:bg-zinc-900/50 border-zinc-100 dark:border-zinc-800"
-                    }`}
+                  {/* Date label */}
+                  <span className="text-[9px] text-zinc-400 dark:text-zinc-500 font-mono mt-2 leading-none">
+                    {formatDate(event.date)}
+                  </span>
+                  {/* Compact label */}
+                  <span className="text-[10px] font-semibold text-zinc-700 dark:text-zinc-300 mt-1 text-center leading-tight max-w-[120px] truncate">
+                    {event.name}
+                  </span>
+                  <span
+                    className="text-[8px] px-1.5 py-0.5 rounded-full font-medium text-white mt-1"
+                    style={{ backgroundColor: color }}
                   >
-                    <div className="flex items-start justify-between gap-2 flex-wrap">
-                      <div>
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <span className="font-semibold text-sm text-zinc-900 dark:text-zinc-100">
-                            {event.name}
+                    {event.org}
+                  </span>
+
+                  {/* Hover detail card */}
+                  {isHovered && (
+                    <div className="absolute top-16 z-30 w-56 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-xl shadow-xl p-3 pointer-events-none">
+                      <div className="flex items-center gap-2 flex-wrap mb-1.5">
+                        <span className="font-semibold text-xs text-zinc-900 dark:text-zinc-100">
+                          {event.name}
+                        </span>
+                        <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400 font-mono">
+                          {event.params}
+                        </span>
+                        {event.highlight && (
+                          <span className="text-[9px] text-amber-500 font-bold">
+                            ★
                           </span>
-                          <span
-                            className="text-[10px] px-2 py-0.5 rounded-full font-medium text-white"
-                            style={{ backgroundColor: color }}
-                          >
-                            {event.org}
-                          </span>
-                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400 font-mono">
-                            {event.params}
-                          </span>
-                          {event.highlight && (
-                            <span className="text-[10px] text-amber-500 font-bold">
-                              ★ Milestone
+                        )}
+                      </div>
+                      <p className="text-[11px] text-zinc-500 dark:text-zinc-400 leading-relaxed">
+                        {event.description}
+                      </p>
+                      {event.inDb && (
+                        <span className="inline-block mt-1.5 text-[9px] px-1.5 py-0.5 rounded-full bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-400 font-medium">
+                          in this app
+                        </span>
+                      )}
+                      {event.isLive && (
+                        <span className="inline-block mt-1.5 text-[9px] px-1.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 font-medium">
+                          Live · HF
+                        </span>
+                      )}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      ) : (
+        <div className="relative">
+          {/* Vertical line */}
+          <div className="absolute left-[88px] top-0 bottom-0 w-0.5 bg-zinc-200 dark:bg-zinc-700" />
+
+          <div className="space-y-1">
+            {filtered.map((event, i) => {
+              const color = ORG_COLORS[event.org] ?? "#8b5cf6";
+              const isHovered = hoveredIdx === i;
+              return (
+                <div
+                  key={i}
+                  className="flex gap-0 items-start group"
+                  onMouseEnter={() => setHoveredIdx(i)}
+                  onMouseLeave={() => setHoveredIdx(null)}
+                >
+                  {/* Date */}
+                  <div className="w-20 shrink-0 pt-3 pr-3 text-right">
+                    <span className="text-[11px] text-zinc-400 dark:text-zinc-500 font-mono leading-none">
+                      {formatDate(event.date)}
+                    </span>
+                  </div>
+
+                  {/* Dot */}
+                  <div className="shrink-0 relative z-10 mt-3.5">
+                    <div
+                      className={`w-3 h-3 rounded-full border-2 border-white dark:border-zinc-950 transition-transform ${event.highlight ? "ring-2 ring-offset-1 dark:ring-offset-zinc-950" : ""} ${isHovered ? "scale-150" : ""}`}
+                      style={{
+                        backgroundColor: color,
+                        ...(event.highlight ? { ringColor: color } : {}),
+                      }}
+                    />
+                  </div>
+
+                  {/* Card */}
+                  <div className="flex-1 ml-4 mb-2 relative">
+                    <div
+                      className={`rounded-xl border px-4 py-3 transition-all ${
+                        isHovered
+                          ? "bg-white dark:bg-zinc-900 border-zinc-300 dark:border-zinc-600 shadow-md scale-[1.01]"
+                          : event.highlight
+                            ? "bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-700 shadow-sm"
+                            : "bg-zinc-50 dark:bg-zinc-900/50 border-zinc-100 dark:border-zinc-800"
+                      }`}
+                    >
+                      <div className="flex items-start justify-between gap-2 flex-wrap">
+                        <div>
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span className="font-semibold text-sm text-zinc-900 dark:text-zinc-100">
+                              {event.name}
                             </span>
-                          )}
-                          {event.inDb && (
-                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-400 font-medium">
-                              in this app ↗
-                            </span>
-                          )}
-                          {event.isLive && (
-                            <a
-                              href={event.hfUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 font-medium hover:underline"
+                            <span
+                              className="text-[10px] px-2 py-0.5 rounded-full font-medium text-white"
+                              style={{ backgroundColor: color }}
                             >
-                              Live · HF ↗
-                            </a>
-                          )}
+                              {event.org}
+                            </span>
+                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400 font-mono">
+                              {event.params}
+                            </span>
+                            {event.highlight && (
+                              <span className="text-[10px] text-amber-500 font-bold">
+                                ★ Milestone
+                              </span>
+                            )}
+                            {event.inDb && (
+                              <span className="text-[10px] px-2 py-0.5 rounded-full bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-400 font-medium">
+                                in this app ↗
+                              </span>
+                            )}
+                            {event.isLive && (
+                              <a
+                                href={event.hfUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 font-medium hover:underline"
+                              >
+                                Live · HF ↗
+                              </a>
+                            )}
+                          </div>
+                          <p
+                            className={`text-xs text-zinc-500 dark:text-zinc-400 mt-1 leading-relaxed transition-all ${isHovered ? "max-h-40" : "max-h-5 overflow-hidden"}`}
+                          >
+                            {event.description}
+                          </p>
                         </div>
-                        <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1 leading-relaxed">
-                          {event.description}
-                        </p>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
-      </div>
+      )}
 
       <p className="text-xs text-zinc-400 dark:text-zinc-500 mt-6 text-center">
-        Showing open-source / open-weight models. Dates are approximate release
-        / announcement dates.
+        Showing {filtered.length} of {allEvents.length} models.{" "}
+        {yearZoom && (
+          <button
+            onClick={() => setYearZoom(null)}
+            className="underline cursor-pointer"
+          >
+            Show all years
+          </button>
+        )}
       </p>
     </div>
   );

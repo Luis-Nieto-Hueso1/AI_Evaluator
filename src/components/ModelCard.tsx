@@ -198,6 +198,204 @@ function CommandRow({
   );
 }
 
+const SLIDER_STEPS = [
+  10_000, 50_000, 100_000, 250_000, 500_000, 1_000_000, 5_000_000,
+];
+const RATIO_OPTIONS = [
+  { label: "50/50", inRatio: 0.5 },
+  { label: "80/20 (chat)", inRatio: 0.8 },
+  { label: "20/80 (gen)", inRatio: 0.2 },
+];
+
+function CostCalculator({
+  apiCost,
+}: {
+  apiCost: { provider: string; inputPer1M: number; outputPer1M: number };
+}) {
+  const [tokIdx, setTokIdx] = useState(2); // default 100K
+  const [ratioIdx, setRatioIdx] = useState(0); // default 50/50
+  const [showDetail, setShowDetail] = useState(false);
+
+  const tokensPerDay = SLIDER_STEPS[tokIdx];
+  const tokensPerMonth = tokensPerDay * 30;
+  const { inRatio } = RATIO_OPTIONS[ratioIdx];
+  const inputTokens = tokensPerMonth * inRatio;
+  const outputTokens = tokensPerMonth * (1 - inRatio);
+  const inputCost = (inputTokens / 1_000_000) * apiCost.inputPer1M;
+  const outputCost = (outputTokens / 1_000_000) * apiCost.outputPer1M;
+  const totalCost = inputCost + outputCost;
+
+  function formatTokLabel(n: number) {
+    if (n >= 1_000_000)
+      return `${(n / 1_000_000).toFixed(n % 1_000_000 === 0 ? 0 : 1)}M`;
+    return `${(n / 1_000).toFixed(0)}K`;
+  }
+
+  function exportCostCsv() {
+    const rows = [
+      [
+        "Provider",
+        "Tokens/Day",
+        "Input/Output Ratio",
+        "Input Tokens/Month",
+        "Output Tokens/Month",
+        "Input Cost",
+        "Output Cost",
+        "Total Monthly Cost",
+      ],
+      [
+        apiCost.provider,
+        tokensPerDay,
+        RATIO_OPTIONS[ratioIdx].label,
+        Math.round(inputTokens),
+        Math.round(outputTokens),
+        `$${inputCost.toFixed(2)}`,
+        `$${outputCost.toFixed(2)}`,
+        `$${totalCost.toFixed(2)}`,
+      ],
+    ];
+    const csv = rows.map((r) => r.join(",")).join("\n");
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `cost-estimate-${apiCost.provider.toLowerCase().replace(/\s+/g, "-")}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  return (
+    <div className="bg-emerald-50 dark:bg-emerald-900/10 border border-emerald-100 dark:border-emerald-900/30 rounded-lg px-3 py-2.5">
+      <div className="flex items-center justify-between mb-1">
+        <p className="text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 uppercase tracking-wide">
+          API equivalent — {apiCost.provider}
+        </p>
+        <div className="flex gap-1.5">
+          <button
+            onClick={() => setShowDetail((v) => !v)}
+            className="text-[9px] px-1.5 py-0.5 rounded bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-200 dark:hover:bg-emerald-900/60 transition-colors cursor-pointer font-medium"
+          >
+            {showDetail ? "Simple" : "Detailed"}
+          </button>
+          <button
+            onClick={exportCostCsv}
+            className="text-[9px] px-1.5 py-0.5 rounded bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-200 dark:hover:bg-emerald-900/60 transition-colors cursor-pointer font-medium"
+          >
+            CSV
+          </button>
+        </div>
+      </div>
+
+      {/* Rate display */}
+      <div className="flex items-center gap-3 flex-wrap">
+        <span className="text-xs text-zinc-600 dark:text-zinc-400">
+          <span className="font-medium text-zinc-800 dark:text-zinc-200">
+            ${apiCost.inputPer1M.toFixed(2)}
+          </span>{" "}
+          in ·{" "}
+          <span className="font-medium text-zinc-800 dark:text-zinc-200">
+            ${apiCost.outputPer1M.toFixed(2)}
+          </span>{" "}
+          out <span className="text-zinc-400">/1M tokens</span>
+        </span>
+        <span className="text-zinc-300 dark:text-zinc-600">·</span>
+        <span className="text-xs text-zinc-600 dark:text-zinc-400">
+          At {formatTokLabel(tokensPerDay)} tok/day →{" "}
+          <span className="font-semibold text-emerald-600 dark:text-emerald-400">
+            ${totalCost.toFixed(2)}/month
+          </span>{" "}
+          via API
+        </span>
+      </div>
+
+      {showDetail && (
+        <div className="mt-2.5 space-y-2 pt-2 border-t border-emerald-200/50 dark:border-emerald-800/30">
+          {/* Tokens/day slider */}
+          <div>
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-[10px] text-zinc-500 dark:text-zinc-400 font-medium">
+                Tokens/day
+              </span>
+              <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400">
+                {formatTokLabel(tokensPerDay)}
+              </span>
+            </div>
+            <input
+              type="range"
+              min={0}
+              max={SLIDER_STEPS.length - 1}
+              value={tokIdx}
+              onChange={(e) => setTokIdx(Number(e.target.value))}
+              className="w-full h-1.5 accent-emerald-600 cursor-pointer"
+            />
+            <div className="flex justify-between text-[8px] text-zinc-400 mt-0.5">
+              <span>10K</span>
+              <span>5M</span>
+            </div>
+          </div>
+
+          {/* Input/output ratio */}
+          <div>
+            <span className="text-[10px] text-zinc-500 dark:text-zinc-400 font-medium">
+              Input/Output ratio
+            </span>
+            <div className="flex gap-1.5 mt-1">
+              {RATIO_OPTIONS.map((opt, idx) => (
+                <button
+                  key={opt.label}
+                  onClick={() => setRatioIdx(idx)}
+                  className={`text-[10px] px-2 py-0.5 rounded-full font-medium transition-colors cursor-pointer ${
+                    ratioIdx === idx
+                      ? "bg-emerald-600 text-white"
+                      : "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-200"
+                  }`}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Breakdown */}
+          <div className="grid grid-cols-3 gap-2 text-center">
+            <div className="bg-white/60 dark:bg-zinc-800/40 rounded-lg px-2 py-1.5">
+              <p className="text-[9px] text-zinc-400 font-medium">Input</p>
+              <p className="text-xs font-bold text-zinc-700 dark:text-zinc-300">
+                ${inputCost.toFixed(2)}
+              </p>
+              <p className="text-[8px] text-zinc-400">
+                {formatTokLabel(Math.round(inputTokens))}/mo
+              </p>
+            </div>
+            <div className="bg-white/60 dark:bg-zinc-800/40 rounded-lg px-2 py-1.5">
+              <p className="text-[9px] text-zinc-400 font-medium">Output</p>
+              <p className="text-xs font-bold text-zinc-700 dark:text-zinc-300">
+                ${outputCost.toFixed(2)}
+              </p>
+              <p className="text-[8px] text-zinc-400">
+                {formatTokLabel(Math.round(outputTokens))}/mo
+              </p>
+            </div>
+            <div className="bg-emerald-100/60 dark:bg-emerald-900/20 rounded-lg px-2 py-1.5">
+              <p className="text-[9px] text-emerald-600 dark:text-emerald-400 font-medium">
+                Total
+              </p>
+              <p className="text-xs font-bold text-emerald-700 dark:text-emerald-300">
+                ${totalCost.toFixed(2)}
+              </p>
+              <p className="text-[8px] text-emerald-500">per month</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <p className="text-[11px] text-emerald-600 dark:text-emerald-400 mt-0.5">
+        Running locally saves ~${totalCost.toFixed(2)}/month
+      </p>
+    </div>
+  );
+}
+
 export function ModelCard({ item, hardware, calibrationFactor = 1 }: Props) {
   const [showRun, setShowRun] = useState(false);
   const [showDetail, setShowDetail] = useState(false);
@@ -523,44 +721,7 @@ export function ModelCard({ item, hardware, calibrationFactor = 1 }: Props) {
             })()}
 
           {/* API cost comparison */}
-          {model.apiCost &&
-            (() => {
-              const tokensPerDay = 100_000;
-              const tokensPerMonth = tokensPerDay * 30;
-              const avgCost =
-                (model.apiCost.inputPer1M + model.apiCost.outputPer1M) / 2;
-              const monthlyCost = (tokensPerMonth / 1_000_000) * avgCost;
-              return (
-                <div className="bg-emerald-50 dark:bg-emerald-900/10 border border-emerald-100 dark:border-emerald-900/30 rounded-lg px-3 py-2.5">
-                  <p className="text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 uppercase tracking-wide mb-1">
-                    API equivalent — {model.apiCost.provider}
-                  </p>
-                  <div className="flex items-center gap-3 flex-wrap">
-                    <span className="text-xs text-zinc-600 dark:text-zinc-400">
-                      <span className="font-medium text-zinc-800 dark:text-zinc-200">
-                        ${model.apiCost.inputPer1M.toFixed(2)}
-                      </span>{" "}
-                      in ·{" "}
-                      <span className="font-medium text-zinc-800 dark:text-zinc-200">
-                        ${model.apiCost.outputPer1M.toFixed(2)}
-                      </span>{" "}
-                      out <span className="text-zinc-400">/1M tokens</span>
-                    </span>
-                    <span className="text-zinc-300 dark:text-zinc-600">·</span>
-                    <span className="text-xs text-zinc-600 dark:text-zinc-400">
-                      At 100K tok/day →{" "}
-                      <span className="font-semibold text-emerald-600 dark:text-emerald-400">
-                        ${monthlyCost.toFixed(2)}/month
-                      </span>{" "}
-                      via API
-                    </span>
-                  </div>
-                  <p className="text-[11px] text-emerald-600 dark:text-emerald-400 mt-0.5">
-                    Running locally saves ~${monthlyCost.toFixed(2)}/month
-                  </p>
-                </div>
-              );
-            })()}
+          {model.apiCost && <CostCalculator apiCost={model.apiCost} />}
 
           {/* Strengths */}
           {model.strengths && model.strengths.length > 0 && (
