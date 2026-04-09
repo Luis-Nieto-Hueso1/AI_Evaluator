@@ -1,13 +1,12 @@
 import { useState, useCallback } from "react";
 
-// Decision tree nodes mirroring the scikit-learn cheat sheet
 interface FlowNode {
   id: string;
   label: string;
   question?: string;
-  yes?: string; // id of yes-child
-  no?: string; // id of no-child
-  result?: string; // algorithm recommendation
+  yes?: string;
+  no?: string;
+  result?: string;
   x: number;
   y: number;
 }
@@ -16,199 +15,186 @@ const NODES: FlowNode[] = [
   // Root
   {
     id: "start",
-    label: "> 50 samples?",
-    question: "Do you have more than 50 samples?",
-    yes: "predict",
-    no: "more_data",
-    x: 600,
+    label: "Need deep\nlearning?",
+    question: "Does your task require deep learning (neural networks)?",
+    yes: "dl_task",
+    no: "classical",
+    x: 505,
     y: 30,
   },
-  {
-    id: "more_data",
-    label: "Get more data",
-    result: "Get more data",
-    x: 170,
-    y: 110,
-  },
 
-  // Predict category or quantity?
+  // Classical ML branch
   {
-    id: "predict",
-    label: "Predicting a\ncategory?",
-    question: "Are you predicting a category (classification)?",
-    yes: "labeled_cls",
-    no: "predict_qty",
-    x: 600,
+    id: "classical",
+    label: "Tabular\ndata?",
+    question: "Are you working with tabular/structured data?",
+    yes: "tabular_prod",
+    no: "classical_other",
+    x: 260,
     y: 130,
   },
-
-  // Classification branch
   {
-    id: "labeled_cls",
-    label: "Have labeled\ndata?",
-    question: "Do you have labeled training data?",
-    yes: "cls_size",
-    no: "clustering",
-    x: 310,
+    id: "tabular_prod",
+    label: "Production\nready?",
+    question: "Do you need production-grade deployment?",
+    yes: "sklearn_result",
+    no: "learning_check",
+    x: 148,
     y: 230,
   },
   {
-    id: "cls_size",
-    label: "> 100K\nsamples?",
-    question: "Do you have more than 100K samples?",
-    yes: "sgd_cls",
-    no: "cls_few_features",
-    x: 170,
+    id: "sklearn_result",
+    label: "scikit-learn",
+    result: "scikit-learn — mature, batteries-included ML library",
+    x: 80,
     y: 330,
   },
   {
-    id: "sgd_cls",
-    label: "SGD Classifier\nor Linear SVC",
-    result: "SGD Classifier / Linear SVC",
-    x: 75,
-    y: 430,
-  },
-  {
-    id: "cls_few_features",
-    label: "Few features\nimportant?",
-    question: "Are only a few features important (interpretability)?",
-    yes: "cls_interp",
-    no: "cls_complex",
-    x: 270,
-    y: 430,
-  },
-  {
-    id: "cls_interp",
-    label: "Logistic Regression\nor Naive Bayes",
-    result: "Logistic Regression / Naive Bayes",
-    x: 160,
-    y: 530,
-  },
-  {
-    id: "cls_complex",
-    label: "SVM or\nEnsemble?",
-    question: "Do you need the very best accuracy (ensemble) or SVM?",
-    yes: "ensemble_cls",
-    no: "svm_knn",
-    x: 390,
-    y: 530,
-  },
-  {
-    id: "ensemble_cls",
-    label: "Random Forest\nor XGBoost",
-    result: "Random Forest / XGBoost",
-    x: 310,
-    y: 630,
-  },
-  { id: "svm_knn", label: "SVM or KNN", result: "SVM / KNN", x: 480, y: 630 },
-
-  // Clustering branch
-  {
-    id: "clustering",
-    label: "Know #\nclusters?",
-    question: "Do you know the number of clusters?",
-    yes: "kmeans",
-    no: "density_cl",
-    x: 480,
+    id: "learning_check",
+    label: "Just\nlearning?",
+    question: "Are you a beginner just getting started with ML?",
+    yes: "sklearn_learn",
+    no: "xgboost_result",
+    x: 215,
     y: 330,
   },
-  { id: "kmeans", label: "K-Means", result: "K-Means", x: 420, y: 430 },
   {
-    id: "density_cl",
-    label: "DBSCAN or\nMean Shift",
-    result: "DBSCAN / Mean Shift",
-    x: 555,
+    id: "sklearn_learn",
+    label: "scikit-learn",
+    result: "scikit-learn — best for learning ML fundamentals",
+    x: 145,
     y: 430,
   },
-
-  // Regression / Dim-reduction branch
   {
-    id: "predict_qty",
-    label: "Predicting a\nquantity?",
-    question: "Are you predicting a continuous number (regression)?",
-    yes: "reg_branch",
-    no: "dimred",
-    x: 900,
+    id: "xgboost_result",
+    label: "XGBoost /\nLightGBM",
+    result: "XGBoost or LightGBM — top performance on tabular data",
+    x: 285,
+    y: 430,
+  },
+  {
+    id: "classical_other",
+    label: "Scientific\ncomputing?",
+    question: "Are you doing scientific computing or numerical methods?",
+    yes: "jax_sci",
+    no: "dl_task",
+    x: 375,
     y: 230,
   },
   {
-    id: "reg_branch",
-    label: "> 100K\nsamples?",
-    question: "Do you have more than 100K samples?",
-    yes: "sgd_reg",
-    no: "reg_few",
-    x: 770,
+    id: "jax_sci",
+    label: "JAX",
+    result: "JAX — high-performance numerical computing with autograd",
+    x: 375,
     y: 330,
-  },
-  {
-    id: "sgd_reg",
-    label: "SGD Regressor\nor Ridge",
-    result: "SGD Regressor / Ridge Regression",
-    x: 690,
-    y: 430,
-  },
-  {
-    id: "reg_few",
-    label: "Few features\nimportant?",
-    question: "Do you need interpretable coefficients?",
-    yes: "lasso_elasticnet",
-    no: "reg_ensemble",
-    x: 860,
-    y: 430,
-  },
-  {
-    id: "lasso_elasticnet",
-    label: "Lasso /\nElasticNet",
-    result: "Lasso / ElasticNet",
-    x: 790,
-    y: 530,
-  },
-  {
-    id: "reg_ensemble",
-    label: "Random Forest\nor GBR",
-    result: "Random Forest Regressor / Gradient Boosting",
-    x: 940,
-    y: 530,
   },
 
-  // Dim reduction
+  // Deep learning branch
   {
-    id: "dimred",
-    label: "Visualizing\nstructure?",
-    question: "Are you trying to visualize or reduce dimensions?",
-    yes: "dimred_size",
-    no: "just_looking",
-    x: 1080,
+    id: "dl_task",
+    label: "NLP or\nGenerative?",
+    question: "Is your task NLP, text generation, or LLM-related?",
+    yes: "nlp_branch",
+    no: "cv_check",
+    x: 750,
+    y: 130,
+  },
+  {
+    id: "nlp_branch",
+    label: "Fine-tuning\npretrained?",
+    question: "Are you fine-tuning a pretrained model (e.g., BERT, LLaMA)?",
+    yes: "hf_result",
+    no: "train_scratch",
+    x: 585,
+    y: 230,
+  },
+  {
+    id: "hf_result",
+    label: "HuggingFace\nTransformers",
+    result: "HuggingFace Transformers — easiest pretrained model workflow",
+    x: 510,
     y: 330,
   },
   {
-    id: "dimred_size",
-    label: "< 10K\nsamples?",
-    question: "Do you have fewer than 10K samples?",
-    yes: "tsne_umap",
-    no: "pca",
-    x: 1020,
+    id: "train_scratch",
+    label: "Large\nteam?",
+    question: "Do you have a large engineering team (10+)?",
+    yes: "pt_large",
+    no: "pt_solo",
+    x: 660,
+    y: 330,
+  },
+  {
+    id: "pt_large",
+    label: "PyTorch",
+    result: "PyTorch — most flexible, dominant in research & industry",
+    x: 595,
     y: 430,
   },
   {
-    id: "tsne_umap",
-    label: "t-SNE /\nUMAP",
-    result: "t-SNE / UMAP",
-    x: 1090,
-    y: 530,
+    id: "pt_solo",
+    label: "PyTorch +\nLightning",
+    result: "PyTorch Lightning — reduces boilerplate for small teams",
+    x: 725,
+    y: 430,
+  },
+
+  // CV branch
+  {
+    id: "cv_check",
+    label: "Computer\nvision?",
+    question: "Is your task computer vision (images, video)?",
+    yes: "cv_prod",
+    no: "other_dl",
+    x: 1050,
+    y: 230,
   },
   {
-    id: "pca",
-    label: "PCA / Kernel\nPCA",
-    result: "PCA / Kernel PCA",
-    x: 1230,
-    y: 530,
+    id: "cv_prod",
+    label: "Need\nproduction?",
+    question: "Do you need production deployment at scale?",
+    yes: "tf_result",
+    no: "pt_cv",
+    x: 920,
+    y: 330,
   },
   {
-    id: "just_looking",
-    label: "Explore with\nPCA first",
-    result: "Start with PCA for exploration",
-    x: 1170,
+    id: "tf_result",
+    label: "TensorFlow /\nKeras",
+    result: "TensorFlow + Keras — strong production ecosystem for CV",
+    x: 855,
+    y: 430,
+  },
+  {
+    id: "pt_cv",
+    label: "PyTorch +\ntorchvision",
+    result: "PyTorch + torchvision — research-first CV framework",
+    x: 985,
+    y: 430,
+  },
+
+  // Other DL
+  {
+    id: "other_dl",
+    label: "Research\nfocus?",
+    question: "Is this primarily for research / cutting-edge experiments?",
+    yes: "jax_dl",
+    no: "tf_general",
+    x: 1180,
+    y: 330,
+  },
+  {
+    id: "jax_dl",
+    label: "JAX / Flax",
+    result: "JAX + Flax — functional style, great for research",
+    x: 1115,
+    y: 430,
+  },
+  {
+    id: "tf_general",
+    label: "TensorFlow /\nKeras",
+    result: "TensorFlow + Keras — general-purpose, great deployment story",
+    x: 1245,
     y: 430,
   },
 ];
@@ -231,32 +217,13 @@ function getEdges(): { from: FlowNode; to: FlowNode; label: string }[] {
 }
 
 const EDGES = getEdges();
-const W = 1300;
-const H = 680;
+const W = 1350;
+const H = 500;
 const NW = 110;
 const NH = 44;
 
-function buildShareUrl(path: string[]): string {
-  const params = new URLSearchParams(window.location.search);
-  params.set("flowpath", path.join(","));
-  return `${window.location.origin}${window.location.pathname}?${params.toString()}`;
-}
-
-function parseShareUrl(): string[] {
-  try {
-    const p = new URLSearchParams(window.location.search);
-    const val = p.get("flowpath");
-    if (val) return val.split(",").filter(Boolean);
-  } catch {}
-  return [];
-}
-
-export function AlgorithmFlowchart() {
-  const initial = parseShareUrl();
-  const [path, setPath] = useState<string[]>(
-    initial.length > 0 ? initial : ["start"],
-  );
-  const [shareCopied, setShareCopied] = useState(false);
+export function FrameworkFlowchart() {
+  const [path, setPath] = useState<string[]>(["start"]);
 
   const current = path[path.length - 1];
   const currentNode = NODE_MAP.get(current);
@@ -266,53 +233,23 @@ export function AlgorithmFlowchart() {
     (nodeId: string) => {
       const node = NODE_MAP.get(nodeId);
       if (!node) return;
-
-      // If clicking a node already in path, backtrack to it
       const idx = path.indexOf(nodeId);
       if (idx >= 0) {
         setPath(path.slice(0, idx + 1));
         return;
       }
-
-      // Only allow clicking direct children of current node
       if (currentNode?.yes === nodeId || currentNode?.no === nodeId) {
-        const newPath = [...path, nodeId];
-        setPath(newPath);
-        // Update URL
-        const params = new URLSearchParams(window.location.search);
-        params.set("flowpath", newPath.join(","));
-        window.history.replaceState(null, "", `?${params.toString()}`);
+        setPath([...path, nodeId]);
       }
     },
     [path, currentNode],
   );
 
-  function reset() {
-    setPath(["start"]);
-    const params = new URLSearchParams(window.location.search);
-    params.delete("flowpath");
-    const qs = params.toString();
-    window.history.replaceState(
-      null,
-      "",
-      qs ? `?${qs}` : window.location.pathname,
-    );
-  }
-
-  function handleShare() {
-    navigator.clipboard.writeText(buildShareUrl(path)).then(() => {
-      setShareCopied(true);
-      setTimeout(() => setShareCopied(false), 1500);
-    });
-  }
-
-  // Determine which edges are on the active path
   const activeEdges = new Set<string>();
   for (let i = 0; i < path.length - 1; i++) {
     activeEdges.add(`${path[i]}->${path[i + 1]}`);
   }
 
-  // Which nodes are clickable next
   const clickableNext = new Set<string>();
   if (currentNode && !currentNode.result) {
     if (currentNode.yes) clickableNext.add(currentNode.yes);
@@ -320,7 +257,7 @@ export function AlgorithmFlowchart() {
   }
 
   return (
-    <div>
+    <div className="mb-6">
       {/* Controls */}
       <div className="flex items-center gap-3 mb-4 flex-wrap">
         {currentNode?.question && !currentNode.result && (
@@ -333,43 +270,31 @@ export function AlgorithmFlowchart() {
             Recommendation: {currentNode.result}
           </p>
         )}
-        <div className="ml-auto flex gap-2">
-          {path.length > 1 && (
+        {path.length > 1 && (
+          <div className="ml-auto flex gap-2">
             <button
-              onClick={() => {
-                const newPath = path.slice(0, -1);
-                setPath(newPath);
-              }}
+              onClick={() => setPath(path.slice(0, -1))}
               className="text-xs px-2.5 py-1.5 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors cursor-pointer font-medium"
             >
               Back
             </button>
-          )}
-          {path.length > 1 && (
             <button
-              onClick={reset}
+              onClick={() => setPath(["start"])}
               className="text-xs px-2.5 py-1.5 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors cursor-pointer font-medium"
             >
               Reset
             </button>
-          )}
-          <button
-            onClick={handleShare}
-            className="text-xs px-2.5 py-1.5 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors cursor-pointer font-medium"
-          >
-            {shareCopied ? "Copied!" : "Share path"}
-          </button>
-        </div>
+          </div>
+        )}
       </div>
 
-      {/* SVG Flowchart */}
+      {/* SVG */}
       <div className="overflow-x-auto rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
         <svg
           viewBox={`0 0 ${W} ${H}`}
           className="w-full min-w-[700px]"
-          style={{ maxHeight: "70vh" }}
+          style={{ maxHeight: "60vh" }}
         >
-          {/* Edges */}
           {EDGES.map((edge, i) => {
             const key = `${edge.from.id}->${edge.to.id}`;
             const isActive = activeEdges.has(key);
@@ -378,7 +303,6 @@ export function AlgorithmFlowchart() {
             const x2 = edge.to.x;
             const y2 = edge.to.y;
             const midY = (y1 + y2) / 2;
-
             return (
               <g key={i}>
                 <path
@@ -389,7 +313,6 @@ export function AlgorithmFlowchart() {
                   opacity={isActive ? 1 : 0.15}
                   className="text-zinc-400 dark:text-zinc-600"
                 />
-                {/* Edge label */}
                 <text
                   x={(x1 + x2) / 2 + (edge.label === "Yes" ? -12 : 12)}
                   y={midY - 2}
@@ -406,7 +329,6 @@ export function AlgorithmFlowchart() {
             );
           })}
 
-          {/* Nodes */}
           {NODES.map((node) => {
             const isOnPath = pathSet.has(node.id);
             const isCurrent = node.id === current;
@@ -488,7 +410,6 @@ export function AlgorithmFlowchart() {
           })}
         </svg>
       </div>
-
       <p className="text-xs text-zinc-400 dark:text-zinc-500 mt-3 text-center">
         Click the highlighted options to navigate. Click any visited node to
         backtrack.

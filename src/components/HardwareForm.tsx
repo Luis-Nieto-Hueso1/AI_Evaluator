@@ -319,7 +319,7 @@ export function HardwareForm({ onSubmit, initial }: Props) {
                 System RAM
               </label>
               {ramNeedsConfirm && (
-                <span className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400">
+                <span className="text-xs font-medium px-2.5 py-1 rounded bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400">
                   browser-capped — please confirm
                 </span>
               )}
@@ -346,7 +346,7 @@ export function HardwareForm({ onSubmit, initial }: Props) {
               ))}
             </div>
             {ramNeedsConfirm && (
-              <p className="text-[11px] text-amber-600 dark:text-amber-400 mt-1.5">
+              <p className="text-xs text-amber-600 dark:text-amber-400 mt-1.5">
                 Browsers hide actual RAM — select your real amount above.
               </p>
             )}
@@ -450,7 +450,8 @@ export function HardwareForm({ onSubmit, initial }: Props) {
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Search GPU…"
-                  className="w-full text-sm px-3 py-1.5 rounded-lg bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent"
+                  aria-label="Search GPU"
+                  className="w-full text-sm px-3 py-2 rounded-lg bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent"
                 />
               </div>
 
@@ -466,7 +467,7 @@ export function HardwareForm({ onSubmit, initial }: Props) {
               </div>
 
               {/* Grouped list */}
-              <div className="max-h-64 overflow-y-auto">
+              <div className="max-h-80 overflow-y-auto">
                 {grouped.length === 0 ? (
                   <p className="text-sm text-zinc-400 text-center py-6">
                     No GPUs found
@@ -539,7 +540,7 @@ export function HardwareForm({ onSubmit, initial }: Props) {
             <div className="flex items-center justify-between mb-1.5">
               <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
                 GPU VRAM
-                <span className="ml-1.5 text-[10px] font-normal text-violet-500 dark:text-violet-400">
+                <span className="ml-1.5 text-xs font-normal text-violet-500 dark:text-violet-400">
                   AI memory limit
                 </span>
               </label>
@@ -577,7 +578,7 @@ export function HardwareForm({ onSubmit, initial }: Props) {
               ))}
             </div>
             {vram === null && (
-              <p className="text-[11px] text-zinc-400 dark:text-zinc-500 mt-1.5">
+              <p className="text-xs text-zinc-400 dark:text-zinc-500 mt-1.5">
                 No GPU selected — models will be scored by system RAM.
               </p>
             )}
@@ -674,10 +675,11 @@ export function HardwareForm({ onSubmit, initial }: Props) {
                     value={cpuSearch}
                     onChange={(e) => setCpuSearch(e.target.value)}
                     placeholder="Search CPU…"
-                    className="w-full text-sm px-3 py-1.5 rounded-lg bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent"
+                    aria-label="Search CPU"
+                    className="w-full text-sm px-3 py-2 rounded-lg bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent"
                   />
                 </div>
-                <div className="max-h-56 overflow-y-auto">
+                <div className="max-h-72 overflow-y-auto">
                   {groupedCpus.length === 0 ? (
                     <p className="text-sm text-zinc-400 text-center py-6">
                       No CPUs found

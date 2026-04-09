@@ -1,0 +1,930 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LLM Evaluator — AI Team Presentation</title>
+    <style>
+      :root {
+        --bg: #09090b;
+        --surface: #18181b;
+        --border: #27272a;
+        --text: #fafafa;
+        --muted: #a1a1aa;
+        --violet: #8b5cf6;
+        --violet-dim: #7c3aed22;
+        --emerald: #34d399;
+        --amber: #fbbf24;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        overflow: hidden;
+        height: 100vh;
+      }
+
+      /* Slide system */
+      .slide {
+        display: none;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        padding: 60px 80px;
+        text-align: center;
+        animation: fadeIn 0.4s ease;
+      }
+      .slide.active {
+        display: flex;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(12px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+
+      h1 {
+        font-size: 3.5rem;
+        font-weight: 800;
+        line-height: 1.1;
+        margin-bottom: 16px;
+      }
+      h2 {
+        font-size: 2.4rem;
+        font-weight: 700;
+        margin-bottom: 24px;
+      }
+      h3 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--violet);
+        margin-bottom: 12px;
+      }
+      p,
+      li {
+        font-size: 1.25rem;
+        line-height: 1.7;
+        color: var(--muted);
+      }
+      .highlight {
+        color: var(--violet);
+      }
+      .emerald {
+        color: var(--emerald);
+      }
+
+      .subtitle {
+        font-size: 1.4rem;
+        color: var(--muted);
+        max-width: 700px;
+        margin-bottom: 32px;
+      }
+      .badge {
+        display: inline-block;
+        padding: 6px 16px;
+        border-radius: 999px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        margin: 4px;
+      }
+      .badge-violet {
+        background: var(--violet-dim);
+        color: var(--violet);
+        border: 1px solid #7c3aed44;
+      }
+      .badge-emerald {
+        background: #34d39920;
+        color: var(--emerald);
+        border: 1px solid #34d39944;
+      }
+
+      /* Grid layouts */
+      .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+        max-width: 1000px;
+        text-align: left;
+      }
+      .grid-3 {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 24px;
+        max-width: 1100px;
+        text-align: left;
+      }
+      .grid-4 {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        gap: 20px;
+        max-width: 1100px;
+        text-align: left;
+      }
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 24px;
+      }
+      .card h3 {
+        font-size: 1.2rem;
+        margin-bottom: 8px;
+      }
+      .card p {
+        font-size: 1rem;
+      }
+
+      /* Lists */
+      ul {
+        list-style: none;
+        text-align: left;
+        max-width: 800px;
+      }
+      ul li {
+        padding: 8px 0;
+        position: relative;
+        padding-left: 28px;
+      }
+      ul li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 16px;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: var(--violet);
+      }
+
+      /* Architecture diagram */
+      .arch-box {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 16px 20px;
+        text-align: center;
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: var(--text);
+      }
+      .arch-box.highlight-box {
+        border-color: var(--violet);
+        background: var(--violet-dim);
+      }
+      .arch-box.emerald-box {
+        border-color: var(--emerald);
+        background: #34d39915;
+      }
+      .arch-arrow {
+        color: var(--muted);
+        font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* Flow diagram */
+      .flow-grid {
+        display: grid;
+        gap: 12px;
+        max-width: 1000px;
+        width: 100%;
+        grid-template-columns: repeat(5, 1fr);
+        grid-template-rows: auto;
+      }
+      .flow-item {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 14px;
+        text-align: center;
+        font-size: 0.85rem;
+        color: var(--muted);
+      }
+      .flow-item strong {
+        display: block;
+        color: var(--text);
+        font-size: 1rem;
+        margin-bottom: 4px;
+      }
+      .flow-item.span-full {
+        grid-column: 1 / -1;
+      }
+
+      /* Stats */
+      .stat {
+        text-align: center;
+      }
+      .stat .number {
+        font-size: 3rem;
+        font-weight: 800;
+        color: var(--violet);
+      }
+      .stat .label {
+        font-size: 1rem;
+        color: var(--muted);
+      }
+
+      /* Navigation */
+      .nav {
+        position: fixed;
+        bottom: 24px;
+        right: 32px;
+        display: flex;
+        gap: 8px;
+        z-index: 100;
+      }
+      .nav button {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        color: var(--text);
+        padding: 10px 20px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        font-weight: 600;
+        transition: all 0.2s;
+      }
+      .nav button:hover {
+        background: var(--violet);
+        border-color: var(--violet);
+      }
+      .progress {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        height: 3px;
+        background: var(--violet);
+        transition: width 0.3s;
+      }
+      .slide-counter {
+        position: fixed;
+        bottom: 30px;
+        left: 32px;
+        font-size: 0.85rem;
+        color: var(--muted);
+      }
+
+      /* Table */
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        max-width: 900px;
+      }
+      th,
+      td {
+        padding: 12px 16px;
+        text-align: left;
+        border-bottom: 1px solid var(--border);
+        font-size: 1rem;
+      }
+      th {
+        color: var(--violet);
+        font-weight: 600;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      td {
+        color: var(--muted);
+      }
+
+      .code-block {
+        background: #0f0f11;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 20px 24px;
+        text-align: left;
+        font-family: "SF Mono", "Fira Code", monospace;
+        font-size: 0.95rem;
+        color: var(--emerald);
+        max-width: 800px;
+        width: 100%;
+        line-height: 1.8;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Slide 1: Title -->
+    <div class="slide active" id="s1">
+      <div style="margin-bottom: 24px">
+        <span class="badge badge-violet">Portfolio Project</span>
+        <span class="badge badge-emerald">React + TypeScript</span>
+      </div>
+      <h1>LLM Evaluator</h1>
+      <p class="subtitle">
+        A hardware-aware ML toolkit that tells you which open-source LLMs you
+        can run locally, picks the right algorithm, chooses a framework, and
+        plans deployment.
+      </p>
+      <div style="display: flex; gap: 16px; margin-top: 16px">
+        <span class="badge badge-violet">8 Interactive Views</span>
+        <span class="badge badge-violet">45+ Models</span>
+        <span class="badge badge-violet">37 Algorithms</span>
+        <span class="badge badge-violet">AI-Powered Chat</span>
+      </div>
+    </div>
+
+    <!-- Slide 2: Problem -->
+    <div class="slide" id="s2">
+      <h2>The Problem</h2>
+      <div class="grid-2" style="margin-top: 24px">
+        <div class="card">
+          <h3>For ML Engineers</h3>
+          <p>
+            "Can my laptop run Llama 3.3 70B?"<br />"Which quantization gives
+            the best speed/quality tradeoff?"<br />"How many tok/s will I
+            actually get?"
+          </p>
+        </div>
+        <div class="card">
+          <h3>For ML Beginners</h3>
+          <p>
+            "Which algorithm should I use for my dataset?"<br />"PyTorch or
+            TensorFlow?"<br />"How do I deploy this model locally?"
+          </p>
+        </div>
+      </div>
+      <p style="margin-top: 32px; font-size: 1.3rem">
+        <span class="highlight">LLM Evaluator</span> answers all of these in one
+        interactive app.
+      </p>
+    </div>
+
+    <!-- Slide 3: Key Numbers -->
+    <div class="slide" id="s3">
+      <h2>By the Numbers</h2>
+      <div class="grid-4" style="margin-top: 32px">
+        <div class="stat">
+          <div class="number">45+</div>
+          <div class="label">LLM Models</div>
+        </div>
+        <div class="stat">
+          <div class="number">37</div>
+          <div class="label">ML Algorithms</div>
+        </div>
+        <div class="stat">
+          <div class="number">10</div>
+          <div class="label">Frameworks</div>
+        </div>
+        <div class="stat">
+          <div class="number">8</div>
+          <div class="label">Deploy Stacks</div>
+        </div>
+      </div>
+      <div class="grid-4" style="margin-top: 40px">
+        <div class="stat">
+          <div class="number">18</div>
+          <div class="label">Components</div>
+        </div>
+        <div class="stat">
+          <div class="number">33</div>
+          <div class="label">Unit Tests</div>
+        </div>
+        <div class="stat">
+          <div class="number">3</div>
+          <div class="label">Interactive Flowcharts</div>
+        </div>
+        <div class="stat">
+          <div class="number">2</div>
+          <div class="label">AI Chat Advisors</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 4: 8 Views -->
+    <div class="slide" id="s4">
+      <h2>Eight Interactive Views</h2>
+      <div class="grid-4" style="margin-top: 24px">
+        <div class="card">
+          <h3>1. Results</h3>
+          <p>
+            Hardware form, compatibility grades (S-F), speed estimates, "How to
+            Run" commands
+          </p>
+        </div>
+        <div class="card">
+          <h3>2. Tier List</h3>
+          <p>All models grouped by grade with CSV/JSON export</p>
+        </div>
+        <div class="card">
+          <h3>3. Compare</h3>
+          <p>Side-by-side comparison of two hardware setups</p>
+        </div>
+        <div class="card">
+          <h3>4. Algorithms</h3>
+          <p>Interactive flowchart + questionnaire for 37 ML algorithms</p>
+        </div>
+        <div class="card">
+          <h3>5. Frameworks</h3>
+          <p>Framework picker: PyTorch, TF, JAX, sklearn, and 6 more</p>
+        </div>
+        <div class="card">
+          <h3>6. Deploy</h3>
+          <p>Inference stack guide with install commands and config flags</p>
+        </div>
+        <div class="card">
+          <h3>7. Leaderboard</h3>
+          <p>MMLU, HumanEval, MT-Bench benchmark scores</p>
+        </div>
+        <div class="card">
+          <h3>8. Timeline</h3>
+          <p>LLM release history 2022-2025 with live model badges</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 5: Scoring Engine -->
+    <div class="slide" id="s5">
+      <h2>Compatibility Scoring Engine</h2>
+      <div class="code-block" style="margin-top: 24px">
+        <span style="color: var(--muted)">// Composite 0-100 score</span><br />
+        score = <span style="color: var(--amber)">speedScore</span> x 0.55 +
+        <span style="color: var(--amber)">memScore</span> x 0.35 +
+        <span style="color: var(--amber)">qualityBonus</span> x 0.10<br /><br />
+        <span style="color: var(--muted)">// Token speed estimation</span><br />
+        GPU: tok/s = <span style="color: var(--amber)">bandwidth</span>(GB/s) x
+        0.70 / bytesPerToken<br />
+        CPU: tok/s = <span style="color: var(--amber)">bandwidth</span>(GB/s) x
+        0.12 / bytesPerToken<br /><br />
+        <span style="color: var(--muted)">// Grade mapping</span><br />
+        85+ <span style="color: var(--emerald)">S</span> | 70+
+        <span style="color: var(--emerald)">A</span> | 55+
+        <span style="color: var(--amber)">B</span> | 40+
+        <span style="color: var(--amber)">C</span> | 20+
+        <span style="color: #f87171">D</span> | &lt;20
+        <span style="color: #f87171">F</span>
+      </div>
+      <p style="margin-top: 24px">
+        Scoring inspired by <span class="highlight">canirun.ai</span> with added
+        quantization-aware speed estimation and memory bandwidth modeling.
+      </p>
+    </div>
+
+    <!-- Slide 6: Architecture -->
+    <div class="slide" id="s6">
+      <h2>Architecture Overview</h2>
+      <div
+        style="
+          display: grid;
+          grid-template-columns: 1fr 1fr 1fr;
+          gap: 16px;
+          max-width: 900px;
+          margin-top: 24px;
+        "
+      >
+        <!-- Row 1: App Shell -->
+        <div class="arch-box highlight-box" style="grid-column: 1 / -1">
+          App Shell (App.tsx) — Tab Router, Hardware State, Dark Mode, URL State
+        </div>
+        <!-- Row 2: Views -->
+        <div class="arch-box">
+          View Layer<br /><span style="color: var(--muted); font-size: 0.8rem"
+            >18 Components</span
+          >
+        </div>
+        <div class="arch-box">
+          Core Engine<br /><span style="color: var(--muted); font-size: 0.8rem"
+            >10 lib modules</span
+          >
+        </div>
+        <div class="arch-box">
+          Data Layer<br /><span style="color: var(--muted); font-size: 0.8rem"
+            >4 JSON datasets</span
+          >
+        </div>
+        <!-- Row 3: External -->
+        <div class="arch-box emerald-box">
+          HuggingFace Hub<br /><span
+            style="color: var(--muted); font-size: 0.8rem"
+            >Live models</span
+          >
+        </div>
+        <div class="arch-box emerald-box">
+          HuggingFace Router<br /><span
+            style="color: var(--muted); font-size: 0.8rem"
+            >AI chat (free)</span
+          >
+        </div>
+        <div class="arch-box emerald-box">
+          Anthropic Claude<br /><span
+            style="color: var(--muted); font-size: 0.8rem"
+            >AI chat (premium)</span
+          >
+        </div>
+      </div>
+      <div style="display: flex; gap: 16px; margin-top: 24px">
+        <span class="badge badge-violet">No backend server</span>
+        <span class="badge badge-violet">No database</span>
+        <span class="badge badge-violet">100% client-side</span>
+        <span class="badge badge-emerald">PWA-ready</span>
+      </div>
+    </div>
+
+    <!-- Slide 7: Tech Stack -->
+    <div class="slide" id="s7">
+      <h2>Tech Stack</h2>
+      <div class="grid-3" style="margin-top: 24px">
+        <div class="card">
+          <h3>Frontend</h3>
+          <p>React 19<br />TypeScript 5.9<br />Tailwind CSS v4<br />Vite 8</p>
+        </div>
+        <div class="card">
+          <h3>Testing & CI</h3>
+          <p>
+            Vitest (33 tests)<br />ESLint 9<br />GitHub Actions CI<br />TypeScript
+            strict mode
+          </p>
+        </div>
+        <div class="card">
+          <h3>APIs & Infra</h3>
+          <p>
+            HuggingFace Hub API<br />Anthropic Claude SDK<br />WebGL/WebGPU
+            detection<br />PWA + Service Worker
+          </p>
+        </div>
+      </div>
+      <div class="grid-3" style="margin-top: 16px">
+        <div class="card">
+          <h3>State</h3>
+          <p>
+            React useState<br />URL params<br />localStorage<br />No
+            Redux/Zustand
+          </p>
+        </div>
+        <div class="card">
+          <h3>Deploy</h3>
+          <p>Vercel<br />Netlify<br />GitHub Pages<br />Static SPA</p>
+        </div>
+        <div class="card">
+          <h3>Design</h3>
+          <p>
+            SVG flowcharts<br />Dark mode<br />WCAG accessible<br />Responsive
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 8: Data Flow -->
+    <div class="slide" id="s8">
+      <h2>Data Flow — Compatibility Check</h2>
+      <div
+        class="flow-grid"
+        style="margin-top: 24px; grid-template-columns: repeat(5, 1fr)"
+      >
+        <div class="flow-item"><strong>Hardware Form</strong>RAM, GPU, CPU</div>
+        <div class="arch-arrow">&rarr;</div>
+        <div class="flow-item">
+          <strong>Scoring Engine</strong>compatibility.ts
+        </div>
+        <div class="arch-arrow">&rarr;</div>
+        <div class="flow-item">
+          <strong>CompatibleModel[]</strong>Graded S-F
+        </div>
+      </div>
+      <div style="max-width: 1000px; margin-top: 24px">
+        <table>
+          <tr>
+            <th>Step</th>
+            <th>What Happens</th>
+          </tr>
+          <tr>
+            <td>1. Variant Selection</td>
+            <td>
+              Pick highest-quality quantization that fits in available memory
+            </td>
+          </tr>
+          <tr>
+            <td>2. Execution Mode</td>
+            <td>GPU if VRAM sufficient, otherwise CPU (with RAM bandwidth)</td>
+          </tr>
+          <tr>
+            <td>3. Speed Estimation</td>
+            <td>bandwidth x efficiency / bytesPerToken = tok/s</td>
+          </tr>
+          <tr>
+            <td>4. Score Computation</td>
+            <td>55% speed + 35% memory headroom + 10% model quality</td>
+          </tr>
+          <tr>
+            <td>5. Grade Assignment</td>
+            <td>S (85+), A (70+), B (55+), C (40+), D (20+), F (&lt;20)</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- Slide 9: Interactive Flowcharts -->
+    <div class="slide" id="s9">
+      <h2>Three Interactive Decision Flowcharts</h2>
+      <div class="grid-3" style="margin-top: 32px">
+        <div class="card" style="text-align: center">
+          <h3>Algorithm Flowchart</h3>
+          <p style="font-size: 3rem; margin: 16px 0">🧠</p>
+          <p>
+            25-node SVG decision tree mirroring the scikit-learn cheat sheet.
+            Click-to-navigate with backtracking and URL sharing.
+          </p>
+        </div>
+        <div class="card" style="text-align: center">
+          <h3>Framework Flowchart</h3>
+          <p style="font-size: 3rem; margin: 16px 0">🔧</p>
+          <p>
+            Guides users from "Need deep learning?" to specific framework
+            recommendations (PyTorch, TF, JAX, sklearn, etc.)
+          </p>
+        </div>
+        <div class="card" style="text-align: center">
+          <h3>Deployment Flowchart</h3>
+          <p style="font-size: 3rem; margin: 16px 0">🚀</p>
+          <p>
+            Maps hardware (GPU/CPU/edge) and priorities (speed/ease/flexibility)
+            to inference stacks (vLLM, Ollama, TGI, etc.)
+          </p>
+        </div>
+      </div>
+      <p style="margin-top: 24px">
+        All flowcharts use the same engine:
+        <span class="highlight"
+          >SVG nodes + Bezier edges + click navigation + path highlighting</span
+        >
+      </p>
+    </div>
+
+    <!-- Slide 10: AI Integration -->
+    <div class="slide" id="s10">
+      <h2>AI-Powered Features</h2>
+      <div class="grid-2" style="margin-top: 32px">
+        <div class="card">
+          <h3>Use-Case Advisor</h3>
+          <p>
+            "Which model should I use for synthetic data generation on my 16 GB
+            machine?"
+          </p>
+          <p style="margin-top: 12px; font-size: 0.9rem">
+            <span class="badge badge-emerald">Claude API</span>
+            <span class="badge badge-violet">HuggingFace fallback</span
+            ><br /><br />
+            Streaming responses, hardware-aware context, expandable modal view
+          </p>
+        </div>
+        <div class="card">
+          <h3>Algorithm Advisor</h3>
+          <p>
+            "I have 50K rows of tabular data and need to predict customer churn"
+          </p>
+          <p style="margin-top: 12px; font-size: 0.9rem">
+            <span class="badge badge-emerald">Claude API</span>
+            <span class="badge badge-violet">Scikit-learn focused</span
+            ><br /><br />
+            Recommends algorithms with code snippets, explains tradeoffs
+          </p>
+        </div>
+      </div>
+      <p style="margin-top: 24px">
+        Both advisors support <span class="emerald">expand-to-modal</span> for
+        accessibility and longer conversations
+      </p>
+    </div>
+
+    <!-- Slide 11: Live Data -->
+    <div class="slide" id="s11">
+      <h2>Live Model Feed</h2>
+      <ul style="margin-top: 24px">
+        <li>
+          <strong>Auto-fetches</strong> trending models from HuggingFace Hub +
+          Ollama library on every page load
+        </li>
+        <li>
+          <strong>24h localStorage cache</strong> — stale cache refreshed in
+          background, fresh data shown immediately
+        </li>
+        <li>
+          <strong>Deduplication</strong> — fuzzy match on org + parameter count
+          avoids duplicating static DB entries
+        </li>
+        <li>
+          <strong>Custom import</strong> — paste any HF URL to import a model
+          with auto-estimated RAM/VRAM variants
+        </li>
+        <li>
+          <strong>Unified pipeline</strong> — live + custom + static models all
+          flow through the same scoring engine
+        </li>
+      </ul>
+    </div>
+
+    <!-- Slide 12: Accessibility & UX -->
+    <div class="slide" id="s12">
+      <h2>Accessibility & UX</h2>
+      <div class="grid-3" style="margin-top: 24px">
+        <div class="card">
+          <h3>WCAG Compliant</h3>
+          <p>
+            12px minimum text, aria-labels on all inputs, touch-target sizing,
+            keyboard navigation
+          </p>
+        </div>
+        <div class="card">
+          <h3>Responsive</h3>
+          <p>
+            Mobile-first layout, scrollable tab nav, collapsible panels, dark
+            mode
+          </p>
+        </div>
+        <div class="card">
+          <h3>Onboarding</h3>
+          <p>
+            4-step spotlight tour for first-time users, localStorage
+            persistence, skip/next controls
+          </p>
+        </div>
+      </div>
+      <div class="grid-3" style="margin-top: 16px">
+        <div class="card">
+          <h3>Expandable Panels</h3>
+          <p>
+            Both AI chats expand to full-screen modal with larger text for
+            readability
+          </p>
+        </div>
+        <div class="card">
+          <h3>Multi-Currency</h3>
+          <p>
+            Cost calculator supports 10 currencies (USD, EUR, GBP, JPY, etc.)
+          </p>
+        </div>
+        <div class="card">
+          <h3>Export & Share</h3>
+          <p>CSV/JSON download, URL state sharing, flowchart path links</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 13: Differentiators -->
+    <div class="slide" id="s13">
+      <h2>What Makes This Different</h2>
+      <div class="grid-2" style="margin-top: 32px">
+        <div>
+          <table>
+            <tr>
+              <th>Feature</th>
+              <th>canirun.ai</th>
+              <th style="color: var(--violet)">LLM Evaluator</th>
+            </tr>
+            <tr>
+              <td>Compatibility check</td>
+              <td style="color: var(--emerald)">Yes</td>
+              <td style="color: var(--emerald)">Yes</td>
+            </tr>
+            <tr>
+              <td>AI use-case advisor</td>
+              <td style="color: #f87171">No</td>
+              <td style="color: var(--emerald)">Yes</td>
+            </tr>
+            <tr>
+              <td>Algorithm picker</td>
+              <td style="color: #f87171">No</td>
+              <td style="color: var(--emerald)">37 algorithms</td>
+            </tr>
+            <tr>
+              <td>Framework guide</td>
+              <td style="color: #f87171">No</td>
+              <td style="color: var(--emerald)">10 frameworks</td>
+            </tr>
+            <tr>
+              <td>Deploy guide</td>
+              <td style="color: #f87171">No</td>
+              <td style="color: var(--emerald)">8 stacks</td>
+            </tr>
+            <tr>
+              <td>Live model feed</td>
+              <td style="color: #f87171">No</td>
+              <td style="color: var(--emerald)">HF + Ollama</td>
+            </tr>
+            <tr>
+              <td>Interactive flowcharts</td>
+              <td style="color: #f87171">No</td>
+              <td style="color: var(--emerald)">3 flowcharts</td>
+            </tr>
+            <tr>
+              <td>Cost calculator</td>
+              <td style="color: #f87171">No</td>
+              <td style="color: var(--emerald)">10 currencies</td>
+            </tr>
+          </table>
+        </div>
+        <div
+          style="display: flex; flex-direction: column; justify-content: center"
+        >
+          <p style="font-size: 1.3rem; color: var(--text); line-height: 1.8">
+            Not just <span class="highlight">"can I run this?"</span><br />
+            but <span class="emerald">"what should I run, how, and why?"</span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 14: Thank You -->
+    <div class="slide" id="s14">
+      <h1>Thank You</h1>
+      <p class="subtitle" style="margin-top: 16px">
+        LLM Evaluator — an all-in-one ML toolkit built with React, TypeScript,
+        and AI-powered recommendations
+      </p>
+      <div style="display: flex; gap: 16px; margin-top: 32px">
+        <span class="badge badge-violet">React 19</span>
+        <span class="badge badge-violet">TypeScript</span>
+        <span class="badge badge-violet">Tailwind v4</span>
+        <span class="badge badge-violet">Vite 8</span>
+        <span class="badge badge-emerald">Claude AI</span>
+        <span class="badge badge-emerald">HuggingFace</span>
+      </div>
+      <p style="margin-top: 40px; font-size: 1rem; color: var(--muted)">
+        Press
+        <kbd
+          style="
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 2px 8px;
+            border-radius: 4px;
+          "
+          >&larr;</kbd
+        >
+        <kbd
+          style="
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 2px 8px;
+            border-radius: 4px;
+          "
+          >&rarr;</kbd
+        >
+        to navigate slides
+      </p>
+    </div>
+
+    <!-- Navigation -->
+    <div class="nav">
+      <button onclick="prevSlide()">&larr; Back</button>
+      <button onclick="nextSlide()">Next &rarr;</button>
+    </div>
+    <div class="progress" id="progress"></div>
+    <div class="slide-counter" id="counter"></div>
+
+    <script>
+      const slides = document.querySelectorAll(".slide");
+      let current = 0;
+
+      function showSlide(n) {
+        slides[current].classList.remove("active");
+        current = Math.max(0, Math.min(n, slides.length - 1));
+        slides[current].classList.add("active");
+        document.getElementById("progress").style.width =
+          ((current + 1) / slides.length) * 100 + "%";
+        document.getElementById("counter").textContent =
+          current + 1 + " / " + slides.length;
+      }
+
+      function nextSlide() {
+        showSlide(current + 1);
+      }
+      function prevSlide() {
+        showSlide(current - 1);
+      }
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowRight" || e.key === " ") {
+          e.preventDefault();
+          nextSlide();
+        }
+        if (e.key === "ArrowLeft") {
+          e.preventDefault();
+          prevSlide();
+        }
+        if (e.key === "Home") {
+          e.preventDefault();
+          showSlide(0);
+        }
+        if (e.key === "End") {
+          e.preventDefault();
+          showSlide(slides.length - 1);
+        }
+      });
+
+      showSlide(0);
+    </script>
+  </body>
+</html>

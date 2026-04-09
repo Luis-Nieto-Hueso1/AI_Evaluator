@@ -58,13 +58,13 @@ export function BenchmarkCalibrator({
         className="flex items-center gap-1.5 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 transition-colors"
       >
         <span
-          className={`transition-transform duration-150 text-[10px] ${open ? "rotate-90" : ""}`}
+          className={`transition-transform duration-150 text-xs ${open ? "rotate-90" : ""}`}
         >
           ▶
         </span>
         Calibrate speed estimates
         {calibration && (
-          <span className="ml-1 px-1.5 py-0.5 rounded-full bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-300 font-medium">
+          <span className="ml-1 px-2.5 py-1 rounded-full bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-300 font-medium">
             {calibration.factor.toFixed(2)}× active
           </span>
         )}
@@ -72,7 +72,7 @@ export function BenchmarkCalibrator({
 
       {open && (
         <div className="mt-2.5 p-3 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900 flex flex-col gap-3">
-          <p className="text-[11px] text-zinc-500 dark:text-zinc-400 leading-relaxed">
+          <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">
             Run a model and paste your actual tok/s below. The app will scale
             all speed estimates to match your real hardware.
           </p>
@@ -92,7 +92,7 @@ export function BenchmarkCalibrator({
               </span>
               <button
                 onClick={handleClear}
-                className="ml-2 shrink-0 text-[10px] px-2 py-0.5 rounded bg-violet-100 dark:bg-violet-900/40 text-violet-600 dark:text-violet-400 hover:bg-violet-200 dark:hover:bg-violet-900/60 transition-colors cursor-pointer"
+                className="ml-2 shrink-0 text-xs px-2.5 py-1 rounded bg-violet-100 dark:bg-violet-900/40 text-violet-600 dark:text-violet-400 hover:bg-violet-200 dark:hover:bg-violet-900/60 transition-colors cursor-pointer"
               >
                 Reset
               </button>
@@ -135,7 +135,7 @@ export function BenchmarkCalibrator({
           </div>
 
           {selectedModel && measured && parseFloat(measured) > 0 && (
-            <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
+            <p className="text-xs text-zinc-500 dark:text-zinc-400">
               Factor:{" "}
               <span className="font-semibold text-zinc-700 dark:text-zinc-300">
                 {(parseFloat(measured) / selectedModel.tokensPerSec).toFixed(2)}

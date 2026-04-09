@@ -25,14 +25,37 @@
         "quality": "high"
       }
     ],
-    "useCases": ["coding", "reasoning", "writing", "analysis", "chat"],
+    "useCases": [
+      "coding",
+      "reasoning",
+      "writing",
+      "analysis",
+      "chat",
+      "agents",
+      "instruction-following"
+    ],
     "contextLength": 131072,
     "description": "Meta's most capable open-weight model. Excellent reasoning and instruction following.",
-    "strengths": ["Strong reasoning", "Code generation", "Long context"],
+    "strengths": [
+      "Strong reasoning",
+      "Code generation",
+      "Long context"
+    ],
     "license": "restricted",
-    "benchmarks": { "mmlu": 86, "humanEval": 88, "mtBench": 9.0 },
-    "kvMBPerToken": 1.0,
-    "apiCost": { "provider": "Groq", "inputPer1M": 0.59, "outputPer1M": 0.79 }
+    "benchmarks": {
+      "mmlu": 86,
+      "humanEval": 88.4,
+      "mtBench": 9,
+      "math": 77,
+      "gpqa": 50.5,
+      "ifEval": 92.1
+    },
+    "kvMBPerToken": 1,
+    "apiCost": {
+      "provider": "Groq",
+      "inputPer1M": 0.59,
+      "outputPer1M": 0.79
+    }
   },
   {
     "id": "llama-3.1-8b",
@@ -60,14 +83,35 @@
         "quality": "best"
       }
     ],
-    "useCases": ["chat", "writing", "coding", "summarization"],
+    "useCases": [
+      "chat",
+      "writing",
+      "coding",
+      "summarization",
+      "text-generation"
+    ],
     "contextLength": 131072,
     "description": "Versatile small model with strong instruction following and a huge context window.",
-    "strengths": ["Long context (128K)", "Fast inference", "Good all-rounder"],
+    "strengths": [
+      "Long context (128K)",
+      "Fast inference",
+      "Good all-rounder"
+    ],
     "license": "restricted",
-    "benchmarks": { "mmlu": 73, "humanEval": 72, "mtBench": 8.2 },
+    "benchmarks": {
+      "mmlu": 73,
+      "humanEval": 72.6,
+      "mtBench": 8,
+      "math": 51.9,
+      "gpqa": 31.8,
+      "ifEval": 80.4
+    },
     "kvMBPerToken": 0.16,
-    "apiCost": { "provider": "Groq", "inputPer1M": 0.05, "outputPer1M": 0.08 }
+    "apiCost": {
+      "provider": "Groq",
+      "inputPer1M": 0.05,
+      "outputPer1M": 0.08
+    }
   },
   {
     "id": "llama-3.2-3b",
@@ -95,14 +139,32 @@
         "quality": "best"
       }
     ],
-    "useCases": ["chat", "summarization", "classification", "edge"],
+    "useCases": [
+      "chat",
+      "summarization",
+      "classification",
+      "edge",
+      "text-generation"
+    ],
     "contextLength": 131072,
     "description": "Tiny but capable. Great for edge devices, quick tasks, and when speed matters most.",
-    "strengths": ["Very fast", "Runs on anything", "Low memory"],
+    "strengths": [
+      "Very fast",
+      "Runs on anything",
+      "Low memory"
+    ],
     "license": "restricted",
-    "benchmarks": { "mmlu": 63, "humanEval": 41 },
+    "benchmarks": {
+      "mmlu": 63.4,
+      "humanEval": 55,
+      "math": 35
+    },
     "kvMBPerToken": 0.1,
-    "apiCost": { "provider": "Groq", "inputPer1M": 0.06, "outputPer1M": 0.06 }
+    "apiCost": {
+      "provider": "Groq",
+      "inputPer1M": 0.06,
+      "outputPer1M": 0.06
+    }
   },
   {
     "id": "llama-3.2-1b",
@@ -124,14 +186,31 @@
         "quality": "high"
       }
     ],
-    "useCases": ["edge", "classification", "summarization"],
+    "useCases": [
+      "edge",
+      "classification",
+      "summarization",
+      "on-device"
+    ],
     "contextLength": 131072,
     "description": "The smallest Llama. Minimal footprint for on-device and embedded use cases.",
-    "strengths": ["Ultra-low memory", "Fastest possible", "Edge deployment"],
+    "strengths": [
+      "Ultra-low memory",
+      "Fastest possible",
+      "Edge deployment"
+    ],
     "license": "restricted",
-    "benchmarks": { "mmlu": 49, "humanEval": 25 },
+    "benchmarks": {
+      "mmlu": 49.3,
+      "humanEval": 34,
+      "math": 24
+    },
     "kvMBPerToken": 0.06,
-    "apiCost": { "provider": "Groq", "inputPer1M": 0.04, "outputPer1M": 0.04 }
+    "apiCost": {
+      "provider": "Groq",
+      "inputPer1M": 0.04,
+      "outputPer1M": 0.04
+    }
   },
   {
     "id": "mistral-7b",
@@ -159,12 +238,27 @@
         "quality": "best"
       }
     ],
-    "useCases": ["chat", "coding", "writing", "rag"],
+    "useCases": [
+      "chat",
+      "coding",
+      "writing",
+      "rag",
+      "text-generation"
+    ],
     "contextLength": 32768,
     "description": "Efficient European model with strong performance per parameter and sliding window attention.",
-    "strengths": ["Efficient", "Good at RAG", "Apache 2.0 license"],
+    "strengths": [
+      "Efficient",
+      "Good at RAG",
+      "Apache 2.0 license"
+    ],
     "license": "open",
-    "benchmarks": { "mmlu": 62, "humanEval": 26, "mtBench": 7.6 },
+    "benchmarks": {
+      "mmlu": 62.5,
+      "humanEval": 32.9,
+      "mtBench": 6.8,
+      "math": 28
+    },
     "kvMBPerToken": 0.16,
     "apiCost": {
       "provider": "Together AI",
@@ -198,7 +292,13 @@
         "quality": "best"
       }
     ],
-    "useCases": ["reasoning", "math", "coding", "science"],
+    "useCases": [
+      "reasoning",
+      "math",
+      "coding",
+      "science",
+      "data-extraction"
+    ],
     "contextLength": 16384,
     "description": "Microsoft's research model trained on high-quality synthetic data. Punches well above its weight.",
     "strengths": [
@@ -207,9 +307,19 @@
       "Synthetic data quality"
     ],
     "license": "open",
-    "benchmarks": { "mmlu": 84, "humanEval": 82, "mtBench": 8.6 },
+    "benchmarks": {
+      "mmlu": 84.8,
+      "humanEval": 82.6,
+      "mtBench": 8.6,
+      "math": 80.4,
+      "gpqa": 56.1
+    },
     "kvMBPerToken": 0.24,
-    "apiCost": { "provider": "Azure AI", "inputPer1M": 0.8, "outputPer1M": 0.8 }
+    "apiCost": {
+      "provider": "Azure AI",
+      "inputPer1M": 0.8,
+      "outputPer1M": 0.8
+    }
   },
   {
     "id": "phi-3.5-mini",
@@ -237,12 +347,28 @@
         "quality": "best"
       }
     ],
-    "useCases": ["reasoning", "coding", "math", "chat"],
+    "useCases": [
+      "reasoning",
+      "coding",
+      "math",
+      "edge",
+      "summarization"
+    ],
     "contextLength": 131072,
     "description": "Small but highly capable model from Microsoft. Surprisingly strong at reasoning for its size.",
-    "strengths": ["Strong for size", "128K context", "Fast inference"],
+    "strengths": [
+      "Strong for size",
+      "128K context",
+      "Fast inference"
+    ],
     "license": "open",
-    "benchmarks": { "mmlu": 69, "humanEval": 62, "mtBench": 8.0 },
+    "benchmarks": {
+      "mmlu": 69,
+      "humanEval": 62,
+      "mtBench": 8,
+      "math": 48,
+      "gpqa": 32
+    },
     "kvMBPerToken": 0.1,
     "apiCost": {
       "provider": "Azure AI",
@@ -270,12 +396,27 @@
         "quality": "high"
       }
     ],
-    "useCases": ["chat", "reasoning", "writing", "analysis"],
+    "useCases": [
+      "chat",
+      "reasoning",
+      "writing",
+      "analysis",
+      "translation"
+    ],
     "contextLength": 8192,
     "description": "Google's strong open model with novel architecture improvements. Best Gemma for quality tasks.",
-    "strengths": ["Strong reasoning", "Clean architecture", "Google quality"],
+    "strengths": [
+      "Strong reasoning",
+      "Clean architecture",
+      "Google quality"
+    ],
     "license": "open",
-    "benchmarks": { "mmlu": 78, "humanEval": 51, "mtBench": 8.8 },
+    "benchmarks": {
+      "mmlu": 75.2,
+      "humanEval": 51,
+      "mtBench": 8.6,
+      "math": 42
+    },
     "kvMBPerToken": 0.4,
     "apiCost": {
       "provider": "Google AI",
@@ -309,12 +450,27 @@
         "quality": "best"
       }
     ],
-    "useCases": ["chat", "coding", "writing", "rag"],
+    "useCases": [
+      "chat",
+      "coding",
+      "writing",
+      "rag",
+      "summarization"
+    ],
     "contextLength": 8192,
     "description": "Balanced Google model — strong performance at a fraction of the compute cost of 27B.",
-    "strengths": ["Good balance", "Strong coding", "Reliable"],
+    "strengths": [
+      "Good balance",
+      "Strong coding",
+      "Reliable"
+    ],
     "license": "open",
-    "benchmarks": { "mmlu": 72, "humanEval": 40, "mtBench": 8.0 },
+    "benchmarks": {
+      "mmlu": 71.3,
+      "humanEval": 40,
+      "mtBench": 8,
+      "math": 36
+    },
     "kvMBPerToken": 0.18,
     "apiCost": {
       "provider": "Google AI",
@@ -348,12 +504,26 @@
         "quality": "best"
       }
     ],
-    "useCases": ["edge", "chat", "classification", "summarization"],
+    "useCases": [
+      "edge",
+      "chat",
+      "classification",
+      "summarization",
+      "on-device"
+    ],
     "contextLength": 8192,
     "description": "Tiny Google model with impressive quality for its size. Great for resource-constrained setups.",
-    "strengths": ["Very small", "Good quality/size ratio", "Fast"],
+    "strengths": [
+      "Very small",
+      "Good quality/size ratio",
+      "Fast"
+    ],
     "license": "open",
-    "benchmarks": { "mmlu": 52, "humanEval": 19 },
+    "benchmarks": {
+      "mmlu": 51.3,
+      "humanEval": 25,
+      "math": 18
+    },
     "kvMBPerToken": 0.07,
     "apiCost": {
       "provider": "Google AI",
@@ -381,12 +551,29 @@
         "quality": "high"
       }
     ],
-    "useCases": ["coding", "reasoning", "math", "writing", "multilingual"],
+    "useCases": [
+      "coding",
+      "reasoning",
+      "math",
+      "writing",
+      "multilingual",
+      "translation"
+    ],
     "contextLength": 131072,
     "description": "Alibaba's top open model — exceptional at coding and math, strong multilingual support.",
-    "strengths": ["Excellent coding", "Strong math", "Multilingual"],
+    "strengths": [
+      "Excellent coding",
+      "Strong math",
+      "Multilingual"
+    ],
     "license": "open",
-    "benchmarks": { "mmlu": 83, "humanEval": 85, "mtBench": 8.8 },
+    "benchmarks": {
+      "mmlu": 83,
+      "humanEval": 85,
+      "mtBench": 8.8,
+      "math": 79.7,
+      "gpqa": 42
+    },
     "kvMBPerToken": 0.55,
     "apiCost": {
       "provider": "Together AI",
@@ -420,12 +607,28 @@
         "quality": "best"
       }
     ],
-    "useCases": ["coding", "reasoning", "math", "multilingual"],
+    "useCases": [
+      "coding",
+      "reasoning",
+      "math",
+      "multilingual",
+      "function-calling"
+    ],
     "contextLength": 131072,
     "description": "Mid-size Qwen model with strong coding and math capabilities. Great Llama 3.3 alternative.",
-    "strengths": ["Coding", "Math", "128K context"],
+    "strengths": [
+      "Coding",
+      "Math",
+      "128K context"
+    ],
     "license": "open",
-    "benchmarks": { "mmlu": 79, "humanEval": 74, "mtBench": 8.5 },
+    "benchmarks": {
+      "mmlu": 79.9,
+      "humanEval": 76,
+      "mtBench": 8.5,
+      "math": 75.6,
+      "gpqa": 42.9
+    },
     "kvMBPerToken": 0.24,
     "apiCost": {
       "provider": "Together AI",
@@ -459,12 +662,28 @@
         "quality": "best"
       }
     ],
-    "useCases": ["coding", "chat", "math", "multilingual"],
+    "useCases": [
+      "coding",
+      "chat",
+      "math",
+      "multilingual",
+      "text-generation"
+    ],
     "contextLength": 131072,
     "description": "Compact Qwen with strong coding. One of the best small models for code tasks.",
-    "strengths": ["Strong coding for size", "Multilingual", "Fast"],
+    "strengths": [
+      "Strong coding for size",
+      "Multilingual",
+      "Fast"
+    ],
     "license": "open",
-    "benchmarks": { "mmlu": 74, "humanEval": 72, "mtBench": 8.3 },
+    "benchmarks": {
+      "mmlu": 74.2,
+      "humanEval": 68,
+      "mtBench": 8.1,
+      "math": 62,
+      "gpqa": 31
+    },
     "kvMBPerToken": 0.16,
     "apiCost": {
       "provider": "Together AI",
@@ -498,12 +717,27 @@
         "quality": "best"
       }
     ],
-    "useCases": ["reasoning", "math", "coding", "science"],
+    "useCases": [
+      "reasoning",
+      "math",
+      "coding",
+      "science",
+      "chain-of-thought"
+    ],
     "contextLength": 131072,
     "description": "DeepSeek's reasoning model distilled to 7B. Explicit chain-of-thought for harder problems.",
-    "strengths": ["Reasoning chains", "Math", "Competitive pricing"],
+    "strengths": [
+      "Reasoning chains",
+      "Math",
+      "Competitive pricing"
+    ],
     "license": "open",
-    "benchmarks": { "mmlu": 55, "humanEval": 55 },
+    "benchmarks": {
+      "mmlu": 58,
+      "humanEval": 55,
+      "math": 83.9,
+      "gpqa": 36.8
+    },
     "kvMBPerToken": 0.16,
     "apiCost": {
       "provider": "DeepSeek",
@@ -531,12 +765,27 @@
         "quality": "high"
       }
     ],
-    "useCases": ["reasoning", "math", "coding", "science"],
+    "useCases": [
+      "reasoning",
+      "math",
+      "coding",
+      "science",
+      "chain-of-thought"
+    ],
     "contextLength": 131072,
     "description": "Larger reasoning distillation from DeepSeek R1. Better at complex multi-step problems.",
-    "strengths": ["Strong reasoning", "Complex math", "Chain-of-thought"],
+    "strengths": [
+      "Strong reasoning",
+      "Complex math",
+      "Chain-of-thought"
+    ],
     "license": "open",
-    "benchmarks": { "mmlu": 69, "humanEval": 53 },
+    "benchmarks": {
+      "mmlu": 69,
+      "humanEval": 65,
+      "math": 90.2,
+      "gpqa": 49
+    },
     "kvMBPerToken": 0.24,
     "apiCost": {
       "provider": "DeepSeek",
@@ -564,12 +813,25 @@
         "quality": "high"
       }
     ],
-    "useCases": ["coding", "code-completion", "debugging"],
+    "useCases": [
+      "coding",
+      "code-completion",
+      "debugging",
+      "sql"
+    ],
     "contextLength": 100000,
     "description": "Meta's code-specialized model. Fine-tuned on code with fill-in-the-middle support.",
-    "strengths": ["Code completion", "Multi-language", "FIM support"],
+    "strengths": [
+      "Code completion",
+      "Multi-language",
+      "FIM support"
+    ],
     "license": "restricted",
-    "benchmarks": { "mmlu": 34, "humanEval": 33 },
+    "benchmarks": {
+      "mmlu": 40,
+      "humanEval": 62.2,
+      "math": 10
+    },
     "kvMBPerToken": 0.16
   },
   {
@@ -592,12 +854,26 @@
         "quality": "high"
       }
     ],
-    "useCases": ["vision", "image-analysis", "multimodal", "chat"],
+    "useCases": [
+      "vision",
+      "image-analysis",
+      "multimodal",
+      "chat",
+      "document-qa"
+    ],
     "contextLength": 131072,
     "description": "Llama with vision. Can understand and describe images, charts, and screenshots.",
-    "strengths": ["Image understanding", "Multimodal", "OCR"],
+    "strengths": [
+      "Image understanding",
+      "Multimodal",
+      "OCR"
+    ],
     "license": "restricted",
-    "benchmarks": { "mmlu": 73, "humanEval": 40 },
+    "benchmarks": {
+      "mmlu": 73,
+      "humanEval": 72.6,
+      "math": 51.9
+    },
     "kvMBPerToken": 0.22,
     "apiCost": {
       "provider": "Together AI",
@@ -625,12 +901,27 @@
         "quality": "high"
       }
     ],
-    "useCases": ["chat", "coding", "rag", "function-calling"],
+    "useCases": [
+      "chat",
+      "coding",
+      "rag",
+      "function-calling",
+      "agents"
+    ],
     "contextLength": 131072,
     "description": "Mistral's mid-size model with a 128K context window. Great for long document tasks.",
-    "strengths": ["Long context", "Function calling", "Good RAG"],
+    "strengths": [
+      "Long context",
+      "Function calling",
+      "Good RAG"
+    ],
     "license": "open",
-    "benchmarks": { "mmlu": 68, "humanEval": 49, "mtBench": 7.9 },
+    "benchmarks": {
+      "mmlu": 68,
+      "humanEval": 55,
+      "mtBench": 7.6,
+      "math": 40
+    },
     "kvMBPerToken": 0.22,
     "apiCost": {
       "provider": "Mistral AI",
@@ -658,12 +949,27 @@
         "quality": "high"
       }
     ],
-    "useCases": ["chat", "writing", "reasoning", "analysis"],
+    "useCases": [
+      "chat",
+      "writing",
+      "reasoning",
+      "analysis",
+      "creative-writing"
+    ],
     "contextLength": 131072,
     "description": "Google's largest Gemma 3 model with strong multilingual and reasoning capabilities.",
-    "strengths": ["Multilingual", "Strong reasoning", "Large context"],
+    "strengths": [
+      "Multilingual",
+      "Strong reasoning",
+      "Large context"
+    ],
     "license": "open",
-    "benchmarks": { "mmlu": 81, "humanEval": 60 },
+    "benchmarks": {
+      "mmlu": 78.6,
+      "humanEval": 48.8,
+      "math": 50,
+      "gpqa": 24.3
+    },
     "kvMBPerToken": 0.4,
     "apiCost": {
       "provider": "Google AI",
@@ -697,12 +1003,26 @@
         "quality": "best"
       }
     ],
-    "useCases": ["chat", "writing", "coding", "analysis"],
+    "useCases": [
+      "chat",
+      "writing",
+      "coding",
+      "analysis",
+      "rag"
+    ],
     "contextLength": 131072,
     "description": "Balanced Gemma 3 model with excellent performance-to-size ratio.",
-    "strengths": ["Balanced", "Multilingual", "Good coding"],
+    "strengths": [
+      "Balanced",
+      "Multilingual",
+      "Good coding"
+    ],
     "license": "open",
-    "benchmarks": { "mmlu": 74, "humanEval": 52 },
+    "benchmarks": {
+      "mmlu": 74.5,
+      "humanEval": 45,
+      "math": 42
+    },
     "kvMBPerToken": 0.22,
     "apiCost": {
       "provider": "Google AI",
@@ -736,12 +1056,25 @@
         "quality": "best"
       }
     ],
-    "useCases": ["chat", "writing", "coding"],
+    "useCases": [
+      "chat",
+      "writing",
+      "coding",
+      "edge"
+    ],
     "contextLength": 131072,
     "description": "Compact Gemma 3 model that runs well on consumer hardware.",
-    "strengths": ["Efficient", "Multilingual", "Fast on consumer GPU"],
+    "strengths": [
+      "Efficient",
+      "Multilingual",
+      "Fast on consumer GPU"
+    ],
     "license": "open",
-    "benchmarks": { "mmlu": 59, "humanEval": 38 },
+    "benchmarks": {
+      "mmlu": 65,
+      "humanEval": 38,
+      "math": 32
+    },
     "kvMBPerToken": 0.1,
     "apiCost": {
       "provider": "Google AI",
@@ -775,12 +1108,25 @@
         "quality": "best"
       }
     ],
-    "useCases": ["chat", "on-device"],
+    "useCases": [
+      "chat",
+      "on-device",
+      "edge",
+      "text-generation"
+    ],
     "contextLength": 32768,
     "description": "Ultra-compact Gemma model for edge devices and rapid prototyping.",
-    "strengths": ["Ultra-fast", "Tiny footprint", "Edge deployment"],
+    "strengths": [
+      "Ultra-fast",
+      "Tiny footprint",
+      "Edge deployment"
+    ],
     "license": "open",
-    "benchmarks": { "mmlu": 35, "humanEval": 12 },
+    "benchmarks": {
+      "mmlu": 39,
+      "humanEval": 22,
+      "math": 15
+    },
     "kvMBPerToken": 0.06
   },
   {
@@ -803,12 +1149,28 @@
         "quality": "high"
       }
     ],
-    "useCases": ["chat", "reasoning", "coding", "analysis"],
+    "useCases": [
+      "chat",
+      "reasoning",
+      "coding",
+      "analysis",
+      "agents"
+    ],
     "contextLength": 32768,
     "description": "Alibaba's flagship dense model with hybrid thinking mode and strong reasoning.",
-    "strengths": ["Hybrid thinking", "Strong reasoning", "Multilingual"],
+    "strengths": [
+      "Hybrid thinking",
+      "Strong reasoning",
+      "Multilingual"
+    ],
     "license": "open",
-    "benchmarks": { "mmlu": 85, "humanEval": 92 },
+    "benchmarks": {
+      "mmlu": 85,
+      "humanEval": 92,
+      "math": 95,
+      "gpqa": 65,
+      "ifEval": 88
+    },
     "kvMBPerToken": 0.55,
     "apiCost": {
       "provider": "Together AI",
@@ -842,12 +1204,28 @@
         "quality": "best"
       }
     ],
-    "useCases": ["chat", "reasoning", "coding", "analysis"],
+    "useCases": [
+      "chat",
+      "reasoning",
+      "coding",
+      "analysis",
+      "function-calling"
+    ],
     "contextLength": 32768,
     "description": "High-capability Qwen 3 model with excellent performance across benchmarks.",
-    "strengths": ["Hybrid thinking", "Strong coding", "Multilingual"],
+    "strengths": [
+      "Hybrid thinking",
+      "Strong coding",
+      "Multilingual"
+    ],
     "license": "open",
-    "benchmarks": { "mmlu": 80, "humanEval": 87 },
+    "benchmarks": {
+      "mmlu": 80,
+      "humanEval": 84,
+      "math": 88,
+      "gpqa": 52,
+      "ifEval": 82
+    },
     "kvMBPerToken": 0.24,
     "apiCost": {
       "provider": "Together AI",
@@ -881,12 +1259,26 @@
         "quality": "best"
       }
     ],
-    "useCases": ["chat", "coding", "reasoning"],
+    "useCases": [
+      "chat",
+      "coding",
+      "reasoning",
+      "rag"
+    ],
     "contextLength": 32768,
     "description": "Versatile Qwen 3 model that punches above its weight class.",
-    "strengths": ["Thinking mode", "Efficient", "Strong instruction following"],
+    "strengths": [
+      "Thinking mode",
+      "Efficient",
+      "Strong instruction following"
+    ],
     "license": "open",
-    "benchmarks": { "mmlu": 77, "humanEval": 82 },
+    "benchmarks": {
+      "mmlu": 74,
+      "humanEval": 76,
+      "math": 78,
+      "gpqa": 40
+    },
     "kvMBPerToken": 0.16,
     "apiCost": {
       "provider": "Together AI",
@@ -920,12 +1312,26 @@
         "quality": "best"
       }
     ],
-    "useCases": ["chat", "coding", "writing"],
+    "useCases": [
+      "chat",
+      "coding",
+      "writing",
+      "edge"
+    ],
     "contextLength": 32768,
     "description": "Compact Qwen 3 model with thinking mode, ideal for everyday tasks.",
-    "strengths": ["Thinking mode", "Fast", "Good quality/size ratio"],
+    "strengths": [
+      "Thinking mode",
+      "Fast",
+      "Good quality/size ratio"
+    ],
     "license": "open",
-    "benchmarks": { "mmlu": 72, "humanEval": 71 },
+    "benchmarks": {
+      "mmlu": 66,
+      "humanEval": 65,
+      "math": 65,
+      "gpqa": 30
+    },
     "kvMBPerToken": 0.1,
     "apiCost": {
       "provider": "Together AI",
@@ -959,12 +1365,25 @@
         "quality": "best"
       }
     ],
-    "useCases": ["chat", "on-device"],
+    "useCases": [
+      "chat",
+      "on-device",
+      "edge",
+      "classification"
+    ],
     "contextLength": 32768,
     "description": "Small but capable Qwen 3 model with thinking mode support.",
-    "strengths": ["Thinking mode", "Ultra-fast", "Tiny footprint"],
+    "strengths": [
+      "Thinking mode",
+      "Ultra-fast",
+      "Tiny footprint"
+    ],
     "license": "open",
-    "benchmarks": { "mmlu": 57, "humanEval": 46 },
+    "benchmarks": {
+      "mmlu": 52,
+      "humanEval": 45,
+      "math": 42
+    },
     "kvMBPerToken": 0.07
   },
   {
@@ -987,7 +1406,14 @@
         "quality": "high"
       }
     ],
-    "useCases": ["chat", "reasoning", "coding", "analysis", "writing"],
+    "useCases": [
+      "chat",
+      "reasoning",
+      "coding",
+      "analysis",
+      "writing",
+      "agents"
+    ],
     "contextLength": 131072,
     "description": "Alibaba's flagship 72B model with near-frontier performance across all tasks.",
     "strengths": [
@@ -997,8 +1423,15 @@
       "Multilingual"
     ],
     "license": "open",
-    "benchmarks": { "mmlu": 86, "humanEval": 86, "mtBench": 9.1 },
-    "kvMBPerToken": 1.0,
+    "benchmarks": {
+      "mmlu": 85.3,
+      "humanEval": 86.6,
+      "mtBench": 9.1,
+      "math": 83.1,
+      "gpqa": 49,
+      "ifEval": 86.1
+    },
+    "kvMBPerToken": 1,
     "apiCost": {
       "provider": "Together AI",
       "inputPer1M": 0.9,
@@ -1031,7 +1464,12 @@
         "quality": "best"
       }
     ],
-    "useCases": ["coding", "debugging", "code review"],
+    "useCases": [
+      "coding",
+      "debugging",
+      "code-review",
+      "code-completion"
+    ],
     "contextLength": 131072,
     "description": "Specialized coding model from Alibaba, competitive with much larger models on code tasks.",
     "strengths": [
@@ -1041,7 +1479,11 @@
       "128K context"
     ],
     "license": "open",
-    "benchmarks": { "mmlu": 65, "humanEval": 85 },
+    "benchmarks": {
+      "mmlu": 68,
+      "humanEval": 88.4,
+      "math": 40
+    },
     "kvMBPerToken": 0.16,
     "apiCost": {
       "provider": "Together AI",
@@ -1069,7 +1511,13 @@
         "quality": "high"
       }
     ],
-    "useCases": ["coding", "debugging", "code review", "architecture"],
+    "useCases": [
+      "coding",
+      "debugging",
+      "code-review",
+      "architecture",
+      "agents"
+    ],
     "contextLength": 131072,
     "description": "State-of-the-art coding model that rivals GPT-4 on many benchmarks.",
     "strengths": [
@@ -1078,7 +1526,11 @@
       "128K context"
     ],
     "license": "open",
-    "benchmarks": { "mmlu": 79, "humanEval": 92 },
+    "benchmarks": {
+      "mmlu": 76,
+      "humanEval": 92.7,
+      "math": 55
+    },
     "kvMBPerToken": 0.55,
     "apiCost": {
       "provider": "Together AI",
@@ -1106,7 +1558,13 @@
         "quality": "high"
       }
     ],
-    "useCases": ["chat", "coding", "writing", "analysis"],
+    "useCases": [
+      "chat",
+      "coding",
+      "writing",
+      "analysis",
+      "multilingual"
+    ],
     "contextLength": 32768,
     "description": "Mixture-of-experts model from Mistral. Uses only 12.9B parameters per token despite having 46.7B total.",
     "strengths": [
@@ -1116,7 +1574,12 @@
       "Good coding"
     ],
     "license": "open",
-    "benchmarks": { "mmlu": 70, "humanEval": 45, "mtBench": 8.3 },
+    "benchmarks": {
+      "mmlu": 70.6,
+      "humanEval": 40.2,
+      "mtBench": 8.3,
+      "math": 28
+    },
     "kvMBPerToken": 0.25,
     "apiCost": {
       "provider": "Mistral AI",
@@ -1144,7 +1607,14 @@
         "quality": "high"
       }
     ],
-    "useCases": ["chat", "coding", "reasoning", "analysis"],
+    "useCases": [
+      "chat",
+      "coding",
+      "reasoning",
+      "analysis",
+      "rag",
+      "function-calling"
+    ],
     "contextLength": 65536,
     "description": "Mistral's largest MoE model with 141B parameters and 39B active per token. Near-frontier quality.",
     "strengths": [
@@ -1154,7 +1624,12 @@
       "Multilingual"
     ],
     "license": "open",
-    "benchmarks": { "mmlu": 78, "humanEval": 60 },
+    "benchmarks": {
+      "mmlu": 77.8,
+      "humanEval": 45,
+      "mtBench": 8.6,
+      "math": 42
+    },
     "kvMBPerToken": 0.6,
     "apiCost": {
       "provider": "Mistral AI",
@@ -1188,12 +1663,27 @@
         "quality": "best"
       }
     ],
-    "useCases": ["reasoning", "math", "coding"],
+    "useCases": [
+      "reasoning",
+      "math",
+      "coding",
+      "edge",
+      "chain-of-thought"
+    ],
     "contextLength": 131072,
     "description": "Tiny DeepSeek R1 distill with chain-of-thought reasoning, surprisingly capable.",
-    "strengths": ["Chain-of-thought", "Math reasoning", "Tiny footprint"],
+    "strengths": [
+      "Chain-of-thought",
+      "Math reasoning",
+      "Tiny footprint"
+    ],
     "license": "open",
-    "benchmarks": { "mmlu": 28, "humanEval": 28 },
+    "benchmarks": {
+      "mmlu": 43,
+      "humanEval": 40,
+      "math": 72,
+      "gpqa": 25
+    },
     "kvMBPerToken": 0.06,
     "apiCost": {
       "provider": "DeepSeek",
@@ -1221,12 +1711,28 @@
         "quality": "high"
       }
     ],
-    "useCases": ["reasoning", "math", "coding", "analysis"],
+    "useCases": [
+      "reasoning",
+      "math",
+      "coding",
+      "analysis",
+      "chain-of-thought"
+    ],
     "contextLength": 131072,
     "description": "DeepSeek R1 distill at 32B — excellent reasoning with chain-of-thought, near frontier quality.",
-    "strengths": ["Advanced reasoning", "Math", "Coding", "128K context"],
+    "strengths": [
+      "Advanced reasoning",
+      "Math",
+      "Coding",
+      "128K context"
+    ],
     "license": "open",
-    "benchmarks": { "mmlu": 72, "humanEval": 72 },
+    "benchmarks": {
+      "mmlu": 80,
+      "humanEval": 72,
+      "math": 94.3,
+      "gpqa": 62.1
+    },
     "kvMBPerToken": 0.55,
     "apiCost": {
       "provider": "DeepSeek",
@@ -1248,13 +1754,30 @@
         "quality": "medium"
       }
     ],
-    "useCases": ["chat", "reasoning", "coding", "analysis"],
+    "useCases": [
+      "chat",
+      "reasoning",
+      "coding",
+      "analysis",
+      "agents",
+      "multilingual"
+    ],
     "contextLength": 65536,
     "description": "DeepSeek's flagship MoE model with 671B parameters. Frontier-level quality, runs in cloud.",
-    "strengths": ["Frontier quality", "MoE architecture", "Strong coding"],
+    "strengths": [
+      "Frontier quality",
+      "MoE architecture",
+      "Strong coding"
+    ],
     "license": "open",
-    "benchmarks": { "mmlu": 88, "humanEval": 91 },
-    "kvMBPerToken": 2.0,
+    "benchmarks": {
+      "mmlu": 88.5,
+      "humanEval": 82.6,
+      "math": 90.2,
+      "gpqa": 59.1,
+      "ifEval": 86.1
+    },
+    "kvMBPerToken": 2,
     "apiCost": {
       "provider": "DeepSeek",
       "inputPer1M": 0.27,
@@ -1287,7 +1810,13 @@
         "quality": "best"
       }
     ],
-    "useCases": ["chat", "writing", "coding", "analysis"],
+    "useCases": [
+      "chat",
+      "writing",
+      "coding",
+      "analysis",
+      "creative-writing"
+    ],
     "contextLength": 131072,
     "description": "Mistral's efficient 24B model with vision capabilities and strong instruction following.",
     "strengths": [
@@ -1297,7 +1826,14 @@
       "Efficient"
     ],
     "license": "open",
-    "benchmarks": { "mmlu": 81, "humanEval": 72, "mtBench": 8.4 },
+    "benchmarks": {
+      "mmlu": 80.6,
+      "humanEval": 88.4,
+      "mtBench": 8.4,
+      "math": 69.3,
+      "gpqa": 46,
+      "ifEval": 84
+    },
     "kvMBPerToken": 0.4,
     "apiCost": {
       "provider": "Mistral AI",
@@ -1325,7 +1861,13 @@
         "quality": "high"
       }
     ],
-    "useCases": ["coding", "debugging", "code completion"],
+    "useCases": [
+      "coding",
+      "debugging",
+      "code-completion",
+      "architecture",
+      "sql"
+    ],
     "contextLength": 32768,
     "description": "Mistral's specialized coding model with strong performance across 80+ languages.",
     "strengths": [
@@ -1335,7 +1877,11 @@
       "Fast inference"
     ],
     "license": "restricted",
-    "benchmarks": { "mmlu": 81, "humanEval": 81 },
+    "benchmarks": {
+      "mmlu": 81,
+      "humanEval": 81.1,
+      "math": 56
+    },
     "kvMBPerToken": 0.4,
     "apiCost": {
       "provider": "Mistral AI",
@@ -1363,7 +1909,14 @@
         "quality": "high"
       }
     ],
-    "useCases": ["chat", "reasoning", "coding", "writing", "analysis"],
+    "useCases": [
+      "chat",
+      "reasoning",
+      "coding",
+      "writing",
+      "analysis",
+      "agents"
+    ],
     "contextLength": 131072,
     "description": "Meta's 70B flagship with massive 128K context and strong multilingual support.",
     "strengths": [
@@ -1373,8 +1926,15 @@
       "Tool use"
     ],
     "license": "restricted",
-    "benchmarks": { "mmlu": 86, "humanEval": 80, "mtBench": 8.9 },
-    "kvMBPerToken": 1.0,
+    "benchmarks": {
+      "mmlu": 86,
+      "humanEval": 80.5,
+      "mtBench": 8.9,
+      "math": 68,
+      "gpqa": 48,
+      "ifEval": 87.5
+    },
+    "kvMBPerToken": 1,
     "apiCost": {
       "provider": "Together AI",
       "inputPer1M": 0.54,
@@ -1401,7 +1961,12 @@
         "quality": "high"
       }
     ],
-    "useCases": ["coding", "debugging", "code review"],
+    "useCases": [
+      "coding",
+      "debugging",
+      "code-review",
+      "architecture"
+    ],
     "contextLength": 100000,
     "description": "Meta's dedicated code model at 34B — strong at code generation and completion.",
     "strengths": [
@@ -1411,7 +1976,11 @@
       "Many languages"
     ],
     "license": "restricted",
-    "benchmarks": { "mmlu": 46, "humanEval": 48 },
+    "benchmarks": {
+      "mmlu": 54,
+      "humanEval": 67.8,
+      "math": 15
+    },
     "kvMBPerToken": 0.55
   },
   {
@@ -1434,7 +2003,14 @@
         "quality": "high"
       }
     ],
-    "useCases": ["chat", "RAG", "analysis", "writing"],
+    "useCases": [
+      "chat",
+      "rag",
+      "analysis",
+      "writing",
+      "document-qa",
+      "data-extraction"
+    ],
     "contextLength": 131072,
     "description": "Cohere's Command R model optimized for RAG and enterprise use cases.",
     "strengths": [
@@ -1444,9 +2020,17 @@
       "Enterprise-ready"
     ],
     "license": "open",
-    "benchmarks": { "mmlu": 68, "humanEval": 37 },
+    "benchmarks": {
+      "mmlu": 75,
+      "humanEval": 56,
+      "math": 30
+    },
     "kvMBPerToken": 0.55,
-    "apiCost": { "provider": "Cohere", "inputPer1M": 0.5, "outputPer1M": 1.5 }
+    "apiCost": {
+      "provider": "Cohere",
+      "inputPer1M": 0.5,
+      "outputPer1M": 1.5
+    }
   },
   {
     "id": "llama-3.1-405b",
@@ -1462,7 +2046,13 @@
         "quality": "medium"
       }
     ],
-    "useCases": ["chat", "reasoning", "coding", "research"],
+    "useCases": [
+      "chat",
+      "reasoning",
+      "coding",
+      "research",
+      "agents"
+    ],
     "contextLength": 131072,
     "description": "Meta's frontier 405B model. Requires multi-GPU server setups or cloud inference.",
     "strengths": [
@@ -1471,8 +2061,14 @@
       "128K context"
     ],
     "license": "restricted",
-    "benchmarks": { "mmlu": 88, "humanEval": 89 },
-    "kvMBPerToken": 4.0,
+    "benchmarks": {
+      "mmlu": 88.6,
+      "humanEval": 89,
+      "math": 73.8,
+      "gpqa": 49,
+      "ifEval": 88.6
+    },
+    "kvMBPerToken": 4,
     "apiCost": {
       "provider": "Together AI",
       "inputPer1M": 3.5,
@@ -1505,12 +2101,26 @@
         "quality": "best"
       }
     ],
-    "useCases": ["chat", "on-device"],
+    "useCases": [
+      "chat",
+      "on-device",
+      "edge",
+      "text-generation"
+    ],
     "contextLength": 2048,
     "description": "Ultra-small LLaMA architecture trained on 3 trillion tokens. Ideal for embedded and edge use.",
-    "strengths": ["Tiny size", "Very fast", "Edge deployment", "Low power"],
+    "strengths": [
+      "Tiny size",
+      "Very fast",
+      "Edge deployment",
+      "Low power"
+    ],
     "license": "open",
-    "benchmarks": { "mmlu": 26, "humanEval": 8 },
+    "benchmarks": {
+      "mmlu": 25,
+      "humanEval": 12,
+      "math": 3
+    },
     "kvMBPerToken": 0.05
   },
   {
@@ -1544,7 +2154,8 @@
       "reasoning",
       "writing",
       "analysis",
-      "instruction-following"
+      "instruction-following",
+      "creative-writing"
     ],
     "contextLength": 32768,
     "description": "Microsoft's instruction-tuned model with strong reasoning and complex task following.",
@@ -1554,7 +2165,12 @@
       "Writing quality"
     ],
     "license": "open",
-    "benchmarks": { "mmlu": 63, "humanEval": 45, "mtBench": 8.0 },
+    "benchmarks": {
+      "mmlu": 65,
+      "humanEval": 50,
+      "mtBench": 7.5,
+      "math": 30
+    },
     "kvMBPerToken": 0.16
   },
   {
@@ -1583,7 +2199,14 @@
         "quality": "best"
       }
     ],
-    "useCases": ["chat", "coding", "reasoning", "analysis", "summarization"],
+    "useCases": [
+      "chat",
+      "coding",
+      "reasoning",
+      "analysis",
+      "summarization",
+      "data-extraction"
+    ],
     "contextLength": 131072,
     "description": "IBM's enterprise-grade instruct model. Strong at structured tasks, long context, and code.",
     "strengths": [
@@ -1593,7 +2216,11 @@
       "Apache 2.0"
     ],
     "license": "open",
-    "benchmarks": { "mmlu": 62, "humanEval": 42 },
+    "benchmarks": {
+      "mmlu": 66,
+      "humanEval": 58,
+      "math": 45
+    },
     "kvMBPerToken": 0.16
   },
   {
@@ -1622,7 +2249,13 @@
         "quality": "best"
       }
     ],
-    "useCases": ["chat", "summarization", "analysis", "on-device"],
+    "useCases": [
+      "chat",
+      "summarization",
+      "analysis",
+      "on-device",
+      "edge"
+    ],
     "contextLength": 131072,
     "description": "IBM's compact enterprise model. Punches above its weight for on-device and edge deployment.",
     "strengths": [
@@ -1632,7 +2265,11 @@
       "Apache 2.0"
     ],
     "license": "open",
-    "benchmarks": { "mmlu": 42, "humanEval": 20 },
+    "benchmarks": {
+      "mmlu": 48,
+      "humanEval": 32,
+      "math": 22
+    },
     "kvMBPerToken": 0.07
   }
 ]

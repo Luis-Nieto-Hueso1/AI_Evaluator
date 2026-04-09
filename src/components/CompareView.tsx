@@ -86,10 +86,11 @@ function DevicePicker({
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search GPU…"
-                className="w-full text-sm px-2 py-1 rounded bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none"
+                aria-label="Search GPU for comparison"
+                className="w-full text-sm px-3 py-2 rounded bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none"
               />
             </div>
-            <div className="max-h-48 overflow-y-auto">
+            <div className="max-h-64 overflow-y-auto">
               <div
                 onClick={() => {
                   onChange({ ...config, gpuId: null });
@@ -289,17 +290,17 @@ export function CompareView() {
                   className={`flex flex-col items-center ${bWins ? "opacity-50" : ""}`}
                 >
                   <span
-                    className={`text-xs font-bold px-2 py-0.5 rounded-lg ${SCORE_COLOR(a.score, a.fits)}`}
+                    className={`text-xs font-bold px-2.5 py-1 rounded-lg ${SCORE_COLOR(a.score, a.fits)}`}
                   >
                     {a.fits ? a.score : "—"}
                   </span>
                   {a.fits && (
-                    <span className="text-[10px] text-zinc-400 mt-0.5">
+                    <span className="text-xs text-zinc-400 mt-0.5">
                       {formatToks(a.tokensPerSec)}
                     </span>
                   )}
                   {aWins && (
-                    <span className="text-[10px] text-blue-500 font-bold mt-0.5">
+                    <span className="text-xs text-blue-500 font-bold mt-0.5">
                       ▲ A
                     </span>
                   )}
@@ -310,17 +311,17 @@ export function CompareView() {
                   className={`flex flex-col items-center ${aWins ? "opacity-50" : ""}`}
                 >
                   <span
-                    className={`text-xs font-bold px-2 py-0.5 rounded-lg ${SCORE_COLOR(b.score, b.fits)}`}
+                    className={`text-xs font-bold px-2.5 py-1 rounded-lg ${SCORE_COLOR(b.score, b.fits)}`}
                   >
                     {b.fits ? b.score : "—"}
                   </span>
                   {b.fits && (
-                    <span className="text-[10px] text-zinc-400 mt-0.5">
+                    <span className="text-xs text-zinc-400 mt-0.5">
                       {formatToks(b.tokensPerSec)}
                     </span>
                   )}
                   {bWins && (
-                    <span className="text-[10px] text-violet-500 font-bold mt-0.5">
+                    <span className="text-xs text-violet-500 font-bold mt-0.5">
                       ▲ B
                     </span>
                   )}

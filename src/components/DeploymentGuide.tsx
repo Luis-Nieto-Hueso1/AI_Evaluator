@@ -145,7 +145,7 @@ function CopyButton({ text }: { text: string }) {
           setTimeout(() => setCopied(false), 1500);
         });
       }}
-      className="text-[10px] px-1.5 py-0.5 rounded bg-zinc-200 dark:bg-zinc-700 text-zinc-500 dark:text-zinc-400 hover:bg-zinc-300 dark:hover:bg-zinc-600 transition-colors cursor-pointer shrink-0"
+      className="text-xs px-2.5 py-1 rounded bg-zinc-200 dark:bg-zinc-700 text-zinc-500 dark:text-zinc-400 hover:bg-zinc-300 dark:hover:bg-zinc-600 transition-colors cursor-pointer shrink-0"
     >
       {copied ? "Copied!" : "Copy"}
     </button>
@@ -174,14 +174,14 @@ function StackCard({
         <span className="text-lg">{stack.icon}</span>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
-            <span className="text-[10px] font-bold text-zinc-400 dark:text-zinc-500">
+            <span className="text-xs font-bold text-zinc-400 dark:text-zinc-500">
               #{rank}
             </span>
             <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 truncate">
               {stack.name}
             </span>
             <span
-              className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${COMPLEXITY_COLORS[stack.complexity] ?? ""}`}
+              className={`text-xs px-2.5 py-1 rounded-full font-medium ${COMPLEXITY_COLORS[stack.complexity] ?? ""}`}
             >
               {stack.complexity}
             </span>
@@ -191,16 +191,20 @@ function StackCard({
           </p>
         </div>
         {/* Score bar */}
-        <div className="w-20 shrink-0">
+        <div
+          className="w-20 shrink-0"
+          title="Match score: how well this deployment stack fits your target platform, priority, and hardware"
+        >
+          <p className="text-xs text-zinc-400 text-right mb-0.5 font-medium">
+            Match
+          </p>
           <div className="h-2 rounded-full bg-zinc-100 dark:bg-zinc-800 overflow-hidden">
             <div
               className="h-full rounded-full bg-violet-500 transition-all"
               style={{ width: `${barWidth}%` }}
             />
           </div>
-          <p className="text-[10px] text-zinc-400 text-right mt-0.5">
-            {score}/100
-          </p>
+          <p className="text-xs text-zinc-400 text-right mt-0.5">{score}/100</p>
         </div>
         <svg
           className={`w-4 h-4 shrink-0 text-zinc-400 transition-transform ${open ? "rotate-180" : ""}`}
@@ -228,18 +232,18 @@ function StackCard({
             {stack.quantFormats.map((f) => (
               <span
                 key={f}
-                className="text-[10px] px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400 font-mono font-medium"
+                className="text-xs px-2.5 py-1 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400 font-mono font-medium"
               >
                 {f}
               </span>
             ))}
             {stack.gpuRequired && (
-              <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 font-medium">
+              <span className="text-xs px-2.5 py-1 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 font-medium">
                 GPU required
               </span>
             )}
             {!stack.gpuRequired && (
-              <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 font-medium">
+              <span className="text-xs px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 font-medium">
                 CPU OK
               </span>
             )}
@@ -247,7 +251,7 @@ function StackCard({
 
           {/* Install */}
           <div>
-            <p className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wide mb-1">
+            <p className="text-xs font-semibold text-zinc-400 uppercase tracking-wide mb-1">
               Install
             </p>
             <div className="flex items-center gap-2 bg-zinc-50 dark:bg-zinc-800 rounded-lg px-3 py-2">
@@ -260,7 +264,7 @@ function StackCard({
 
           {/* Run command */}
           <div>
-            <p className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wide mb-1">
+            <p className="text-xs font-semibold text-zinc-400 uppercase tracking-wide mb-1">
               Run
             </p>
             <div className="flex items-center gap-2 bg-zinc-50 dark:bg-zinc-800 rounded-lg px-3 py-2">
@@ -273,14 +277,14 @@ function StackCard({
 
           {/* Config flags */}
           <div>
-            <p className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wide mb-1">
+            <p className="text-xs font-semibold text-zinc-400 uppercase tracking-wide mb-1">
               Key config flags
             </p>
             <div className="flex flex-wrap gap-1.5">
               {stack.configFlags.map((f) => (
                 <code
                   key={f}
-                  className="text-[11px] px-2 py-0.5 rounded-md bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 font-mono"
+                  className="text-xs px-2.5 py-1 rounded-md bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 font-mono"
                 >
                   {f}
                 </code>
@@ -299,7 +303,7 @@ function StackCard({
           {/* Pros / Cons */}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <p className="text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 uppercase tracking-wide mb-1">
+              <p className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 uppercase tracking-wide mb-1">
                 Pros
               </p>
               <ul className="space-y-0.5">
@@ -314,7 +318,7 @@ function StackCard({
               </ul>
             </div>
             <div>
-              <p className="text-[10px] font-semibold text-red-500 dark:text-red-400 uppercase tracking-wide mb-1">
+              <p className="text-xs font-semibold text-red-500 dark:text-red-400 uppercase tracking-wide mb-1">
                 Cons
               </p>
               <ul className="space-y-0.5">
@@ -474,6 +478,11 @@ export function DeploymentGuide() {
                   {results.length}
                 </span>{" "}
                 deployment stacks ranked for your setup
+              </p>
+              <p className="text-xs text-zinc-400 dark:text-zinc-500 mt-1">
+                The <span className="font-medium text-violet-500">Match</span>{" "}
+                bar shows how well each stack fits your target platform,
+                priority, and hardware (0–100).
               </p>
             </div>
             <div className="space-y-2">

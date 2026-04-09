@@ -32,6 +32,7 @@ export function AdvisorChat({ hardware, compatible }: Props) {
   const [input, setInput] = useState("");
   const [isStreaming, setIsStreaming] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [expanded, setExpanded] = useState(false);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const lastSentRef = useRef<string>("");
@@ -130,34 +131,25 @@ export function AdvisorChat({ hardware, compatible }: Props) {
     );
   }
 
-  return (
-    <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-sm flex flex-col">
-      <div className="px-6 py-4 border-b border-zinc-100 dark:border-zinc-800">
-        <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
-          AI Advisor
-        </h2>
-        <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
-          {BACKEND === "claude"
-            ? "Ask about use cases — powered by Claude"
-            : "Ask about use cases — powered by Qwen 2.5 (free via HuggingFace)"}
-        </p>
-      </div>
-
+  const chatContent = (
+    <>
       {/* Messages */}
       <div
         ref={messagesContainerRef}
-        className="flex-1 overflow-y-auto p-4 space-y-4 min-h-[200px] max-h-[400px]"
+        className={`flex-1 overflow-y-auto p-4 space-y-4 ${expanded ? "min-h-[350px] max-h-[70vh]" : "min-h-[250px] max-h-[500px]"}`}
       >
         {messages.length === 0 && (
           <div className="space-y-2">
-            <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-3">
+            <p
+              className={`font-medium text-zinc-500 dark:text-zinc-400 mb-3 ${expanded ? "text-sm" : "text-xs"}`}
+            >
               Try asking:
             </p>
             {SUGGESTIONS.map((s) => (
               <button
                 key={s}
                 onClick={() => sendMessage(s)}
-                className="block w-full text-left text-sm px-3 py-2 rounded-xl bg-zinc-50 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-violet-50 dark:hover:bg-violet-900/20 hover:text-violet-700 dark:hover:text-violet-300 transition-colors cursor-pointer border border-zinc-200 dark:border-zinc-700"
+                className={`block w-full text-left rounded-xl bg-zinc-50 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-violet-50 dark:hover:bg-violet-900/20 hover:text-violet-700 dark:hover:text-violet-300 transition-colors cursor-pointer border border-zinc-200 dark:border-zinc-700 ${expanded ? "text-sm px-4 py-2.5" : "text-sm px-3 py-2"}`}
               >
                 {s}
               </button>
@@ -171,7 +163,7 @@ export function AdvisorChat({ hardware, compatible }: Props) {
             className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
           >
             <div
-              className={`max-w-[85%] text-sm px-4 py-2.5 rounded-2xl leading-relaxed whitespace-pre-wrap ${
+              className={`max-w-[85%] px-4 py-2.5 rounded-2xl leading-relaxed whitespace-pre-wrap ${expanded ? "text-base" : "text-sm"} ${
                 msg.role === "user"
                   ? "bg-violet-600 text-white rounded-br-sm"
                   : "bg-zinc-100 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 rounded-bl-sm"
@@ -215,13 +207,13 @@ export function AdvisorChat({ hardware, compatible }: Props) {
             onKeyDown={handleKeyDown}
             placeholder="What use case do you have in mind?"
             disabled={isStreaming}
-            rows={1}
-            className="flex-1 resize-none text-sm px-3 py-2 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent disabled:opacity-50"
+            rows={expanded ? 2 : 1}
+            className={`flex-1 resize-none rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent disabled:opacity-50 ${expanded ? "text-base px-4 py-3" : "text-sm px-3 py-2"}`}
           />
           <button
             onClick={() => sendMessage(input)}
             disabled={!input.trim() || isStreaming}
-            className="px-4 py-2 bg-violet-600 hover:bg-violet-700 disabled:bg-zinc-200 dark:disabled:bg-zinc-700 disabled:text-zinc-400 text-white rounded-xl transition-colors font-medium text-sm cursor-pointer disabled:cursor-not-allowed"
+            className={`bg-violet-600 hover:bg-violet-700 disabled:bg-zinc-200 dark:disabled:bg-zinc-700 disabled:text-zinc-400 text-white rounded-xl transition-colors font-medium cursor-pointer disabled:cursor-not-allowed ${expanded ? "px-5 py-3 text-base" : "px-4 py-2 text-sm"}`}
           >
             {isStreaming ? "…" : "Ask"}
           </button>
@@ -230,6 +222,107 @@ export function AdvisorChat({ hardware, compatible }: Props) {
           Enter to send · Shift+Enter for new line
         </p>
       </div>
+    </>
+  );
+
+  // Expanded: full-screen modal overlay
+  if (expanded) {
+    return (
+      <>
+        <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-sm">
+          <button
+            onClick={() => setExpanded(true)}
+            className="w-full flex items-center justify-between px-6 py-4 cursor-pointer hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors"
+          >
+            <div className="flex items-center gap-2">
+              <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
+                AI Advisor
+              </h2>
+              <span className="text-xs px-2.5 py-1 rounded-full bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-400 font-medium">
+                Expanded
+              </span>
+            </div>
+          </button>
+        </div>
+
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+          <div className="w-full max-w-2xl bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-2xl flex flex-col max-h-[85vh] overflow-hidden">
+            <div className="flex items-center justify-between px-5 py-4 border-b border-zinc-100 dark:border-zinc-800">
+              <div>
+                <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
+                  AI Advisor
+                </h2>
+                <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
+                  {BACKEND === "claude"
+                    ? "Powered by Claude"
+                    : "Powered by Qwen 2.5 (free via HuggingFace)"}
+                </p>
+              </div>
+              <button
+                onClick={() => setExpanded(false)}
+                className="p-2 rounded-lg text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
+                title="Collapse"
+                aria-label="Collapse advisor chat"
+              >
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+            {chatContent}
+          </div>
+        </div>
+      </>
+    );
+  }
+
+  return (
+    <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-sm flex flex-col">
+      <div className="px-6 py-4 border-b border-zinc-100 dark:border-zinc-800 flex items-center justify-between">
+        <div>
+          <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
+            AI Advisor
+          </h2>
+          <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
+            {BACKEND === "claude"
+              ? "Ask about use cases — powered by Claude"
+              : "Ask about use cases — powered by Qwen 2.5 (free via HuggingFace)"}
+          </p>
+        </div>
+        <button
+          onClick={() => setExpanded(true)}
+          className="text-xs px-2.5 py-1 rounded-md text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer flex items-center gap-1"
+          title="Expand to full size"
+          aria-label="Expand advisor chat"
+        >
+          <svg
+            className="w-3.5 h-3.5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 4h-4m4 0l-5-5"
+            />
+          </svg>
+          Expand
+        </button>
+      </div>
+
+      {chatContent}
     </div>
   );
 }

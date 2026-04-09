@@ -92,12 +92,12 @@ export function AlgoAdvisorChat({
       {/* Messages */}
       <div
         ref={containerRef}
-        className={`overflow-y-auto p-3 space-y-3 ${expanded ? "min-h-[300px] max-h-[60vh]" : "min-h-[150px] max-h-[350px]"}`}
+        className={`overflow-y-auto p-4 space-y-3 ${expanded ? "min-h-[350px] max-h-[70vh]" : "min-h-[200px] max-h-[450px]"}`}
       >
         {messages.length === 0 && (
           <div className="space-y-1.5">
             <p
-              className={`font-semibold text-zinc-400 uppercase tracking-wide mb-2 ${expanded ? "text-xs" : "text-[10px]"}`}
+              className={`font-semibold text-zinc-400 uppercase tracking-wide mb-2 ${expanded ? "text-xs" : "text-xs"}`}
             >
               Ask about your ML problem:
             </p>
@@ -143,7 +143,7 @@ export function AlgoAdvisorChat({
                 setError(null);
                 sendMessage(lastSentRef.current);
               }}
-              className="shrink-0 text-[10px] px-2 py-0.5 rounded bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-400 hover:bg-red-200 dark:hover:bg-red-900/60 transition-colors font-medium cursor-pointer"
+              className="shrink-0 text-xs px-2.5 py-1 rounded bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-400 hover:bg-red-200 dark:hover:bg-red-900/60 transition-colors font-medium cursor-pointer"
             >
               Retry
             </button>
@@ -191,10 +191,10 @@ export function AlgoAdvisorChat({
               <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
                 Algorithm Advisor
               </span>
-              <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 font-medium">
+              <span className="text-xs px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 font-medium">
                 AI
               </span>
-              <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-400 font-medium">
+              <span className="text-xs px-2.5 py-1 rounded-full bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-400 font-medium">
                 Expanded
               </span>
             </div>
@@ -211,14 +211,15 @@ export function AlgoAdvisorChat({
                 <span className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
                   Algorithm Advisor
                 </span>
-                <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 font-medium">
+                <span className="text-xs px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 font-medium">
                   AI
                 </span>
               </div>
               <button
                 onClick={() => setExpanded(false)}
-                className="p-1.5 rounded-lg text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
+                className="p-2 rounded-lg text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
                 title="Collapse"
+                aria-label="Collapse advisor chat"
               >
                 <svg
                   className="w-5 h-5"
@@ -255,7 +256,7 @@ export function AlgoAdvisorChat({
           <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
             Algorithm Advisor
           </span>
-          <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 font-medium">
+          <span className="text-xs px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 font-medium">
             AI
           </span>
         </div>
@@ -280,7 +281,7 @@ export function AlgoAdvisorChat({
           <div className="flex justify-end px-3 pt-2 border-t border-zinc-100 dark:border-zinc-800">
             <button
               onClick={() => setExpanded(true)}
-              className="text-[10px] px-2 py-0.5 rounded-md text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer flex items-center gap-1"
+              className="text-xs px-2.5 py-1 rounded-md text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer flex items-center gap-1"
               title="Expand to full size"
             >
               <svg

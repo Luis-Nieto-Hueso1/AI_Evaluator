@@ -160,7 +160,7 @@ function CopyButton({ text }: { text: string }) {
   return (
     <button
       onClick={copy}
-      className="shrink-0 text-[10px] px-1.5 py-0.5 rounded bg-zinc-200 dark:bg-zinc-700 text-zinc-500 dark:text-zinc-400 hover:bg-zinc-300 dark:hover:bg-zinc-600 transition-colors font-mono"
+      className="shrink-0 text-xs px-2.5 py-1 rounded bg-zinc-200 dark:bg-zinc-700 text-zinc-500 dark:text-zinc-400 hover:bg-zinc-300 dark:hover:bg-zinc-600 transition-colors font-mono"
     >
       {copied ? "✓" : "copy"}
     </button>
@@ -179,17 +179,17 @@ function CommandRow({
   return (
     <div className="flex flex-col gap-1">
       <div className="flex items-center gap-1.5">
-        <span className="text-[10px] font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">
+        <span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">
           {label}
         </span>
         {recommended && (
-          <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-violet-100 dark:bg-violet-900/40 text-violet-700 dark:text-violet-300">
+          <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-violet-100 dark:bg-violet-900/40 text-violet-700 dark:text-violet-300">
             ★ Recommended
           </span>
         )}
       </div>
       <div className="flex items-center gap-2 bg-zinc-950 dark:bg-zinc-950 rounded-lg px-2.5 py-1.5 min-w-0">
-        <code className="text-[11px] text-emerald-400 font-mono flex-1 truncate">
+        <code className="text-xs text-emerald-400 font-mono flex-1 truncate">
           {cmd}
         </code>
         <CopyButton text={cmd} />
@@ -207,6 +207,19 @@ const RATIO_OPTIONS = [
   { label: "20/80 (gen)", inRatio: 0.2 },
 ];
 
+const CURRENCIES = [
+  { code: "USD", symbol: "$", rate: 1 },
+  { code: "EUR", symbol: "\u20ac", rate: 0.92 },
+  { code: "GBP", symbol: "\u00a3", rate: 0.79 },
+  { code: "JPY", symbol: "\u00a5", rate: 154.5, decimals: 0 },
+  { code: "CAD", symbol: "C$", rate: 1.36 },
+  { code: "AUD", symbol: "A$", rate: 1.53 },
+  { code: "INR", symbol: "\u20b9", rate: 83.5, decimals: 0 },
+  { code: "BRL", symbol: "R$", rate: 4.97 },
+  { code: "CNY", symbol: "\u00a5", rate: 7.24 },
+  { code: "KRW", symbol: "\u20a9", rate: 1340, decimals: 0 },
+];
+
 function CostCalculator({
   apiCost,
 }: {
@@ -215,6 +228,12 @@ function CostCalculator({
   const [tokIdx, setTokIdx] = useState(2); // default 100K
   const [ratioIdx, setRatioIdx] = useState(0); // default 50/50
   const [showDetail, setShowDetail] = useState(false);
+  const [currIdx, setCurrIdx] = useState(0); // default USD
+
+  const curr = CURRENCIES[currIdx];
+  const decimals = curr.decimals ?? 2;
+  const fmt = (usd: number) =>
+    `${curr.symbol}${(usd * curr.rate).toFixed(decimals)}`;
 
   const tokensPerDay = SLIDER_STEPS[tokIdx];
   const tokensPerMonth = tokensPerDay * 30;
@@ -235,6 +254,7 @@ function CostCalculator({
     const rows = [
       [
         "Provider",
+        "Currency",
         "Tokens/Day",
         "Input/Output Ratio",
         "Input Tokens/Month",
@@ -245,13 +265,14 @@ function CostCalculator({
       ],
       [
         apiCost.provider,
+        curr.code,
         tokensPerDay,
         RATIO_OPTIONS[ratioIdx].label,
         Math.round(inputTokens),
         Math.round(outputTokens),
-        `$${inputCost.toFixed(2)}`,
-        `$${outputCost.toFixed(2)}`,
-        `$${totalCost.toFixed(2)}`,
+        fmt(inputCost),
+        fmt(outputCost),
+        fmt(totalCost),
       ],
     ];
     const csv = rows.map((r) => r.join(",")).join("\n");
@@ -267,34 +288,51 @@ function CostCalculator({
   return (
     <div className="bg-emerald-50 dark:bg-emerald-900/10 border border-emerald-100 dark:border-emerald-900/30 rounded-lg px-3 py-2.5">
       <div className="flex items-center justify-between mb-1">
-        <p className="text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 uppercase tracking-wide">
+        <p className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 uppercase tracking-wide">
           API equivalent — {apiCost.provider}
         </p>
         <div className="flex gap-1.5">
           <button
             onClick={() => setShowDetail((v) => !v)}
-            className="text-[9px] px-1.5 py-0.5 rounded bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-200 dark:hover:bg-emerald-900/60 transition-colors cursor-pointer font-medium"
+            className="text-xs px-2.5 py-1 rounded bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-200 dark:hover:bg-emerald-900/60 transition-colors cursor-pointer font-medium"
           >
             {showDetail ? "Simple" : "Detailed"}
           </button>
           <button
             onClick={exportCostCsv}
-            className="text-[9px] px-1.5 py-0.5 rounded bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-200 dark:hover:bg-emerald-900/60 transition-colors cursor-pointer font-medium"
+            className="text-xs px-2.5 py-1 rounded bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-200 dark:hover:bg-emerald-900/60 transition-colors cursor-pointer font-medium"
           >
             CSV
           </button>
         </div>
       </div>
 
+      {/* Currency picker */}
+      <div className="flex items-center gap-1.5 flex-wrap mb-1.5">
+        {CURRENCIES.map((c, i) => (
+          <button
+            key={c.code}
+            onClick={() => setCurrIdx(i)}
+            className={`text-xs px-2 py-0.5 rounded font-medium transition-colors cursor-pointer ${
+              currIdx === i
+                ? "bg-emerald-600 text-white"
+                : "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-200"
+            }`}
+          >
+            {c.code}
+          </button>
+        ))}
+      </div>
+
       {/* Rate display */}
       <div className="flex items-center gap-3 flex-wrap">
         <span className="text-xs text-zinc-600 dark:text-zinc-400">
           <span className="font-medium text-zinc-800 dark:text-zinc-200">
-            ${apiCost.inputPer1M.toFixed(2)}
+            {fmt(apiCost.inputPer1M)}
           </span>{" "}
           in ·{" "}
           <span className="font-medium text-zinc-800 dark:text-zinc-200">
-            ${apiCost.outputPer1M.toFixed(2)}
+            {fmt(apiCost.outputPer1M)}
           </span>{" "}
           out <span className="text-zinc-400">/1M tokens</span>
         </span>
@@ -302,7 +340,7 @@ function CostCalculator({
         <span className="text-xs text-zinc-600 dark:text-zinc-400">
           At {formatTokLabel(tokensPerDay)} tok/day →{" "}
           <span className="font-semibold text-emerald-600 dark:text-emerald-400">
-            ${totalCost.toFixed(2)}/month
+            {fmt(totalCost)}/month
           </span>{" "}
           via API
         </span>
@@ -313,10 +351,10 @@ function CostCalculator({
           {/* Tokens/day slider */}
           <div>
             <div className="flex items-center justify-between mb-1">
-              <span className="text-[10px] text-zinc-500 dark:text-zinc-400 font-medium">
+              <span className="text-xs text-zinc-500 dark:text-zinc-400 font-medium">
                 Tokens/day
               </span>
-              <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400">
+              <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400">
                 {formatTokLabel(tokensPerDay)}
               </span>
             </div>
@@ -326,9 +364,10 @@ function CostCalculator({
               max={SLIDER_STEPS.length - 1}
               value={tokIdx}
               onChange={(e) => setTokIdx(Number(e.target.value))}
-              className="w-full h-1.5 accent-emerald-600 cursor-pointer"
+              aria-label="Tokens per day"
+              className="w-full h-2 accent-emerald-600 cursor-pointer"
             />
-            <div className="flex justify-between text-[8px] text-zinc-400 mt-0.5">
+            <div className="flex justify-between text-xs text-zinc-400 mt-0.5">
               <span>10K</span>
               <span>5M</span>
             </div>
@@ -336,7 +375,7 @@ function CostCalculator({
 
           {/* Input/output ratio */}
           <div>
-            <span className="text-[10px] text-zinc-500 dark:text-zinc-400 font-medium">
+            <span className="text-xs text-zinc-500 dark:text-zinc-400 font-medium">
               Input/Output ratio
             </span>
             <div className="flex gap-1.5 mt-1">
@@ -344,7 +383,7 @@ function CostCalculator({
                 <button
                   key={opt.label}
                   onClick={() => setRatioIdx(idx)}
-                  className={`text-[10px] px-2 py-0.5 rounded-full font-medium transition-colors cursor-pointer ${
+                  className={`text-xs px-2.5 py-1 rounded-full font-medium transition-colors cursor-pointer ${
                     ratioIdx === idx
                       ? "bg-emerald-600 text-white"
                       : "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-200"
@@ -359,38 +398,38 @@ function CostCalculator({
           {/* Breakdown */}
           <div className="grid grid-cols-3 gap-2 text-center">
             <div className="bg-white/60 dark:bg-zinc-800/40 rounded-lg px-2 py-1.5">
-              <p className="text-[9px] text-zinc-400 font-medium">Input</p>
+              <p className="text-xs text-zinc-400 font-medium">Input</p>
               <p className="text-xs font-bold text-zinc-700 dark:text-zinc-300">
-                ${inputCost.toFixed(2)}
+                {fmt(inputCost)}
               </p>
-              <p className="text-[8px] text-zinc-400">
+              <p className="text-xs text-zinc-400">
                 {formatTokLabel(Math.round(inputTokens))}/mo
               </p>
             </div>
             <div className="bg-white/60 dark:bg-zinc-800/40 rounded-lg px-2 py-1.5">
-              <p className="text-[9px] text-zinc-400 font-medium">Output</p>
+              <p className="text-xs text-zinc-400 font-medium">Output</p>
               <p className="text-xs font-bold text-zinc-700 dark:text-zinc-300">
-                ${outputCost.toFixed(2)}
+                {fmt(outputCost)}
               </p>
-              <p className="text-[8px] text-zinc-400">
+              <p className="text-xs text-zinc-400">
                 {formatTokLabel(Math.round(outputTokens))}/mo
               </p>
             </div>
             <div className="bg-emerald-100/60 dark:bg-emerald-900/20 rounded-lg px-2 py-1.5">
-              <p className="text-[9px] text-emerald-600 dark:text-emerald-400 font-medium">
+              <p className="text-xs text-emerald-600 dark:text-emerald-400 font-medium">
                 Total
               </p>
               <p className="text-xs font-bold text-emerald-700 dark:text-emerald-300">
-                ${totalCost.toFixed(2)}
+                {fmt(totalCost)}
               </p>
-              <p className="text-[8px] text-emerald-500">per month</p>
+              <p className="text-xs text-emerald-500">per month</p>
             </div>
           </div>
         </div>
       )}
 
-      <p className="text-[11px] text-emerald-600 dark:text-emerald-400 mt-0.5">
-        Running locally saves ~${totalCost.toFixed(2)}/month
+      <p className="text-xs text-emerald-600 dark:text-emerald-400 mt-0.5">
+        Running locally saves ~{fmt(totalCost)}/month
       </p>
     </div>
   );
@@ -490,12 +529,12 @@ export function ModelCard({ item, hardware, calibrationFactor = 1 }: Props) {
           >
             {grade}
             {fits && (
-              <span className="absolute -bottom-1 -right-1 text-[9px] bg-zinc-800 dark:bg-zinc-100 text-white dark:text-zinc-900 font-bold px-1 rounded-full leading-tight">
+              <span className="absolute -bottom-1 -right-1 text-xs bg-zinc-800 dark:bg-zinc-100 text-white dark:text-zinc-900 font-bold px-1 rounded-full leading-tight">
                 {score}
               </span>
             )}
           </div>
-          <span className="text-[10px] text-zinc-400 whitespace-nowrap">
+          <span className="text-xs text-zinc-400 whitespace-nowrap">
             {gradeStyle.label}
           </span>
           <a
@@ -504,7 +543,7 @@ export function ModelCard({ item, hardware, calibrationFactor = 1 }: Props) {
             rel="noopener noreferrer"
             title="View on HuggingFace"
             onClick={(e) => e.stopPropagation()}
-            className="text-[10px] text-zinc-400 hover:text-amber-500 dark:hover:text-amber-400 transition-colors"
+            className="text-xs text-zinc-400 hover:text-amber-500 dark:hover:text-amber-400 transition-colors"
           >
             🤗 HF
           </a>
@@ -516,7 +555,7 @@ export function ModelCard({ item, hardware, calibrationFactor = 1 }: Props) {
         <div className="border border-zinc-100 dark:border-zinc-800 rounded-xl p-3 bg-zinc-50 dark:bg-zinc-950 flex flex-col gap-3">
           {/* Live HF stats */}
           {hfLoading && (
-            <div className="flex items-center gap-1.5 text-[11px] text-zinc-400 dark:text-zinc-500">
+            <div className="flex items-center gap-1.5 text-xs text-zinc-400 dark:text-zinc-500">
               <span className="inline-block w-3 h-3 border-2 border-zinc-300 dark:border-zinc-600 border-t-violet-500 rounded-full animate-spin" />
               Loading HuggingFace stats…
             </div>
@@ -524,7 +563,7 @@ export function ModelCard({ item, hardware, calibrationFactor = 1 }: Props) {
           {!hfLoading &&
             hfMeta &&
             (hfMeta.downloads > 0 || hfMeta.likes > 0) && (
-              <div className="flex items-center gap-3 text-[11px] text-zinc-500 dark:text-zinc-400 bg-amber-50 dark:bg-amber-900/10 border border-amber-100 dark:border-amber-900/30 rounded-lg px-2.5 py-1.5">
+              <div className="flex items-center gap-3 text-xs text-zinc-500 dark:text-zinc-400 bg-amber-50 dark:bg-amber-900/10 border border-amber-100 dark:border-amber-900/30 rounded-lg px-2.5 py-1.5">
                 <span title="Downloads (all time)">
                   ↓{" "}
                   <span className="font-semibold text-zinc-700 dark:text-zinc-300">
@@ -553,12 +592,12 @@ export function ModelCard({ item, hardware, calibrationFactor = 1 }: Props) {
 
           {/* Variant table */}
           <div>
-            <p className="text-[10px] font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide mb-1.5">
+            <p className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide mb-1.5">
               All Variants
             </p>
             <table className="w-full text-xs">
               <thead>
-                <tr className="text-[10px] text-zinc-400 uppercase tracking-wide">
+                <tr className="text-xs text-zinc-400 uppercase tracking-wide">
                   <th className="text-left pb-1 font-medium">Quant</th>
                   <th className="text-left pb-1 font-medium">File size</th>
                   <th className="text-left pb-1 font-medium">Memory</th>
@@ -595,7 +634,7 @@ export function ModelCard({ item, hardware, calibrationFactor = 1 }: Props) {
                     </td>
                     <td className="py-1 pr-2">
                       <span
-                        className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${GRADE_BADGE_COLORS[vs.grade]}`}
+                        className={`text-xs font-bold px-2.5 py-1 rounded ${GRADE_BADGE_COLORS[vs.grade]}`}
                       >
                         {vs.grade}
                       </span>
@@ -623,13 +662,13 @@ export function ModelCard({ item, hardware, calibrationFactor = 1 }: Props) {
               model.benchmarks.humanEval ||
               model.benchmarks.mtBench) && (
               <div>
-                <p className="text-[10px] font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide mb-2">
+                <p className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide mb-2">
                   Benchmarks
                 </p>
                 <div className="flex flex-col gap-1.5">
                   {model.benchmarks.mmlu != null && (
                     <div className="flex items-center gap-2">
-                      <span className="text-[11px] text-zinc-500 dark:text-zinc-400 w-20 shrink-0">
+                      <span className="text-xs text-zinc-500 dark:text-zinc-400 w-20 shrink-0">
                         MMLU
                       </span>
                       <div className="flex-1 h-1.5 bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
@@ -638,14 +677,14 @@ export function ModelCard({ item, hardware, calibrationFactor = 1 }: Props) {
                           style={{ width: `${model.benchmarks.mmlu}%` }}
                         />
                       </div>
-                      <span className="text-[11px] font-medium text-zinc-700 dark:text-zinc-300 w-8 text-right">
+                      <span className="text-xs font-medium text-zinc-700 dark:text-zinc-300 w-8 text-right">
                         {model.benchmarks.mmlu}%
                       </span>
                     </div>
                   )}
                   {model.benchmarks.humanEval != null && (
                     <div className="flex items-center gap-2">
-                      <span className="text-[11px] text-zinc-500 dark:text-zinc-400 w-20 shrink-0">
+                      <span className="text-xs text-zinc-500 dark:text-zinc-400 w-20 shrink-0">
                         HumanEval
                       </span>
                       <div className="flex-1 h-1.5 bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
@@ -654,14 +693,14 @@ export function ModelCard({ item, hardware, calibrationFactor = 1 }: Props) {
                           style={{ width: `${model.benchmarks.humanEval}%` }}
                         />
                       </div>
-                      <span className="text-[11px] font-medium text-zinc-700 dark:text-zinc-300 w-8 text-right">
+                      <span className="text-xs font-medium text-zinc-700 dark:text-zinc-300 w-8 text-right">
                         {model.benchmarks.humanEval}%
                       </span>
                     </div>
                   )}
                   {model.benchmarks.mtBench != null && (
                     <div className="flex items-center gap-2">
-                      <span className="text-[11px] text-zinc-500 dark:text-zinc-400 w-20 shrink-0">
+                      <span className="text-xs text-zinc-500 dark:text-zinc-400 w-20 shrink-0">
                         MT-Bench
                       </span>
                       <div className="flex-1 h-1.5 bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
@@ -672,7 +711,7 @@ export function ModelCard({ item, hardware, calibrationFactor = 1 }: Props) {
                           }}
                         />
                       </div>
-                      <span className="text-[11px] font-medium text-zinc-700 dark:text-zinc-300 w-8 text-right">
+                      <span className="text-xs font-medium text-zinc-700 dark:text-zinc-300 w-8 text-right">
                         {model.benchmarks.mtBench}/10
                       </span>
                     </div>
@@ -696,7 +735,7 @@ export function ModelCard({ item, hardware, calibrationFactor = 1 }: Props) {
               const cappedCtx = Math.min(maxTokens, model.contextLength);
               return (
                 <div className="bg-blue-50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-900/30 rounded-lg px-3 py-2.5">
-                  <p className="text-[10px] font-semibold text-blue-600 dark:text-blue-400 uppercase tracking-wide mb-1">
+                  <p className="text-xs font-semibold text-blue-600 dark:text-blue-400 uppercase tracking-wide mb-1">
                     Context Window (your hardware)
                   </p>
                   <p className="text-xs text-zinc-700 dark:text-zinc-300">
@@ -708,12 +747,12 @@ export function ModelCard({ item, hardware, calibrationFactor = 1 }: Props) {
                     </span>
                     ~{pages.toLocaleString()} pages
                     {maxTokens < model.contextLength && (
-                      <span className="text-amber-500 dark:text-amber-400 ml-1.5 text-[11px]">
+                      <span className="text-amber-500 dark:text-amber-400 ml-1.5 text-xs">
                         (model max: {(model.contextLength / 1000).toFixed(0)}K)
                       </span>
                     )}
                   </p>
-                  <p className="text-[11px] text-zinc-400 dark:text-zinc-500 mt-0.5">
+                  <p className="text-xs text-zinc-400 dark:text-zinc-500 mt-0.5">
                     {memFree.toFixed(1)} GB free after model load
                   </p>
                 </div>
@@ -726,7 +765,7 @@ export function ModelCard({ item, hardware, calibrationFactor = 1 }: Props) {
           {/* Strengths */}
           {model.strengths && model.strengths.length > 0 && (
             <div>
-              <p className="text-[10px] font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide mb-1.5">
+              <p className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide mb-1.5">
                 Strengths
               </p>
               <ul className="flex flex-col gap-0.5">
@@ -751,7 +790,7 @@ export function ModelCard({ item, hardware, calibrationFactor = 1 }: Props) {
           <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-300 bg-zinc-100 dark:bg-zinc-800 px-2 py-1 rounded-lg">
             {formatToks(tokensPerSec * calibrationFactor)}
             {calibrationFactor !== 1 && (
-              <span className="ml-1 text-[9px] text-violet-500 dark:text-violet-400 font-normal">
+              <span className="ml-1 text-xs text-violet-500 dark:text-violet-400 font-normal">
                 cal
               </span>
             )}
@@ -766,17 +805,17 @@ export function ModelCard({ item, hardware, calibrationFactor = 1 }: Props) {
             {runOnGpu ? "⚡ GPU" : "🖥 CPU"}
           </span>
           <span
-            className={`ml-auto text-xs font-medium px-2 py-0.5 rounded-full ${familyColor}`}
+            className={`ml-auto text-xs font-medium px-2.5 py-1 rounded-full ${familyColor}`}
           >
             {model.family}
           </span>
           {model.isCustom && (
-            <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-400 font-semibold">
+            <span className="text-xs px-2.5 py-1 rounded-full bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-400 font-semibold">
               Custom
             </span>
           )}
           {model.isLive && (
-            <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 font-semibold">
+            <span className="text-xs px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 font-semibold">
               Live
             </span>
           )}
@@ -788,17 +827,17 @@ export function ModelCard({ item, hardware, calibrationFactor = 1 }: Props) {
           </span>
           <span className="text-xs text-zinc-400">won't load</span>
           <span
-            className={`ml-auto text-xs font-medium px-2 py-0.5 rounded-full ${familyColor}`}
+            className={`ml-auto text-xs font-medium px-2.5 py-1 rounded-full ${familyColor}`}
           >
             {model.family}
           </span>
           {model.isCustom && (
-            <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-400 font-semibold">
+            <span className="text-xs px-2.5 py-1 rounded-full bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-400 font-semibold">
               Custom
             </span>
           )}
           {model.isLive && (
-            <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 font-semibold">
+            <span className="text-xs px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 font-semibold">
               Live
             </span>
           )}
@@ -809,12 +848,12 @@ export function ModelCard({ item, hardware, calibrationFactor = 1 }: Props) {
       {fits && (
         <div className="flex items-center gap-2">
           <span
-            className="relative group text-xs font-medium px-2 py-0.5 rounded-md bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 cursor-help"
+            className="relative group text-xs font-medium px-2.5 py-1 rounded-md bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 cursor-help"
             title={QUANT_TOOLTIPS[bestVariant.quantization]}
           >
             {bestVariant.quantization}
             {QUANT_TOOLTIPS[bestVariant.quantization] && (
-              <span className="pointer-events-none absolute bottom-full left-0 mb-1.5 w-52 text-[11px] leading-snug bg-zinc-900 dark:bg-zinc-100 text-zinc-100 dark:text-zinc-900 px-2.5 py-1.5 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity z-10 whitespace-normal">
+              <span className="pointer-events-none absolute bottom-full left-0 mb-1.5 w-52 text-xs leading-snug bg-zinc-900 dark:bg-zinc-100 text-zinc-100 dark:text-zinc-900 px-2.5 py-1.5 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity z-10 whitespace-normal">
                 {QUANT_TOOLTIPS[bestVariant.quantization]}
               </span>
             )}
@@ -837,7 +876,7 @@ export function ModelCard({ item, hardware, calibrationFactor = 1 }: Props) {
         {model.useCases.slice(0, 4).map((uc) => (
           <span
             key={uc}
-            className="text-xs px-2 py-0.5 bg-zinc-50 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 rounded-md border border-zinc-200 dark:border-zinc-700"
+            className="text-xs px-2.5 py-1 bg-zinc-50 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 rounded-md border border-zinc-200 dark:border-zinc-700"
           >
             {uc}
           </span>

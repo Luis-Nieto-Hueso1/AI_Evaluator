@@ -1,0 +1,543 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Evaluator - Design Document</title>
+    <style>
+      body {
+        font-family: "Calibri", Arial, sans-serif;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 40px;
+        line-height: 1.6;
+        color: #333;
+        background: white;
+      }
+      h1 {
+        font-size: 28px;
+        font-weight: bold;
+        margin-top: 40px;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #0066cc;
+        padding-bottom: 10px;
+      }
+      h2 {
+        font-size: 22px;
+        font-weight: bold;
+        margin-top: 30px;
+        margin-bottom: 15px;
+        color: #0066cc;
+      }
+      h3 {
+        font-size: 18px;
+        font-weight: bold;
+        margin-top: 20px;
+        margin-bottom: 10px;
+        color: #0099ff;
+      }
+      p {
+        margin-bottom: 15px;
+        text-align: justify;
+      }
+      ul {
+        margin-left: 30px;
+        margin-bottom: 15px;
+      }
+      li {
+        margin-bottom: 8px;
+      }
+      .title-page {
+        text-align: center;
+        padding: 80px 0;
+        page-break-after: always;
+      }
+      .main-title {
+        font-size: 48px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        color: #0066cc;
+      }
+      .subtitle {
+        font-size: 32px;
+        margin-bottom: 40px;
+        color: #333;
+      }
+      .tagline {
+        font-size: 20px;
+        font-style: italic;
+        color: #666;
+        margin-bottom: 60px;
+      }
+      .metadata {
+        font-size: 14px;
+        color: #666;
+      }
+      .page-break {
+        page-break-after: always;
+        margin: 40px 0;
+      }
+      .toc {
+        background: #f0f5ff;
+        padding: 20px;
+        border-radius: 5px;
+        margin: 20px 0;
+      }
+      .highlight {
+        background: #fff3cd;
+        padding: 15px;
+        border-left: 4px solid #ffc107;
+        margin: 20px 0;
+      }
+      code {
+        background: #f4f4f4;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-family: "Courier New", monospace;
+      }
+      .feature-box {
+        background: #f9f9f9;
+        padding: 15px;
+        border-left: 4px solid #0066cc;
+        margin: 15px 0;
+      }
+      strong {
+        font-weight: bold;
+      }
+      em {
+        font-style: italic;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+      }
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 12px;
+        text-align: left;
+      }
+      th {
+        background: #0066cc;
+        color: white;
+      }
+      .footer {
+        margin-top: 60px;
+        padding-top: 20px;
+        border-top: 1px solid #ddd;
+        font-size: 12px;
+        color: #666;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Title Page -->
+    <div class="title-page">
+      <div class="main-title">AI EVALUATOR</div>
+      <div class="subtitle">Design Document & User Guide</div>
+      <div class="tagline">Know Before You Deploy</div>
+      <div class="metadata">
+        <p><strong>Version:</strong> 1.0</p>
+        <p><strong>Date:</strong> April 2026</p>
+        <p><strong>Author:</strong> Luis Nieto Hueso</p>
+        <p><strong>Status:</strong> Production-Ready</p>
+      </div>
+    </div>
+
+    <div class="page-break"></div>
+
+    <!-- Table of Contents -->
+    <h1>Table of Contents</h1>
+    <div class="toc">
+      <ul>
+        <li>Executive Summary</li>
+        <li>Overview</li>
+        <li>Core Features</li>
+        <li>How It Works</li>
+        <li>Architecture & Technology</li>
+        <li>Limitations</li>
+        <li>Future Enhancements</li>
+        <li>Getting Started</li>
+        <li>Conclusion</li>
+      </ul>
+    </div>
+
+    <div class="page-break"></div>
+
+    <!-- Executive Summary -->
+    <h1>Executive Summary</h1>
+
+    <p>
+      <strong>AI Evaluator</strong> is an interactive web application that helps
+      developers, data scientists, and technical decision-makers determine which
+      AI/ML models can run on their specific hardware, with instant
+      compatibility grades, performance estimates, and deployment guidance.
+    </p>
+
+    <h2>The Problem</h2>
+    <ul>
+      <li>50+ LLMs released annually with inconsistent documentation</li>
+      <li>No standardized way to match hardware to models</li>
+      <li>Teams waste weeks testing incompatible models</li>
+      <li>Deployment failures cost $10K–$100K in lost engineering time</li>
+    </ul>
+
+    <h2>The Solution</h2>
+    <ul>
+      <li>Instant hardware-to-model matching (&lt;2 seconds)</li>
+      <li>Letter grades (S–F) for non-technical stakeholders</li>
+      <li>Performance predictions (tokens/sec, latency)</li>
+      <li>AI-powered recommendations via Claude API</li>
+      <li>Guided discovery flows for ML setup</li>
+    </ul>
+
+    <div class="page-break"></div>
+
+    <!-- Overview -->
+    <h1>Overview</h1>
+
+    <h2>What AI Evaluator Does</h2>
+    <ul>
+      <li>Analyzes your hardware (RAM, GPU, CPU, bandwidth)</li>
+      <li>Searches 50+ AI models from Hugging Face and Ollama</li>
+      <li>Calculates which models fit and how fast they run</li>
+      <li>Assigns letter grades (S=excellent, F=won't fit)</li>
+      <li>Shows performance estimates (tokens/second)</li>
+      <li>Provides deployment guidance with cost estimates</li>
+    </ul>
+
+    <div class="page-break"></div>
+
+    <!-- Core Features -->
+    <h1>Core Features</h1>
+
+    <h2>1. Hardware Compatibility Engine</h2>
+    <p>
+      Enter your hardware specs (RAM, GPU, CPU) and instantly see which models
+      you can run.
+    </p>
+    <div class="feature-box">
+      <strong>Key Metrics:</strong>
+      <ul>
+        <li>Memory utilization (% of available VRAM/RAM)</li>
+        <li>Tokens per second (inference speed)</li>
+        <li>Letter grade (S–F composite score)</li>
+        <li>Fit status (does model fit or not?)</li>
+      </ul>
+    </div>
+
+    <h2>2. AI Use-Case Advisor</h2>
+    <p>
+      Chat with Claude AI to get personalized model recommendations for your
+      specific task.
+    </p>
+    <div class="highlight">
+      <strong>Example:</strong><br />
+      User: "I need a model for code review on MacBook M3 with 36GB"<br />
+      AI: "Qwen2.5 Coder 14B is S-tier for your setup. Deploy via Ollama in 10
+      minutes."
+    </div>
+
+    <h2>3. Model Leaderboard & Tier List</h2>
+    <p>
+      Browse all 50+ models ranked by benchmarks, performance, or your hardware
+      grade.
+    </p>
+    <ul>
+      <li>
+        <strong>Leaderboard:</strong> Sortable table with MMLU, HumanEval,
+        MT-Bench scores
+      </li>
+      <li><strong>Tier List:</strong> Visual S–F ranking for your hardware</li>
+      <li><strong>Download Links:</strong> Direct access to model downloads</li>
+    </ul>
+
+    <h2>4. Model Comparison</h2>
+    <p>
+      Compare any 2 models side-by-side: specs, benchmarks, use cases, costs.
+    </p>
+
+    <h2>5. Guided Discovery Flow (NEW)</h2>
+    <p>A 3-step wizard that guides you through:</p>
+    <ul>
+      <li>
+        <strong>Step 1:</strong> Pick an ML algorithm (K-Means, Random Forest,
+        Transformer, etc.)
+      </li>
+      <li>
+        <strong>Step 2:</strong> Get framework recommendations (PyTorch,
+        TensorFlow, scikit-learn)
+      </li>
+      <li>
+        <strong>Step 3:</strong> See personalized summary with getting-started
+        guide
+      </li>
+    </ul>
+
+    <h2>6. Deployment Guide</h2>
+    <p>Get step-by-step deployment guidance for your target environment.</p>
+    <ul>
+      <li>Recommended inference stacks (Ollama, vLLM, TensorRT-LLM)</li>
+      <li>Installation commands</li>
+      <li>Configuration for your hardware</li>
+      <li>Cost and performance estimates</li>
+    </ul>
+
+    <div class="page-break"></div>
+
+    <!-- How It Works -->
+    <h1>How It Works</h1>
+
+    <h2>Step-by-Step User Flow</h2>
+
+    <h3>1. Enter Your Hardware</h3>
+    <ul>
+      <li>Select GPU model (or input VRAM)</li>
+      <li>Enter RAM size</li>
+      <li>Choose CPU (optional)</li>
+    </ul>
+
+    <h3>2. Get Instant Results</h3>
+    <ul>
+      <li>App calculates compatibility for all models</li>
+      <li>Shows letter grades (S–F)</li>
+      <li>Displays speed estimates (tokens/sec)</li>
+      <li>Lists 50+ compatible models</li>
+    </ul>
+
+    <h3>3. Explore & Filter</h3>
+    <ul>
+      <li>Filter by grade (S, A, B, C, D, F)</li>
+      <li>Filter by use case (coding, summarization, etc.)</li>
+      <li>Sort by speed, parameters, context length</li>
+      <li>Compare any 2 models</li>
+    </ul>
+
+    <h3>4. Get Recommendations</h3>
+    <ul>
+      <li>Ask the AI advisor for your use case</li>
+      <li>Get deployment guide with install commands</li>
+      <li>Export results as CSV or JSON</li>
+      <li>Share hardware config via URL</li>
+    </ul>
+
+    <div class="page-break"></div>
+
+    <!-- Architecture -->
+    <h1>Architecture & Technology</h1>
+
+    <h2>Technology Stack</h2>
+
+    <h3>Frontend</h3>
+    <ul>
+      <li><strong>React 19.2.4</strong> – Component-based UI with hooks</li>
+      <li><strong>TypeScript 5.9</strong> – Type-safe development</li>
+      <li>
+        <strong>Tailwind CSS 4.2</strong> – Utility-first responsive styling
+      </li>
+      <li><strong>Vite 8</strong> – Lightning-fast dev server & builds</li>
+    </ul>
+
+    <h3>APIs & Integrations</h3>
+    <ul>
+      <li><strong>Anthropic Claude API</strong> – AI advisor (optional)</li>
+      <li><strong>Hugging Face Hub API</strong> – Live model feed</li>
+      <li><strong>Ollama Registry API</strong> – Alternative models</li>
+    </ul>
+
+    <h3>Data Storage</h3>
+    <ul>
+      <li><strong>localStorage</strong> – Client-side caching (24h models)</li>
+      <li>
+        <strong>JSON files</strong> – Static data (50+ models, algorithms,
+        frameworks)
+      </li>
+      <li><strong>URL params</strong> – Shareable hardware configs</li>
+    </ul>
+
+    <h3>Key Modules</h3>
+    <table>
+      <tr>
+        <th>Module</th>
+        <th>Purpose</th>
+      </tr>
+      <tr>
+        <td>compatibility.ts</td>
+        <td>Core scoring logic (grades, speed estimates)</td>
+      </tr>
+      <tr>
+        <td>hardware-detect.ts</td>
+        <td>GPU/CPU database & bandwidth calculations</td>
+      </tr>
+      <tr>
+        <td>live-models.ts</td>
+        <td>Hugging Face + Ollama API integration</td>
+      </tr>
+      <tr>
+        <td>GuidedDiscovery.tsx</td>
+        <td>3-step wizard for algorithm → framework → summary</td>
+      </tr>
+      <tr>
+        <td>SkeletonModelCard.tsx</td>
+        <td>Loading placeholders with shimmer animation</td>
+      </tr>
+    </table>
+
+    <div class="page-break"></div>
+
+    <!-- Limitations -->
+    <h1>Limitations</h1>
+
+    <h2>Current Version Scope</h2>
+
+    <h3>1. Hardware Coverage</h3>
+    <p>
+      Covers ~30 popular GPUs/CPUs. For unsupported hardware, manually enter
+      VRAM + bandwidth.
+    </p>
+
+    <h3>2. Model Coverage</h3>
+    <p>
+      50+ open-source models included. Proprietary models (GPT-4, Claude) not
+      covered. Requires 24h sync with Hugging Face.
+    </p>
+
+    <h3>3. Performance Estimation</h3>
+    <p>
+      Shows peak performance, not accounting for batching, system load, or
+      quantization overhead. Use Benchmark Calibrator for personal accuracy.
+    </p>
+
+    <h3>4. Mobile Experience</h3>
+    <p>
+      Responsive but optimized for desktop. Model comparison and flowcharts may
+      feel cramped on mobile.
+    </p>
+
+    <h3>5. Framework Selection</h3>
+    <p>
+      Covers 9 mainstream frameworks. Scoring is heuristic-based, not
+      machine-learned.
+    </p>
+
+    <h3>6. Data Updates</h3>
+    <p>
+      24-hour cache means users might miss latest models released recently.
+      Manual refresh available.
+    </p>
+
+    <div class="page-break"></div>
+
+    <!-- Future Enhancements -->
+    <h1>Future Enhancements</h1>
+
+    <h2>Planned Features (2026-2027)</h2>
+
+    <h3>Q2 2026: User Experience</h3>
+    <ul>
+      <li>PDF export reports</li>
+      <li>Save & bookmark configurations</li>
+      <li>Mobile optimization</li>
+      <li>Keyboard shortcuts guide</li>
+    </ul>
+
+    <h3>Q3 2026: Data & Accuracy</h3>
+    <ul>
+      <li>Real-time benchmark integration</li>
+      <li>Cloud cost calculator (AWS, GCP, Azure)</li>
+      <li>Crowd-sourced benchmark data</li>
+    </ul>
+
+    <h3>Q4 2026: Intelligence</h3>
+    <ul>
+      <li>ML-based framework selection</li>
+      <li>Auto-generated Docker/Kubernetes configs</li>
+      <li>Fine-tuning advisor</li>
+    </ul>
+
+    <h3>2027+: Scale & Integration</h3>
+    <ul>
+      <li>REST API for integrations</li>
+      <li>Browser extension for Hugging Face</li>
+      <li>Slack bot integration</li>
+      <li>On-premise SaaS version</li>
+      <li>Video tutorials & documentation</li>
+    </ul>
+
+    <div class="page-break"></div>
+
+    <!-- Getting Started -->
+    <h1>Getting Started</h1>
+
+    <h2>Using AI Evaluator</h2>
+
+    <h3>1. Visit the App</h3>
+    <p>Go to: <code>https://ai-evaluator.vercel.app</code></p>
+
+    <h3>2. Enter Your Hardware</h3>
+    <p>
+      Use the Hardware Form on the left to input your setup (GPU, RAM, CPU).
+    </p>
+
+    <h3>3. Browse Results</h3>
+    <p>See compatible models graded S–F, sorted by score.</p>
+
+    <h3>4. Use the Tools</h3>
+    <ul>
+      <li><strong>Results Tab:</strong> Browse & filter models</li>
+      <li><strong>Guided Discovery:</strong> Step-by-step ML setup</li>
+      <li><strong>AI Advisor:</strong> Chat for recommendations</li>
+      <li><strong>Deployment Guide:</strong> See how to deploy</li>
+      <li><strong>Leaderboard:</strong> Compare benchmarks</li>
+    </ul>
+
+    <h2>Tips & Tricks</h2>
+    <ul>
+      <li>Use "/" to focus search quickly</li>
+      <li>Click "Share" to send hardware config to teammates</li>
+      <li>Export as CSV/JSON for reports</li>
+      <li>Run "Benchmark Calibrator" for personal speed estimates</li>
+      <li>Dark mode toggle in top-right corner</li>
+    </ul>
+
+    <div class="page-break"></div>
+
+    <!-- Conclusion -->
+    <h1>Conclusion</h1>
+
+    <p>
+      AI Evaluator solves a critical problem:
+      <strong>instantly matching hardware to AI models</strong>. Whether you're
+      a student with a MacBook, a startup with GPUs, or an enterprise planning
+      deployment, this tool gives you confidence and speed.
+    </p>
+
+    <div class="highlight" style="text-align: center; font-style: italic">
+      <strong
+        >No more guessing. No more wasted weeks. Deploy with confidence.</strong
+      >
+    </div>
+
+    <p>The platform demonstrates:</p>
+    <ul>
+      <li>✓ Modern React + TypeScript architecture</li>
+      <li>✓ Real-time API integrations (HF, Ollama, Claude)</li>
+      <li>✓ Intelligent scoring algorithms</li>
+      <li>✓ User-centric guided discovery flows</li>
+      <li>✓ Production-ready deployment</li>
+    </ul>
+
+    <p>
+      For questions, feedback, or contributions, visit the GitHub repository or
+      open an issue.
+    </p>
+
+    <div class="footer">
+      <p><strong>AI Evaluator</strong> – Version 1.0 – April 2026</p>
+      <p>Designed & built by Luis Nieto Hueso</p>
+      <p>License: MIT</p>
+    </div>
+  </body>
+</html>

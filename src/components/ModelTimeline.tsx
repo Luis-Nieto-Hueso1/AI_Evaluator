@@ -405,7 +405,7 @@ export function ModelTimeline({ liveModels = [] }: Props) {
 
       {/* Controls row 2: year zoom + toggles */}
       <div className="flex flex-wrap gap-2 mb-6 items-center">
-        <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wide mr-1">
+        <span className="text-xs font-semibold text-zinc-400 uppercase tracking-wide mr-1">
           Year:
         </span>
         <button
@@ -498,15 +498,15 @@ export function ModelTimeline({ liveModels = [] }: Props) {
                     }}
                   />
                   {/* Date label */}
-                  <span className="text-[9px] text-zinc-400 dark:text-zinc-500 font-mono mt-2 leading-none">
+                  <span className="text-xs text-zinc-400 dark:text-zinc-500 font-mono mt-2 leading-none">
                     {formatDate(event.date)}
                   </span>
                   {/* Compact label */}
-                  <span className="text-[10px] font-semibold text-zinc-700 dark:text-zinc-300 mt-1 text-center leading-tight max-w-[120px] truncate">
+                  <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-300 mt-1 text-center leading-tight max-w-[120px] truncate">
                     {event.name}
                   </span>
                   <span
-                    className="text-[8px] px-1.5 py-0.5 rounded-full font-medium text-white mt-1"
+                    className="text-xs px-2.5 py-1 rounded-full font-medium text-white mt-1"
                     style={{ backgroundColor: color }}
                   >
                     {event.org}
@@ -519,25 +519,25 @@ export function ModelTimeline({ liveModels = [] }: Props) {
                         <span className="font-semibold text-xs text-zinc-900 dark:text-zinc-100">
                           {event.name}
                         </span>
-                        <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400 font-mono">
+                        <span className="text-xs px-2.5 py-1 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400 font-mono">
                           {event.params}
                         </span>
                         {event.highlight && (
-                          <span className="text-[9px] text-amber-500 font-bold">
+                          <span className="text-xs text-amber-500 font-bold">
                             ★
                           </span>
                         )}
                       </div>
-                      <p className="text-[11px] text-zinc-500 dark:text-zinc-400 leading-relaxed">
+                      <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">
                         {event.description}
                       </p>
                       {event.inDb && (
-                        <span className="inline-block mt-1.5 text-[9px] px-1.5 py-0.5 rounded-full bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-400 font-medium">
+                        <span className="inline-block mt-1.5 text-xs px-2.5 py-1 rounded-full bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-400 font-medium">
                           in this app
                         </span>
                       )}
                       {event.isLive && (
-                        <span className="inline-block mt-1.5 text-[9px] px-1.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 font-medium">
+                        <span className="inline-block mt-1.5 text-xs px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 font-medium">
                           Live · HF
                         </span>
                       )}
@@ -566,7 +566,7 @@ export function ModelTimeline({ liveModels = [] }: Props) {
                 >
                   {/* Date */}
                   <div className="w-20 shrink-0 pt-3 pr-3 text-right">
-                    <span className="text-[11px] text-zinc-400 dark:text-zinc-500 font-mono leading-none">
+                    <span className="text-xs text-zinc-400 dark:text-zinc-500 font-mono leading-none">
                       {formatDate(event.date)}
                     </span>
                   </div>
@@ -600,21 +600,21 @@ export function ModelTimeline({ liveModels = [] }: Props) {
                               {event.name}
                             </span>
                             <span
-                              className="text-[10px] px-2 py-0.5 rounded-full font-medium text-white"
+                              className="text-xs px-2.5 py-1 rounded-full font-medium text-white"
                               style={{ backgroundColor: color }}
                             >
                               {event.org}
                             </span>
-                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400 font-mono">
+                            <span className="text-xs px-2.5 py-1 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400 font-mono">
                               {event.params}
                             </span>
                             {event.highlight && (
-                              <span className="text-[10px] text-amber-500 font-bold">
+                              <span className="text-xs text-amber-500 font-bold">
                                 ★ Milestone
                               </span>
                             )}
                             {event.inDb && (
-                              <span className="text-[10px] px-2 py-0.5 rounded-full bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-400 font-medium">
+                              <span className="text-xs px-2.5 py-1 rounded-full bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-400 font-medium">
                                 in this app ↗
                               </span>
                             )}
@@ -623,7 +623,7 @@ export function ModelTimeline({ liveModels = [] }: Props) {
                                 href={event.hfUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 font-medium hover:underline"
+                                className="text-xs px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 font-medium hover:underline"
                               >
                                 Live · HF ↗
                               </a>

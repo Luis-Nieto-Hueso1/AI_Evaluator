@@ -13,6 +13,7 @@ import {
 } from "./lib/live-models";
 import { HardwareForm } from "./components/HardwareForm";
 import { ModelCard } from "./components/ModelCard";
+import { SkeletonModelCard } from "./components/SkeletonModelCard";
 import { AdvisorChat } from "./components/AdvisorChat";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { TierList } from "./components/TierList";
@@ -26,6 +27,9 @@ import { FrameworkPicker } from "./components/FrameworkPicker";
 import { DeploymentGuide } from "./components/DeploymentGuide";
 import { OnboardingTour } from "./components/OnboardingTour";
 import { AlgorithmFlowchart } from "./components/AlgorithmFlowchart";
+import { FrameworkFlowchart } from "./components/FrameworkFlowchart";
+import { DeploymentFlowchart } from "./components/DeploymentFlowchart";
+import { GuidedDiscovery } from "./components/GuidedDiscovery";
 
 const DEFAULT_HARDWARE: HardwareProfile = { ram: 16, vram: 0, hasGpu: false };
 const HAS_API_KEY = Boolean(import.meta.env.VITE_ANTHROPIC_API_KEY);
@@ -39,9 +43,70 @@ type View =
   | "timeline"
   | "leaderboard"
   | "frameworks"
-  | "deploy";
+  | "deploy"
+  | "guide";
 
 const GRADE_ORDER: Grade[] = ["S", "A", "B", "C", "D", "F"];
+
+const USE_CASE_INFO: Record<string, string> = {
+  agents:
+    "Autonomous tool-using workflows — plans steps, calls APIs, and iterates toward a goal",
+  analysis:
+    "Structured data interpretation — extracts insights, spots patterns, and summarises findings",
+  architecture:
+    "Software architecture guidance — system design, API design, and codebase organisation",
+  "chain-of-thought":
+    "Step-by-step reasoning made visible — shows its work before giving an answer",
+  chat: "Open-ended conversation — general Q&A, brainstorming, and everyday assistant tasks",
+  classification:
+    "Assigns labels or categories to text — sentiment, intent, topic, spam detection, etc.",
+  "code-completion":
+    "Inline code suggestions — fills in the next tokens as you type in an editor",
+  "code-review":
+    "Reviews pull requests and diffs — flags bugs, style issues, and security concerns",
+  coding:
+    "General-purpose code generation — writes functions, scripts, and full programs from prompts",
+  "creative-writing":
+    "Fiction, poetry, marketing copy — generates text with style, tone, and narrative flair",
+  "data-extraction":
+    "Pulls structured fields from unstructured text — names, dates, amounts, entities",
+  debugging:
+    "Diagnoses and fixes broken code — reads stack traces, suggests patches",
+  "document-qa":
+    "Answers questions grounded in a provided document — PDFs, reports, manuals",
+  edge: "Optimised for low-resource hardware — phones, Raspberry Pi, and embedded devices",
+  "function-calling":
+    "Generates structured JSON tool calls — connects the model to external APIs and actions",
+  "image-analysis":
+    "Understands and describes images — OCR, object detection, chart reading",
+  "instruction-following":
+    "Precisely follows complex multi-step instructions and formatting constraints",
+  math: "Solves mathematical problems — arithmetic, algebra, calculus, and competition-level proofs",
+  multilingual:
+    "Strong performance across many languages — translation-ready and cross-lingual transfer",
+  multimodal:
+    "Accepts multiple input types — text, images, audio, or video in a single prompt",
+  "on-device":
+    "Runs entirely on-device with no internet — privacy-first, offline-capable deployments",
+  rag: "Retrieval-Augmented Generation — answers questions using retrieved context from a knowledge base",
+  reasoning:
+    "Complex multi-step logical thinking — planning, deduction, and problem decomposition",
+  research:
+    "Deep open-ended investigation — literature review, fact synthesis, and report generation",
+  science:
+    "Scientific reasoning and domain knowledge — biology, chemistry, physics, and more",
+  sql: "Generates and explains SQL queries — schema understanding, joins, aggregations",
+  summarization:
+    "Condenses long text into key points — articles, meetings, documents",
+  "text-generation":
+    "General text output — drafts, expansions, and completions without a specific task",
+  translation:
+    "Translates text between languages with nuance, context, and terminology awareness",
+  vision:
+    "Processes visual inputs — images and screenshots as part of the conversation",
+  writing:
+    "Produces clear, well-structured prose — emails, essays, documentation, and reports",
+};
 
 const GRADE_COLORS: Record<Grade, string> = {
   S: "bg-emerald-500 text-white",
@@ -356,6 +421,7 @@ export default function App() {
           {(
             [
               "results",
+              "guide",
               "tierlist",
               "compare",
               "algorithms",
@@ -367,6 +433,7 @@ export default function App() {
           ).map((v) => {
             const labels: Record<View, string> = {
               results: "Results",
+              guide: "Guided Discovery",
               tierlist: "Tier List",
               compare: "Compare",
               algorithms: "Algorithm Picker",
@@ -393,7 +460,20 @@ export default function App() {
       </header>
 
       <main className="max-w-6xl mx-auto px-4 py-8">
-        {view === "timeline" ? (
+        {view === "guide" ? (
+          <>
+            <div className="text-center mb-8 px-2">
+              <h2 className="text-3xl sm:text-4xl font-bold text-zinc-900 dark:text-zinc-100 mb-3">
+                Find Your ML Stack
+              </h2>
+              <p className="text-zinc-600 dark:text-zinc-400 max-w-xl mx-auto text-sm sm:text-base">
+                Answer a few questions and discover the perfect algorithm,
+                framework, and deployment strategy for your problem.
+              </p>
+            </div>
+            <GuidedDiscovery />
+          </>
+        ) : view === "timeline" ? (
           <>
             <div className="text-center mb-8 px-2">
               <h2 className="text-3xl sm:text-4xl font-bold text-zinc-900 dark:text-zinc-100 mb-3">
@@ -433,6 +513,7 @@ export default function App() {
                 vs TensorFlow vs JAX vs scikit-learn and more.
               </p>
             </div>
+            <FrameworkFlowchart />
             <FrameworkPicker />
           </>
         ) : view === "deploy" ? (
@@ -447,6 +528,7 @@ export default function App() {
                 resource requirements.
               </p>
             </div>
+            <DeploymentFlowchart />
             <DeploymentGuide />
           </>
         ) : view === "leaderboard" ? (
@@ -519,7 +601,7 @@ export default function App() {
                           models ·{" "}
                         </span>
                         {liveStatus === "loading" && (
-                          <span className="flex items-center gap-1 text-[11px] text-zinc-400">
+                          <span className="flex items-center gap-1 text-xs text-zinc-400">
                             <svg
                               className="w-3 h-3 animate-spin"
                               viewBox="0 0 24 24"
@@ -543,7 +625,7 @@ export default function App() {
                           </span>
                         )}
                         {liveStatus === "done" && liveModels.length > 0 && (
-                          <span className="flex items-center gap-1 text-[11px]">
+                          <span className="flex items-center gap-1 text-xs">
                             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block" />
                             <span className="text-emerald-600 dark:text-emerald-400 font-medium">
                               +{liveModels.length} live
@@ -558,7 +640,7 @@ export default function App() {
                           </span>
                         )}
                         {liveStatus === "error" && (
-                          <span className="text-[11px] text-zinc-400">
+                          <span className="text-xs text-zinc-400">
                             (live feed unavailable)
                           </span>
                         )}
@@ -613,7 +695,8 @@ export default function App() {
                           onChange={(e) =>
                             setSortKey(e.target.value as SortKey)
                           }
-                          className="text-xs bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 rounded-lg px-2 py-1.5 cursor-pointer focus:outline-none focus:ring-2 focus:ring-violet-500"
+                          aria-label="Sort models by"
+                          className="text-sm bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 rounded-lg px-3 py-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-violet-500"
                         >
                           <option value="score">Sort: Score</option>
                           <option value="grade">Sort: Grade</option>
@@ -628,7 +711,7 @@ export default function App() {
                     {/* Quick picks */}
                     {quickPicks.length > 0 && (
                       <div className="mb-4">
-                        <p className="text-[10px] font-semibold text-zinc-400 dark:text-zinc-500 uppercase tracking-wide mb-2">
+                        <p className="text-xs font-semibold text-zinc-400 dark:text-zinc-500 uppercase tracking-wide mb-2">
                           Top picks for your hardware
                         </p>
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
@@ -654,7 +737,7 @@ export default function App() {
                                 <p className="text-xs font-semibold text-zinc-900 dark:text-zinc-100 leading-tight truncate">
                                   {item.model.name}
                                 </p>
-                                <p className="text-[11px] text-zinc-400 dark:text-zinc-500 mt-0.5 leading-tight">
+                                <p className="text-xs text-zinc-400 dark:text-zinc-500 mt-0.5 leading-tight">
                                   {reason}
                                 </p>
                               </div>
@@ -685,7 +768,8 @@ export default function App() {
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                         placeholder='Search models, families, use cases… (press "/" to focus)'
-                        className="w-full pl-8 pr-8 py-1.5 text-sm rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-violet-500"
+                        aria-label="Search models"
+                        className="w-full pl-8 pr-8 py-2 text-sm rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-violet-500"
                       />
                       {search && (
                         <button
@@ -751,6 +835,7 @@ export default function App() {
                             onClick={() =>
                               setFilterUseCase(filterUseCase === uc ? null : uc)
                             }
+                            title={USE_CASE_INFO[uc] ?? uc}
                             className={`text-xs px-3 py-1 rounded-full font-medium transition-colors cursor-pointer ${
                               filterUseCase === uc
                                 ? "bg-violet-600 text-white"
@@ -775,7 +860,13 @@ export default function App() {
                     )}
 
                     {/* Model grid */}
-                    {sorted.length === 0 ? (
+                    {liveStatus === "loading" && compatible.length === 0 ? (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        {Array.from({ length: 6 }).map((_, i) => (
+                          <SkeletonModelCard key={i} />
+                        ))}
+                      </div>
+                    ) : sorted.length === 0 ? (
                       <div className="flex flex-col items-center justify-center gap-3 py-10 rounded-2xl border-2 border-dashed border-zinc-200 dark:border-zinc-800">
                         <p className="text-zinc-500 dark:text-zinc-400 text-sm font-medium text-center px-4">
                           {search && filterGrade
@@ -896,7 +987,7 @@ export default function App() {
                   <span className="text-xs text-zinc-600 dark:text-zinc-300">
                     {s.desc}
                   </span>
-                  <kbd className="text-[11px] px-2 py-0.5 rounded-md bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-500 dark:text-zinc-400 font-mono">
+                  <kbd className="text-xs px-2.5 py-1 rounded-md bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-500 dark:text-zinc-400 font-mono">
                     {s.key}
                   </kbd>
                 </div>

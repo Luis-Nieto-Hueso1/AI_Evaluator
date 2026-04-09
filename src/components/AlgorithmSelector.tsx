@@ -1339,12 +1339,12 @@ function SnippetBlock({ code }: { code: string }) {
   }
   return (
     <div className="relative group">
-      <pre className="text-[11px] leading-relaxed bg-zinc-950 text-zinc-200 rounded-lg p-3 overflow-x-auto font-mono">
+      <pre className="text-xs leading-relaxed bg-zinc-950 text-zinc-200 rounded-lg p-3 overflow-x-auto font-mono">
         <code>{code}</code>
       </pre>
       <button
         onClick={copy}
-        className="absolute top-2 right-2 text-[10px] px-2 py-0.5 rounded bg-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-700 transition-colors opacity-0 group-hover:opacity-100 cursor-pointer"
+        className="absolute top-2 right-2 text-xs px-2.5 py-1 rounded bg-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-700 transition-colors opacity-0 group-hover:opacity-100 cursor-pointer"
       >
         {copied ? "Copied!" : "Copy"}
       </button>
@@ -1390,12 +1390,12 @@ function ComplexityTable({ results }: { results: Scored[] }) {
                   {algo.name}
                 </td>
                 <td className="px-4 py-2">
-                  <code className="text-violet-600 dark:text-violet-400 bg-violet-50 dark:bg-violet-900/20 px-1.5 py-0.5 rounded">
+                  <code className="text-violet-600 dark:text-violet-400 bg-violet-50 dark:bg-violet-900/20 px-2.5 py-1 rounded">
                     {algo.trainComplexity}
                   </code>
                 </td>
                 <td className="px-4 py-2">
-                  <code className="text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 px-1.5 py-0.5 rounded">
+                  <code className="text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 px-2.5 py-1 rounded">
                     {algo.inferenceComplexity}
                   </code>
                 </td>
@@ -1437,12 +1437,12 @@ function AlgorithmCard({ algo, rank }: { algo: Algorithm; rank: number }) {
               {algo.name}
             </span>
             {algo.interpretable && (
-              <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 font-medium">
+              <span className="text-xs px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 font-medium">
                 interpretable
               </span>
             )}
             {algo.highDimOk && (
-              <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 font-medium">
+              <span className="text-xs px-2.5 py-1 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 font-medium">
                 high-dim ok
               </span>
             )}
@@ -1485,7 +1485,7 @@ function AlgorithmCard({ algo, rank }: { algo: Algorithm; rank: number }) {
           {/* Pros & Cons */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <p className="text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 uppercase tracking-wide mb-1">
+              <p className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 uppercase tracking-wide mb-1">
                 Pros
               </p>
               <ul className="space-y-1">
@@ -1501,7 +1501,7 @@ function AlgorithmCard({ algo, rank }: { algo: Algorithm; rank: number }) {
               </ul>
             </div>
             <div>
-              <p className="text-[10px] font-semibold text-red-500 uppercase tracking-wide mb-1">
+              <p className="text-xs font-semibold text-red-500 uppercase tracking-wide mb-1">
                 Cons
               </p>
               <ul className="space-y-1">
@@ -1521,7 +1521,7 @@ function AlgorithmCard({ algo, rank }: { algo: Algorithm; rank: number }) {
           {/* Complexity */}
           <div className="flex gap-3 flex-wrap">
             <div className="bg-zinc-50 dark:bg-zinc-800 rounded-lg px-3 py-2">
-              <p className="text-[10px] text-zinc-400 font-medium mb-0.5">
+              <p className="text-xs text-zinc-400 font-medium mb-0.5">
                 Train
               </p>
               <code className="text-xs text-zinc-700 dark:text-zinc-300">
@@ -1529,7 +1529,7 @@ function AlgorithmCard({ algo, rank }: { algo: Algorithm; rank: number }) {
               </code>
             </div>
             <div className="bg-zinc-50 dark:bg-zinc-800 rounded-lg px-3 py-2">
-              <p className="text-[10px] text-zinc-400 font-medium mb-0.5">
+              <p className="text-xs text-zinc-400 font-medium mb-0.5">
                 Inference
               </p>
               <code className="text-xs text-zinc-700 dark:text-zinc-300">
@@ -1541,7 +1541,7 @@ function AlgorithmCard({ algo, rank }: { algo: Algorithm; rank: number }) {
           {/* Sklearn snippet */}
           {algo.sklearnSnippet && (
             <div>
-              <p className="text-[10px] font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide mb-1.5">
+              <p className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide mb-1.5">
                 Quick Start
               </p>
               <SnippetBlock code={algo.sklearnSnippet} />

@@ -1,0 +1,1174 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Evaluator — Know Before You Deploy</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --navy: #0a1628;
+        --navy-mid: #111d33;
+        --navy-light: #182842;
+        --teal: #2dd4a8;
+        --teal-dim: rgba(45, 212, 168, 0.15);
+        --teal-glow: rgba(45, 212, 168, 0.4);
+        --white: #f4f7fa;
+        --gray: #8a9bb5;
+        --serif: "DM Serif Display", Georgia, serif;
+        --sans: "Outfit", system-ui, sans-serif;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: var(--sans);
+        background: var(--navy);
+        color: var(--white);
+        line-height: 1.6;
+        overflow-x: hidden;
+      }
+
+      /* ── Utility ── */
+      .container {
+        max-width: 1140px;
+        margin: 0 auto;
+        padding: 0 2rem;
+      }
+      .teal {
+        color: var(--teal);
+      }
+      .section-label {
+        font-family: var(--sans);
+        font-weight: 600;
+        font-size: 0.75rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--teal);
+        margin-bottom: 1rem;
+        display: block;
+      }
+      .section-title {
+        font-family: var(--serif);
+        font-size: clamp(2rem, 4vw, 3rem);
+        line-height: 1.15;
+        margin-bottom: 1.5rem;
+      }
+      .section-sub {
+        color: var(--gray);
+        font-size: 1.1rem;
+        max-width: 600px;
+        line-height: 1.7;
+      }
+
+      /* ── Grain overlay ── */
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+        pointer-events: none;
+        z-index: 9999;
+      }
+
+      /* ── NAV ── */
+      nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        padding: 1.25rem 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: rgba(10, 22, 40, 0.8);
+        backdrop-filter: blur(16px);
+        border-bottom: 1px solid rgba(45, 212, 168, 0.08);
+      }
+      .logo {
+        font-family: var(--serif);
+        font-size: 1.35rem;
+        color: var(--white);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+      }
+      .logo-icon {
+        width: 32px;
+        height: 32px;
+        background: linear-gradient(135deg, var(--teal), #18b890);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        color: var(--navy);
+        font-weight: 700;
+      }
+      nav a.nav-link {
+        color: var(--gray);
+        text-decoration: none;
+        font-size: 0.9rem;
+        font-weight: 400;
+        transition: color 0.2s;
+      }
+      nav a.nav-link:hover {
+        color: var(--white);
+      }
+      .nav-links {
+        display: flex;
+        gap: 2rem;
+        align-items: center;
+      }
+      .btn-primary {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.65rem 1.6rem;
+        background: var(--teal);
+        color: var(--navy);
+        font-weight: 600;
+        font-size: 0.9rem;
+        border-radius: 8px;
+        text-decoration: none;
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+        border: none;
+        cursor: pointer;
+      }
+      .btn-primary:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 8px 30px var(--teal-glow);
+      }
+      .btn-outline {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.65rem 1.6rem;
+        background: transparent;
+        color: var(--white);
+        font-weight: 500;
+        font-size: 0.9rem;
+        border-radius: 8px;
+        text-decoration: none;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        transition:
+          border-color 0.2s,
+          background 0.2s;
+      }
+      .btn-outline:hover {
+        border-color: var(--teal);
+        background: var(--teal-dim);
+      }
+
+      /* ── HERO ── */
+      .hero {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        position: relative;
+        padding-top: 5rem;
+      }
+      .hero::before {
+        content: "";
+        position: absolute;
+        top: -10%;
+        right: -20%;
+        width: 800px;
+        height: 800px;
+        background: radial-gradient(
+          circle,
+          rgba(45, 212, 168, 0.08) 0%,
+          transparent 70%
+        );
+        pointer-events: none;
+      }
+      .hero::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(45, 212, 168, 0.2),
+          transparent
+        );
+      }
+      .hero-inner {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+        align-items: center;
+      }
+      .hero-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.4rem 1rem;
+        background: var(--teal-dim);
+        border: 1px solid rgba(45, 212, 168, 0.2);
+        border-radius: 100px;
+        font-size: 0.8rem;
+        color: var(--teal);
+        font-weight: 500;
+        margin-bottom: 1.5rem;
+        width: fit-content;
+      }
+      .hero h1 {
+        font-family: var(--serif);
+        font-size: clamp(2.5rem, 5.5vw, 4rem);
+        line-height: 1.08;
+        margin-bottom: 1.5rem;
+      }
+      .hero p {
+        font-size: 1.15rem;
+        color: var(--gray);
+        line-height: 1.75;
+        margin-bottom: 2.5rem;
+        max-width: 480px;
+      }
+      .hero-actions {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+      .hero-visual {
+        position: relative;
+        display: flex;
+        justify-content: center;
+      }
+      .hero-card {
+        background: var(--navy-mid);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 16px;
+        padding: 2rem;
+        width: 100%;
+        max-width: 420px;
+        box-shadow: 0 40px 80px rgba(0, 0, 0, 0.4);
+      }
+      .hero-card-header {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+        font-size: 0.8rem;
+        color: var(--gray);
+      }
+      .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+      }
+      .dot-r {
+        background: #ef4444;
+      }
+      .dot-y {
+        background: #eab308;
+      }
+      .dot-g {
+        background: #22c55e;
+      }
+      .grade-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      }
+      .grade-row:last-child {
+        border: none;
+      }
+      .grade-badge {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 0.85rem;
+      }
+      .grade-s {
+        background: #059669;
+        color: #fff;
+      }
+      .grade-a {
+        background: #3b82f6;
+        color: #fff;
+      }
+      .grade-b {
+        background: #8b5cf6;
+        color: #fff;
+      }
+      .grade-c {
+        background: #f59e0b;
+        color: #fff;
+      }
+      .model-info {
+        flex: 1;
+        margin-left: 0.75rem;
+      }
+      .model-name {
+        font-weight: 600;
+        font-size: 0.9rem;
+      }
+      .model-meta {
+        font-size: 0.75rem;
+        color: var(--gray);
+      }
+      .model-speed {
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: var(--teal);
+        text-align: right;
+      }
+      .hero-card-footer {
+        margin-top: 1.25rem;
+        padding-top: 1rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+        font-size: 0.75rem;
+        color: var(--gray);
+        display: flex;
+        justify-content: space-between;
+      }
+
+      /* ── STATS ── */
+      .stats {
+        padding: 4rem 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      }
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 2rem;
+        text-align: center;
+      }
+      .stat-num {
+        font-family: var(--serif);
+        font-size: 2.5rem;
+        color: var(--teal);
+        line-height: 1;
+        margin-bottom: 0.5rem;
+      }
+      .stat-label {
+        font-size: 0.9rem;
+        color: var(--gray);
+      }
+
+      /* ── PROBLEM / SOLUTION ── */
+      .problem-solution {
+        padding: 7rem 0;
+      }
+      .ps-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+      }
+      .ps-card {
+        padding: 2.5rem;
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .ps-problem {
+        background: linear-gradient(
+          135deg,
+          rgba(239, 68, 68, 0.06),
+          transparent
+        );
+        border-color: rgba(239, 68, 68, 0.15);
+      }
+      .ps-solution {
+        background: linear-gradient(
+          135deg,
+          rgba(45, 212, 168, 0.06),
+          transparent
+        );
+        border-color: rgba(45, 212, 168, 0.15);
+      }
+      .ps-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3rem;
+        margin-bottom: 1.5rem;
+      }
+      .ps-problem .ps-icon {
+        background: rgba(239, 68, 68, 0.15);
+      }
+      .ps-solution .ps-icon {
+        background: var(--teal-dim);
+      }
+      .ps-card h3 {
+        font-family: var(--serif);
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+      }
+      .ps-card ul {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+      .ps-card li {
+        color: var(--gray);
+        font-size: 0.95rem;
+        padding-left: 1.5rem;
+        position: relative;
+      }
+      .ps-card li::before {
+        position: absolute;
+        left: 0;
+        top: 0.1em;
+      }
+      .ps-problem li::before {
+        content: "✕";
+        color: #ef4444;
+        font-weight: 700;
+      }
+      .ps-solution li::before {
+        content: "✓";
+        color: var(--teal);
+        font-weight: 700;
+      }
+
+      /* ── HOW IT WORKS ── */
+      .how {
+        padding: 7rem 0;
+        text-align: center;
+      }
+      .how-steps {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2.5rem;
+        margin-top: 4rem;
+      }
+      .step {
+        position: relative;
+        padding: 2.5rem 2rem;
+        background: var(--navy-mid);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 16px;
+        text-align: left;
+        transition: border-color 0.3s;
+      }
+      .step:hover {
+        border-color: rgba(45, 212, 168, 0.25);
+      }
+      .step-num {
+        font-family: var(--serif);
+        font-size: 3rem;
+        color: var(--teal);
+        opacity: 0.3;
+        line-height: 1;
+        margin-bottom: 1rem;
+      }
+      .step h4 {
+        font-size: 1.15rem;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+      }
+      .step p {
+        color: var(--gray);
+        font-size: 0.9rem;
+        line-height: 1.7;
+      }
+
+      /* ── FEATURES ── */
+      .features {
+        padding: 7rem 0;
+      }
+      .features-header {
+        text-align: center;
+        margin-bottom: 4rem;
+      }
+      .features-header .section-sub {
+        margin: 0 auto;
+      }
+      .feat-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+      }
+      .feat {
+        padding: 2rem;
+        background: var(--navy-mid);
+        border: 1px solid rgba(255, 255, 255, 0.04);
+        border-radius: 14px;
+        transition:
+          border-color 0.3s,
+          transform 0.3s;
+      }
+      .feat:hover {
+        border-color: rgba(45, 212, 168, 0.2);
+        transform: translateY(-3px);
+      }
+      .feat-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 10px;
+        background: var(--teal-dim);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        margin-bottom: 1.25rem;
+      }
+      .feat h4 {
+        font-size: 1.05rem;
+        font-weight: 600;
+        margin-bottom: 0.6rem;
+      }
+      .feat p {
+        color: var(--gray);
+        font-size: 0.88rem;
+        line-height: 1.65;
+      }
+
+      /* ── HIGHLIGHT (big feature) ── */
+      .highlight {
+        padding: 7rem 0;
+      }
+      .highlight-card {
+        background: linear-gradient(135deg, var(--navy-mid), var(--navy-light));
+        border: 1px solid rgba(45, 212, 168, 0.12);
+        border-radius: 20px;
+        padding: 4rem;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+        align-items: center;
+      }
+      .highlight-card h3 {
+        font-family: var(--serif);
+        font-size: 2rem;
+        margin-bottom: 1.25rem;
+      }
+      .highlight-card p {
+        color: var(--gray);
+        line-height: 1.75;
+        margin-bottom: 1.5rem;
+      }
+      .highlight-chat {
+        background: var(--navy);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 14px;
+        padding: 1.5rem;
+      }
+      .chat-msg {
+        padding: 0.85rem 1.1rem;
+        border-radius: 12px;
+        font-size: 0.88rem;
+        margin-bottom: 0.75rem;
+        line-height: 1.6;
+      }
+      .chat-user {
+        background: var(--navy-light);
+        color: var(--white);
+        margin-left: 2rem;
+        border-bottom-right-radius: 4px;
+      }
+      .chat-ai {
+        background: var(--teal-dim);
+        color: var(--white);
+        margin-right: 2rem;
+        border-bottom-left-radius: 4px;
+      }
+
+      /* ── AUDIENCE ── */
+      .audience {
+        padding: 7rem 0;
+        text-align: center;
+      }
+      .audience-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1.5rem;
+        margin-top: 3.5rem;
+      }
+      .audience-card {
+        padding: 2rem 1.5rem;
+        background: var(--navy-mid);
+        border: 1px solid rgba(255, 255, 255, 0.04);
+        border-radius: 14px;
+        text-align: center;
+        transition: border-color 0.3s;
+      }
+      .audience-card:hover {
+        border-color: rgba(45, 212, 168, 0.2);
+      }
+      .audience-icon {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+      }
+      .audience-card h4 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+      }
+      .audience-card p {
+        color: var(--gray);
+        font-size: 0.85rem;
+        line-height: 1.6;
+      }
+
+      /* ── TECH STACK ── */
+      .tech {
+        padding: 5rem 0;
+        text-align: center;
+      }
+      .tech-row {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-top: 2rem;
+      }
+      .tech-badge {
+        padding: 0.55rem 1.3rem;
+        background: var(--navy-mid);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 100px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: var(--gray);
+        transition:
+          color 0.2s,
+          border-color 0.2s;
+      }
+      .tech-badge:hover {
+        color: var(--teal);
+        border-color: rgba(45, 212, 168, 0.2);
+      }
+
+      /* ── CTA ── */
+      .cta {
+        padding: 7rem 0 5rem;
+        text-align: center;
+        position: relative;
+      }
+      .cta::before {
+        content: "";
+        position: absolute;
+        bottom: 20%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 600px;
+        height: 400px;
+        background: radial-gradient(
+          circle,
+          rgba(45, 212, 168, 0.1) 0%,
+          transparent 70%
+        );
+        pointer-events: none;
+      }
+      .cta h2 {
+        font-family: var(--serif);
+        font-size: clamp(2rem, 4vw, 3rem);
+        margin-bottom: 1.25rem;
+      }
+      .cta p {
+        color: var(--gray);
+        font-size: 1.1rem;
+        margin-bottom: 2.5rem;
+        max-width: 500px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .cta-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+      }
+
+      /* ── FOOTER ── */
+      footer {
+        padding: 3rem 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.04);
+        text-align: center;
+        color: var(--gray);
+        font-size: 0.8rem;
+      }
+
+      /* ── RESPONSIVE ── */
+      @media (max-width: 900px) {
+        .hero-inner {
+          grid-template-columns: 1fr;
+        }
+        .hero-visual {
+          display: none;
+        }
+        .ps-grid {
+          grid-template-columns: 1fr;
+        }
+        .how-steps {
+          grid-template-columns: 1fr;
+        }
+        .feat-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+        .audience-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+        .highlight-card {
+          grid-template-columns: 1fr;
+          padding: 2.5rem;
+        }
+        .stats-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .nav-links .nav-link {
+          display: none;
+        }
+      }
+      @media (max-width: 600px) {
+        .feat-grid {
+          grid-template-columns: 1fr;
+        }
+        .audience-grid {
+          grid-template-columns: 1fr;
+        }
+        .stats-grid {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 1.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- NAV -->
+    <nav>
+      <a href="#" class="logo">
+        <span class="logo-icon">AI</span>
+        AI Evaluator
+      </a>
+      <div class="nav-links">
+        <a href="#features" class="nav-link">Features</a>
+        <a href="#how" class="nav-link">How It Works</a>
+        <a href="#audience" class="nav-link">Who It's For</a>
+        <a href="#cta" class="btn-primary">Try It Free →</a>
+      </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="container">
+        <div class="hero-inner">
+          <div>
+            <div class="hero-tag">⚡ Powered by Claude AI</div>
+            <h1>
+              Know which AI<br />runs on
+              <span class="teal">your</span> hardware.
+            </h1>
+            <p>
+              Stop guessing. AI Evaluator instantly matches 50+ large language
+              models to your exact hardware specs — with performance grades,
+              speed estimates, and deployment guidance.
+            </p>
+            <div class="hero-actions">
+              <a href="#cta" class="btn-primary">Get Started — It's Free →</a>
+              <a href="#how" class="btn-outline">See How It Works</a>
+            </div>
+          </div>
+          <div class="hero-visual">
+            <div class="hero-card">
+              <div class="hero-card-header">
+                <span class="dot dot-r"></span>
+                <span class="dot dot-y"></span>
+                <span class="dot dot-g"></span>
+                <span style="margin-left: 0.5rem">RTX 4070 · 32 GB RAM</span>
+              </div>
+              <div class="grade-row">
+                <span class="grade-badge grade-s">S</span>
+                <div class="model-info">
+                  <div class="model-name">Llama 3.1 8B</div>
+                  <div class="model-meta">Q4_K_M · 6.2 GB VRAM</div>
+                </div>
+                <div class="model-speed">62 tok/s</div>
+              </div>
+              <div class="grade-row">
+                <span class="grade-badge grade-a">A</span>
+                <div class="model-info">
+                  <div class="model-name">Mistral 7B</div>
+                  <div class="model-meta">Q5_K_M · 7.1 GB VRAM</div>
+                </div>
+                <div class="model-speed">48 tok/s</div>
+              </div>
+              <div class="grade-row">
+                <span class="grade-badge grade-b">B</span>
+                <div class="model-info">
+                  <div class="model-name">Qwen2 14B</div>
+                  <div class="model-meta">Q4_K_S · 10.8 GB VRAM</div>
+                </div>
+                <div class="model-speed">28 tok/s</div>
+              </div>
+              <div class="grade-row">
+                <span class="grade-badge grade-c">C</span>
+                <div class="model-info">
+                  <div class="model-name">Llama 3.1 70B</div>
+                  <div class="model-meta">Q2_K · 11.4 GB VRAM</div>
+                </div>
+                <div class="model-speed">9 tok/s</div>
+              </div>
+              <div class="hero-card-footer">
+                <span>4 compatible models found</span>
+                <span class="teal">View all →</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATS -->
+    <section class="stats">
+      <div class="container">
+        <div class="stats-grid">
+          <div>
+            <div class="stat-num">50+</div>
+            <div class="stat-label">Models Evaluated</div>
+          </div>
+          <div>
+            <div class="stat-num">6</div>
+            <div class="stat-label">Performance Grades</div>
+          </div>
+          <div>
+            <div class="stat-num">&lt;2s</div>
+            <div class="stat-label">Instant Results</div>
+          </div>
+          <div>
+            <div class="stat-num">100%</div>
+            <div class="stat-label">Free &amp; Open</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROBLEM / SOLUTION -->
+    <section class="problem-solution">
+      <div class="container">
+        <div class="ps-grid">
+          <div class="ps-card ps-problem">
+            <div class="ps-icon">✕</div>
+            <h3>The Problem</h3>
+            <ul>
+              <li>
+                Teams waste weeks testing AI models that won't run on their
+                infrastructure
+              </li>
+              <li>
+                Hardware requirements are buried in technical docs with
+                inconsistent specs
+              </li>
+              <li>
+                No standardized way to compare model performance across
+                different setups
+              </li>
+              <li>
+                Deployment failures cost $10K–$100K+ in lost engineering time
+              </li>
+            </ul>
+          </div>
+          <div class="ps-card ps-solution">
+            <div class="ps-icon">✓</div>
+            <h3>Our Solution</h3>
+            <ul>
+              <li>
+                Instant hardware-to-model matching — enter your specs, see what
+                runs
+              </li>
+              <li>
+                Letter grades (S–F) make compatibility clear to any stakeholder
+              </li>
+              <li>
+                AI advisor recommends the best model for your specific use case
+              </li>
+              <li>
+                End-to-end deployment guidance from selection to production
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="how" id="how">
+      <div class="container">
+        <span class="section-label">How It Works</span>
+        <h2 class="section-title">
+          From hardware to deployment<br />in
+          <span class="teal">three steps</span>
+        </h2>
+        <div class="how-steps">
+          <div class="step">
+            <div class="step-num">01</div>
+            <h4>Enter Your Hardware</h4>
+            <p>
+              Select your GPU, CPU, RAM, and VRAM. We auto-detect hardware when
+              possible and support 30+ GPU models from NVIDIA, AMD, Apple, and
+              Intel.
+            </p>
+          </div>
+          <div class="step">
+            <div class="step-num">02</div>
+            <h4>Get Graded Results</h4>
+            <p>
+              Instantly see which LLMs are compatible — ranked by performance
+              grade, estimated speed (tokens/sec), and memory usage. Filter,
+              sort, and compare.
+            </p>
+          </div>
+          <div class="step">
+            <div class="step-num">03</div>
+            <h4>Deploy with Confidence</h4>
+            <p>
+              Follow our step-by-step deployment guide with framework
+              recommendations, cost estimates, and the exact commands to get
+              your model running.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section class="features" id="features">
+      <div class="container">
+        <div class="features-header">
+          <span class="section-label">Platform Features</span>
+          <h2 class="section-title">
+            Everything you need to<br />choose the right AI model
+          </h2>
+          <p class="section-sub">
+            A comprehensive toolkit that takes the guesswork out of AI model
+            selection, benchmarking, and deployment.
+          </p>
+        </div>
+        <div class="feat-grid">
+          <div class="feat">
+            <div class="feat-icon">⚙</div>
+            <h4>Hardware Compatibility Engine</h4>
+            <p>
+              Input RAM, GPU, and CPU — get instant compatibility results with
+              letter grades and tokens-per-second performance estimates.
+            </p>
+          </div>
+          <div class="feat">
+            <div class="feat-icon">💬</div>
+            <h4>AI Use-Case Advisor</h4>
+            <p>
+              Chat with a Claude-powered assistant that recommends models
+              tailored to your specific task — coding, summarization, analysis,
+              and more.
+            </p>
+          </div>
+          <div class="feat">
+            <div class="feat-icon">🏆</div>
+            <h4>Model Leaderboard</h4>
+            <p>
+              Visual tier list and ranking of 50+ models by benchmark scores,
+              parameters, inference speed, and API cost.
+            </p>
+          </div>
+          <div class="feat">
+            <div class="feat-icon">⚖</div>
+            <h4>Side-by-Side Compare</h4>
+            <p>
+              Select any two models and compare their specs, benchmarks,
+              hardware requirements, and use-case strengths in one view.
+            </p>
+          </div>
+          <div class="feat">
+            <div class="feat-icon">🔀</div>
+            <h4>Algorithm Selector</h4>
+            <p>
+              Interactive decision flowchart that guides you to the right ML
+              algorithm based on your problem type, data size, and goals.
+            </p>
+          </div>
+          <div class="feat">
+            <div class="feat-icon">📦</div>
+            <h4>Framework Picker</h4>
+            <p>
+              Get framework recommendations — PyTorch, TensorFlow, scikit-learn,
+              and more — based on your experience level and use case.
+            </p>
+          </div>
+          <div class="feat">
+            <div class="feat-icon">🚀</div>
+            <h4>Deployment Guide</h4>
+            <p>
+              Step-by-step instructions for local and cloud deployment with cost
+              estimates, optimization tips, and copy-paste commands.
+            </p>
+          </div>
+          <div class="feat">
+            <div class="feat-icon">📡</div>
+            <h4>Live Model Feed</h4>
+            <p>
+              Auto-syncs with Hugging Face Hub and Ollama registries so you
+              always have access to the latest released models.
+            </p>
+          </div>
+          <div class="feat">
+            <div class="feat-icon">📊</div>
+            <h4>Benchmark Calibrator</h4>
+            <p>
+              Run a local benchmark to calibrate our predictions to your actual
+              hardware — get results that reflect your real-world performance.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HIGHLIGHT — AI ADVISOR -->
+    <section class="highlight">
+      <div class="container">
+        <div class="highlight-card">
+          <div>
+            <span class="section-label">AI-Powered Guidance</span>
+            <h3>
+              Ask the advisor.<br />Get the
+              <span class="teal">right model</span>.
+            </h3>
+            <p>
+              Our Claude-powered AI advisor understands your use case, budget,
+              and hardware constraints — then recommends exactly which model to
+              deploy and how.
+            </p>
+            <p>
+              No more digging through benchmarks and compatibility tables. Just
+              describe what you need.
+            </p>
+          </div>
+          <div class="highlight-chat">
+            <div class="chat-msg chat-user">
+              I need a model for code review and summarization. I have a MacBook
+              Pro M3 with 36GB RAM.
+            </div>
+            <div class="chat-msg chat-ai">
+              Great setup! For code review + summarization on M3 36GB, I
+              recommend <strong>Qwen2.5 Coder 14B (Q5_K_M)</strong> — it scores
+              S-tier on your hardware at ~35 tok/s, excels at code
+              understanding, and handles long context for doc summarization.
+              Want me to walk you through deployment?
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AUDIENCE -->
+    <section class="audience" id="audience">
+      <div class="container">
+        <span class="section-label">Who It's For</span>
+        <h2 class="section-title">
+          Built for teams making<br /><span class="teal">AI decisions</span>
+        </h2>
+        <div class="audience-grid">
+          <div class="audience-card">
+            <div class="audience-icon">👔</div>
+            <h4>Engineering Leaders</h4>
+            <p>
+              Make data-driven hardware procurement decisions. Know exactly what
+              your infrastructure can support before committing budget.
+            </p>
+          </div>
+          <div class="audience-card">
+            <div class="audience-icon">🔬</div>
+            <h4>ML Engineers</h4>
+            <p>
+              Skip the trial-and-error. Find the best model-hardware match for
+              your pipeline in seconds, not days.
+            </p>
+          </div>
+          <div class="audience-card">
+            <div class="audience-icon">💼</div>
+            <h4>Product Managers</h4>
+            <p>
+              Understand AI capabilities in plain language. Share graded reports
+              with stakeholders. Plan features with realistic AI constraints.
+            </p>
+          </div>
+          <div class="audience-card">
+            <div class="audience-icon">🏢</div>
+            <h4>Enterprise IT</h4>
+            <p>
+              Evaluate on-premise AI deployment feasibility. Ensure compliance
+              by running models locally without sending data to external APIs.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TECH STACK -->
+    <section class="tech">
+      <div class="container">
+        <span class="section-label">Built With</span>
+        <h2 class="section-title" style="font-size: 1.75rem">
+          Modern, production-grade stack
+        </h2>
+        <div class="tech-row">
+          <span class="tech-badge">React 19</span>
+          <span class="tech-badge">TypeScript</span>
+          <span class="tech-badge">Tailwind CSS 4</span>
+          <span class="tech-badge">Vite</span>
+          <span class="tech-badge">Claude API</span>
+          <span class="tech-badge">Hugging Face Hub</span>
+          <span class="tech-badge">Ollama</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta" id="cta">
+      <div class="container">
+        <h2>
+          Ready to find your<br /><span class="teal">perfect AI model</span>?
+        </h2>
+        <p>
+          Enter your hardware specs and get instant, graded compatibility
+          results. No signup. No cost. Just answers.
+        </p>
+        <div class="cta-actions">
+          <a href="#" class="btn-primary">Launch AI Evaluator →</a>
+          <a href="#" class="btn-outline">View on GitHub</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <div class="container">
+        <p>
+          © 2026 AI Evaluator · Built with precision for smarter AI deployment
+          decisions.
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>

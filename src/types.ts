@@ -21,6 +21,13 @@ export interface Model {
     mmlu?: number; // 0-100 percentage
     humanEval?: number; // 0-100 percentage
     mtBench?: number; // 1-10 score
+    math?: number; // 0-100 percentage (MATH benchmark)
+    gpqa?: number; // 0-100 percentage (GPQA Diamond)
+    ifEval?: number; // 0-100 percentage (instruction following)
+    bbh?: number; // 0-100 percentage (Big Bench Hard)
+    musr?: number; // 0-100 percentage (Multi-step Soft Reasoning)
+    mmluPro?: number; // 0-100 percentage (MMLU-PRO)
+    average?: number; // 0-100 average across Open LLM Leaderboard v2 benchmarks
   };
   kvMBPerToken?: number; // KV cache MB per token (for context window estimation)
   apiCost?: {
