@@ -173,8 +173,8 @@ score = speedScore × 0.55 + memScore × 0.35 + qualityBonus × 0.10
 - [x] **Algorithm Picker** ✅ Phase 7 — New tab with 37 algorithms across 5 task types; step-by-step questionnaire (task · dataset size · interpretability · feature count); results ranked live; each card expandable with pros/cons, complexity, docs link, and SVG visual of how the algorithm works.
 - [x] **Benchmark scores on model cards** ✅ Phase 7 — MMLU, HumanEval, MT-Bench bar charts in the detail panel for all 45 models.
 - [x] **Context window calculator** ✅ Phase 7 — Shows estimated max tokens and page count based on your available RAM/VRAM after loading the model (uses per-model KV cache MB/token).
-- [x] **API cost comparison** ✅ Phase 7 — Shows cheapest API equivalent (provider, $/1M tokens, monthly cost at 100K tok/day) in the detail panel.
-- [x] **Model Timeline** ✅ Phase 7 — New "Timeline" tab with 25+ open-source LLM milestones from ChatGPT (2022) to Qwen 3 / LLaMA 4 (2025); filter by org; milestone-only toggle; "in this app" badges.
+- [x] **API cost comparison** ✅ Phase 7 — Shows cheapest API equivalent (provider, $/1M tokens, - [x] **Model Timeline** ✅ Phase 7 — New "Timeline" tab with 25+ open-source LLM milestones from ChatGPT (2022) to Qwen 3 / LLaMA 4 (2025); filter by org; milestone-only toggle; "in this app" badges.monthly cost at 100K tok/day) in the detail panel.
+
 
 ---
 

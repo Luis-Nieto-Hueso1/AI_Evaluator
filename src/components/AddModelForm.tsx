@@ -73,7 +73,7 @@ export function AddModelForm({ customModels, onChanged }: Props) {
             + Add model by HF URL
           </span>
           {customModels.length > 0 && (
-            <span className="text-xs px-2.5 py-1 rounded-full bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-400 font-semibold">
+            <span className="text-xs px-2.5 py-1 rounded-full bg-brand-100 dark:bg-brand-500/30 text-brand-400 dark:text-brand-accent font-semibold">
               {customModels.length}
             </span>
           )}
@@ -116,12 +116,12 @@ export function AddModelForm({ customModels, onChanged }: Props) {
               placeholder="e.g. mistralai/Mistral-7B-Instruct-v0.3"
               aria-label="HuggingFace model URL or ID"
               disabled={status === "loading"}
-              className="flex-1 text-xs px-3 py-2 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-violet-500 disabled:opacity-50"
+              className="flex-1 text-xs px-3 py-2 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-brand-500 disabled:opacity-50"
             />
             <button
               onClick={handleAdd}
               disabled={status === "loading" || !url.trim()}
-              className="shrink-0 text-xs px-3 py-2 rounded-xl bg-violet-600 text-white font-medium hover:bg-violet-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+              className="shrink-0 text-xs px-3 py-2 rounded-xl bg-brand-300 text-white font-medium hover:bg-brand-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             >
               {status === "loading" ? (
                 <span className="flex items-center gap-1.5">

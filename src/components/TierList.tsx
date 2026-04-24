@@ -24,9 +24,9 @@ const TIER_COLORS: Record<Grade, { bg: string; text: string; border: string }> =
       border: "border-blue-200 dark:border-blue-800",
     },
     B: {
-      bg: "bg-violet-500",
+      bg: "bg-brand-500",
       text: "text-white",
-      border: "border-violet-200 dark:border-violet-800",
+      border: "border-brand-200 dark:border-brand-500",
     },
     C: {
       bg: "bg-amber-500",

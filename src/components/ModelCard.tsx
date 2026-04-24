@@ -21,7 +21,7 @@ interface Props {
 }
 
 const FAMILY_COLORS: Record<string, string> = {
-  Llama: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300",
+  Llama: "bg-brand-100 text-brand-400 dark:bg-brand-500/30 dark:text-blue-300",
   Mistral:
     "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300",
   Phi: "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300",
@@ -36,8 +36,8 @@ const FAMILY_COLORS: Record<string, string> = {
 const GRADE_STYLES: Record<Grade, { bg: string; text: string; label: string }> =
   {
     S: { bg: "bg-emerald-500", text: "text-white", label: "Runs great" },
-    A: { bg: "bg-blue-500", text: "text-white", label: "Runs well" },
-    B: { bg: "bg-violet-500", text: "text-white", label: "Decent" },
+    A: { bg: "bg-brand-500", text: "text-white", label: "Runs well" },
+    B: { bg: "bg-brand-500", text: "text-white", label: "Decent" },
     C: { bg: "bg-amber-500", text: "text-white", label: "Tight fit" },
     D: { bg: "bg-red-500", text: "text-white", label: "Barely runs" },
     F: {
@@ -49,8 +49,8 @@ const GRADE_STYLES: Record<Grade, { bg: string; text: string; label: string }> =
 
 const GRADE_BADGE_COLORS: Record<Grade, string> = {
   S: "bg-emerald-500 text-white",
-  A: "bg-blue-500 text-white",
-  B: "bg-violet-500 text-white",
+  A: "bg-brand-500 text-white",
+  B: "bg-brand-500 text-white",
   C: "bg-amber-500 text-white",
   D: "bg-red-500 text-white",
   F: "bg-zinc-400 dark:bg-zinc-600 text-white",
@@ -183,7 +183,7 @@ function CommandRow({
           {label}
         </span>
         {recommended && (
-          <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-violet-100 dark:bg-violet-900/40 text-violet-700 dark:text-violet-300">
+          <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-brand-100 dark:bg-brand-500/40 text-brand-400 dark:text-brand-200">
             ★ Recommended
           </span>
         )}
@@ -556,7 +556,7 @@ export function ModelCard({ item, hardware, calibrationFactor = 1 }: Props) {
           {/* Live HF stats */}
           {hfLoading && (
             <div className="flex items-center gap-1.5 text-xs text-zinc-400 dark:text-zinc-500">
-              <span className="inline-block w-3 h-3 border-2 border-zinc-300 dark:border-zinc-600 border-t-violet-500 rounded-full animate-spin" />
+              <span className="inline-block w-3 h-3 border-2 border-zinc-300 dark:border-zinc-600 border-t-brand-500 rounded-full animate-spin" />
               Loading HuggingFace stats…
             </div>
           )}
@@ -673,7 +673,7 @@ export function ModelCard({ item, hardware, calibrationFactor = 1 }: Props) {
                       </span>
                       <div className="flex-1 h-1.5 bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
                         <div
-                          className="h-full bg-violet-500 rounded-full"
+                          className="h-full bg-brand-500 rounded-full"
                           style={{ width: `${model.benchmarks.mmlu}%` }}
                         />
                       </div>
@@ -689,7 +689,7 @@ export function ModelCard({ item, hardware, calibrationFactor = 1 }: Props) {
                       </span>
                       <div className="flex-1 h-1.5 bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
                         <div
-                          className="h-full bg-blue-500 rounded-full"
+                          className="h-full bg-brand-500 rounded-full"
                           style={{ width: `${model.benchmarks.humanEval}%` }}
                         />
                       </div>
@@ -734,8 +734,8 @@ export function ModelCard({ item, hardware, calibrationFactor = 1 }: Props) {
               const pages = Math.floor(maxTokens / 500);
               const cappedCtx = Math.min(maxTokens, model.contextLength);
               return (
-                <div className="bg-blue-50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-900/30 rounded-lg px-3 py-2.5">
-                  <p className="text-xs font-semibold text-blue-600 dark:text-blue-400 uppercase tracking-wide mb-1">
+                <div className="bg-brand-50 dark:bg-brand-500/10 border border-blue-100 dark:border-blue-900/30 rounded-lg px-3 py-2.5">
+                  <p className="text-xs font-semibold text-brand-300 dark:text-brand-accent uppercase tracking-wide mb-1">
                     Context Window (your hardware)
                   </p>
                   <p className="text-xs text-zinc-700 dark:text-zinc-300">
@@ -774,7 +774,7 @@ export function ModelCard({ item, hardware, calibrationFactor = 1 }: Props) {
                     key={s}
                     className="text-xs text-zinc-600 dark:text-zinc-400 flex items-start gap-1.5"
                   >
-                    <span className="text-violet-500 mt-0.5 shrink-0">•</span>
+                    <span className="text-brand-500 mt-0.5 shrink-0">•</span>
                     {s}
                   </li>
                 ))}
@@ -790,7 +790,7 @@ export function ModelCard({ item, hardware, calibrationFactor = 1 }: Props) {
           <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-300 bg-zinc-100 dark:bg-zinc-800 px-2 py-1 rounded-lg">
             {formatToks(tokensPerSec * calibrationFactor)}
             {calibrationFactor !== 1 && (
-              <span className="ml-1 text-xs text-violet-500 dark:text-violet-400 font-normal">
+              <span className="ml-1 text-xs text-brand-500 dark:text-brand-accent font-normal">
                 cal
               </span>
             )}
@@ -810,7 +810,7 @@ export function ModelCard({ item, hardware, calibrationFactor = 1 }: Props) {
             {model.family}
           </span>
           {model.isCustom && (
-            <span className="text-xs px-2.5 py-1 rounded-full bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-400 font-semibold">
+            <span className="text-xs px-2.5 py-1 rounded-full bg-brand-100 dark:bg-brand-500/30 text-brand-400 dark:text-brand-accent font-semibold">
               Custom
             </span>
           )}
@@ -832,7 +832,7 @@ export function ModelCard({ item, hardware, calibrationFactor = 1 }: Props) {
             {model.family}
           </span>
           {model.isCustom && (
-            <span className="text-xs px-2.5 py-1 rounded-full bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-400 font-semibold">
+            <span className="text-xs px-2.5 py-1 rounded-full bg-brand-100 dark:bg-brand-500/30 text-brand-400 dark:text-brand-accent font-semibold">
               Custom
             </span>
           )}

@@ -157,9 +157,9 @@ export function OnboardingTour() {
                 key={i}
                 className={`w-1.5 h-1.5 rounded-full ${
                   i === step
-                    ? "bg-violet-500"
+                    ? "bg-brand-500"
                     : i < step
-                      ? "bg-violet-300 dark:bg-violet-700"
+                      ? "bg-brand-200 dark:bg-brand-400"
                       : "bg-zinc-200 dark:bg-zinc-700"
                 }`}
               />
@@ -174,7 +174,7 @@ export function OnboardingTour() {
             </button>
             <button
               onClick={next}
-              className="text-xs px-3 py-1 bg-violet-600 hover:bg-violet-700 text-white rounded-lg transition-colors cursor-pointer font-medium"
+              className="text-xs px-3 py-1 bg-brand-300 hover:bg-brand-400 text-white rounded-lg transition-colors cursor-pointer font-medium"
             >
               {step + 1 >= STEPS.length ? "Done" : "Next"}
             </button>

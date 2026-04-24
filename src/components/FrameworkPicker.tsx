@@ -124,7 +124,7 @@ function OptionButton({
       onClick={onClick}
       className={`w-full text-left px-3 py-2 rounded-xl text-sm transition-all cursor-pointer border ${
         selected
-          ? "bg-violet-50 dark:bg-violet-900/20 border-violet-300 dark:border-violet-700 text-violet-700 dark:text-violet-300 ring-1 ring-violet-300 dark:ring-violet-700"
+          ? "bg-brand-50 dark:bg-brand-500/20 border-brand-200 dark:border-brand-400 text-brand-400 dark:text-brand-200 ring-1 ring-brand-200 dark:ring-brand-400"
           : "bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 hover:border-zinc-300 dark:hover:border-zinc-600"
       }`}
     >
@@ -153,7 +153,7 @@ function FrameworkCard({
 
   return (
     <div
-      className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 overflow-hidden hover:border-violet-300 dark:hover:border-violet-700 transition-colors cursor-pointer"
+      className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 overflow-hidden hover:border-brand-200 dark:hover:border-brand-400 transition-colors cursor-pointer"
       onClick={() => setOpen((v) => !v)}
     >
       {/* Header */}
@@ -182,7 +182,7 @@ function FrameworkCard({
           </p>
           <div className="h-2 rounded-full bg-zinc-100 dark:bg-zinc-800 overflow-hidden">
             <div
-              className="h-full rounded-full bg-violet-500 transition-all"
+              className="h-full rounded-full bg-brand-500 transition-all"
               style={{ width: `${barWidth}%` }}
             />
           </div>
@@ -223,7 +223,7 @@ function FrameworkCard({
               </span>
             )}
             {fw.research && (
-              <span className="text-xs px-2.5 py-1 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 font-medium">
+              <span className="text-xs px-2.5 py-1 rounded-full bg-brand-100 dark:bg-brand-500/30 text-brand-400 dark:text-brand-accent font-medium">
                 Research
               </span>
             )}
@@ -285,7 +285,7 @@ function FrameworkCard({
             target="_blank"
             rel="noopener noreferrer"
             onClick={(e) => e.stopPropagation()}
-            className="inline-flex items-center gap-1 text-xs text-violet-600 dark:text-violet-400 font-medium hover:underline"
+            className="inline-flex items-center gap-1 text-xs text-brand-300 dark:text-brand-accent font-medium hover:underline"
           >
             Official docs ↗
           </a>
@@ -435,13 +435,13 @@ export function FrameworkPicker() {
           <>
             <div className="flex items-center justify-between mb-3">
               <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                <span className="text-violet-600 dark:text-violet-400 font-bold">
+                <span className="text-brand-300 dark:text-brand-accent font-bold">
                   {results.length}
                 </span>{" "}
                 frameworks ranked for your criteria
               </p>
               <p className="text-xs text-zinc-400 dark:text-zinc-500 mt-1">
-                The <span className="font-medium text-violet-500">Match</span>{" "}
+                The <span className="font-medium text-brand-500">Match</span>{" "}
                 bar shows how well each framework fits your selected task, goal,
                 and team experience (0–100).
               </p>

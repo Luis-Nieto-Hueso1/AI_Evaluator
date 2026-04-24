@@ -30,6 +30,9 @@ import { AlgorithmFlowchart } from "./components/AlgorithmFlowchart";
 import { FrameworkFlowchart } from "./components/FrameworkFlowchart";
 import { DeploymentFlowchart } from "./components/DeploymentFlowchart";
 import { GuidedDiscovery } from "./components/GuidedDiscovery";
+import { LearnBanner, SECTION_LEARN } from "./components/LearnBanner";
+import { Glossary } from "./components/Glossary";
+import logo2i from "./assets/logo-2i.svg";
 
 const DEFAULT_HARDWARE: HardwareProfile = { ram: 16, vram: 0, hasGpu: false };
 const HAS_API_KEY = Boolean(import.meta.env.VITE_ANTHROPIC_API_KEY);
@@ -44,7 +47,8 @@ type View =
   | "leaderboard"
   | "frameworks"
   | "deploy"
-  | "guide";
+  | "guide"
+  | "glossary";
 
 const GRADE_ORDER: Grade[] = ["S", "A", "B", "C", "D", "F"];
 
@@ -111,7 +115,7 @@ const USE_CASE_INFO: Record<string, string> = {
 const GRADE_COLORS: Record<Grade, string> = {
   S: "bg-emerald-500 text-white",
   A: "bg-blue-500 text-white",
-  B: "bg-violet-500 text-white",
+  B: "bg-brand-500 text-white",
   C: "bg-amber-500 text-white",
   D: "bg-red-500 text-white",
   F: "bg-zinc-500 text-white",
@@ -120,7 +124,7 @@ const GRADE_COLORS: Record<Grade, string> = {
 const GRADE_INACTIVE: Record<Grade, string> = {
   S: "bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/40",
   A: "bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/40",
-  B: "bg-violet-50 dark:bg-violet-900/20 text-violet-700 dark:text-violet-400 hover:bg-violet-100 dark:hover:bg-violet-900/40",
+  B: "bg-brand-50 dark:bg-brand-500/20 text-brand-400 dark:text-brand-accent hover:bg-brand-100 dark:hover:bg-brand-500/40",
   C: "bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400 hover:bg-amber-100 dark:hover:bg-amber-900/40",
   D: "bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/40",
   F: "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-700",
@@ -384,15 +388,22 @@ export default function App() {
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
       {/* Header */}
-      <header className="border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
+      <header className="border-b border-brand-100 dark:border-zinc-800 bg-white dark:bg-zinc-900">
         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-          <div>
-            <h1 className="text-xl font-bold text-zinc-900 dark:text-zinc-100">
-              LLM Evaluator
-            </h1>
-            <p className="text-xs text-zinc-500 dark:text-zinc-400">
-              Find which models your hardware can run
-            </p>
+          <div className="flex items-center gap-3">
+            <img
+              src={logo2i}
+              alt="2i logo"
+              className="w-10 h-10 text-brand-300 dark:text-brand-200"
+            />
+            <div>
+              <h1 className="text-xl font-bold text-brand-500 dark:text-brand-100">
+                LLM Evaluator
+              </h1>
+              <p className="text-xs text-brand-400 dark:text-brand-accent">
+                Find which models your hardware can run
+              </p>
+            </div>
           </div>
           <button
             onClick={() => setDark(!dark)}
@@ -429,6 +440,7 @@ export default function App() {
               "deploy",
               "leaderboard",
               "timeline",
+              "glossary",
             ] as View[]
           ).map((v) => {
             const labels: Record<View, string> = {
@@ -441,6 +453,7 @@ export default function App() {
               deploy: "Deploy Guide",
               leaderboard: "Leaderboard",
               timeline: "Timeline",
+              glossary: "Glossary",
             };
             return (
               <button
@@ -448,8 +461,8 @@ export default function App() {
                 onClick={() => setView(v)}
                 className={`px-4 py-2 text-sm font-medium rounded-t-lg transition-colors cursor-pointer border-b-2 whitespace-nowrap ${
                   view === v
-                    ? "text-violet-700 dark:text-violet-400 border-violet-600 dark:border-violet-400 bg-violet-50 dark:bg-violet-900/20"
-                    : "text-zinc-500 dark:text-zinc-400 border-transparent hover:text-zinc-700 dark:hover:text-zinc-200"
+                    ? "text-brand-400 dark:text-brand-accent border-brand-300 dark:border-brand-accent bg-brand-50 dark:bg-brand-400/10"
+                    : "text-zinc-500 dark:text-zinc-400 border-transparent hover:text-brand-300 dark:hover:text-brand-100"
                 }`}
               >
                 {labels[v]}
@@ -471,6 +484,7 @@ export default function App() {
                 framework, and deployment strategy for your problem.
               </p>
             </div>
+            <LearnBanner id="guide" {...SECTION_LEARN.guide} />
             <GuidedDiscovery />
           </>
         ) : view === "timeline" ? (
@@ -484,6 +498,7 @@ export default function App() {
                 Qwen 3 and beyond.
               </p>
             </div>
+            <LearnBanner id="timeline" {...SECTION_LEARN.timeline} />
             <ModelTimeline liveModels={liveModels} />
           </>
         ) : view === "algorithms" ? (
@@ -498,6 +513,7 @@ export default function App() {
                 but interactive.
               </p>
             </div>
+            <LearnBanner id="algorithms" {...SECTION_LEARN.algorithms} />
             <AlgorithmFlowchart />
             <div className="mt-8" />
             <AlgorithmSelector />
@@ -513,6 +529,7 @@ export default function App() {
                 vs TensorFlow vs JAX vs scikit-learn and more.
               </p>
             </div>
+            <LearnBanner id="frameworks" {...SECTION_LEARN.frameworks} />
             <FrameworkFlowchart />
             <FrameworkPicker />
           </>
@@ -528,6 +545,7 @@ export default function App() {
                 resource requirements.
               </p>
             </div>
+            <LearnBanner id="deploy" {...SECTION_LEARN.deploy} />
             <DeploymentFlowchart />
             <DeploymentGuide />
           </>
@@ -542,10 +560,27 @@ export default function App() {
                 column headers to sort.
               </p>
             </div>
+            <LearnBanner id="leaderboard" {...SECTION_LEARN.leaderboard} />
             <Leaderboard />
           </>
         ) : view === "compare" ? (
-          <CompareView />
+          <>
+            <LearnBanner id="compare" {...SECTION_LEARN.compare} />
+            <CompareView />
+          </>
+        ) : view === "glossary" ? (
+          <>
+            <div className="text-center mb-8 px-2">
+              <h2 className="text-3xl sm:text-4xl font-bold text-zinc-900 dark:text-zinc-100 mb-3">
+                AI & ML Glossary
+              </h2>
+              <p className="text-zinc-600 dark:text-zinc-400 max-w-xl mx-auto text-sm sm:text-base">
+                Every tag, concept, and term explained — from RAG to
+                quantization. Click any term to learn more.
+              </p>
+            </div>
+            <Glossary />
+          </>
         ) : (
           <>
             {/* Hero — only on results */}
@@ -559,6 +594,10 @@ export default function App() {
                   run locally — graded by how well they'll actually perform.
                 </p>
               </div>
+            )}
+
+            {view === "results" && (
+              <LearnBanner id="results" {...SECTION_LEARN.results} />
             )}
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -595,7 +634,7 @@ export default function App() {
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-3 gap-2">
                       <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300 shrink-0 flex items-center gap-2 flex-wrap">
                         <span>
-                          <span className="text-violet-600 dark:text-violet-400 font-bold">
+                          <span className="text-brand-300 dark:text-brand-accent font-bold">
                             {compatible.length}
                           </span>{" "}
                           models ·{" "}
@@ -646,7 +685,7 @@ export default function App() {
                         )}
                         {hardware.hasGpu ? (
                           <>
-                            <span className="text-violet-600 dark:text-violet-400 font-bold">
+                            <span className="text-brand-300 dark:text-brand-accent font-bold">
                               {hardware.vram} GB VRAM
                             </span>
                             <span className="text-zinc-400 dark:text-zinc-500 text-xs font-normal">
@@ -696,7 +735,7 @@ export default function App() {
                             setSortKey(e.target.value as SortKey)
                           }
                           aria-label="Sort models by"
-                          className="text-sm bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 rounded-lg px-3 py-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-violet-500"
+                          className="text-sm bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 rounded-lg px-3 py-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-brand-500"
                         >
                           <option value="score">Sort: Score</option>
                           <option value="grade">Sort: Grade</option>
@@ -718,7 +757,7 @@ export default function App() {
                           {quickPicks.map(({ item, reason }) => (
                             <div
                               key={item.model.id}
-                              className="flex items-start gap-2.5 px-3 py-2.5 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 hover:border-violet-300 dark:hover:border-violet-700 transition-colors"
+                              className="flex items-start gap-2.5 px-3 py-2.5 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 hover:border-brand-200 dark:hover:border-brand-400 transition-colors"
                             >
                               <div
                                 className={`shrink-0 w-7 h-7 rounded-lg flex items-center justify-center text-xs font-black text-white ${
@@ -727,7 +766,7 @@ export default function App() {
                                     : item.grade === "A"
                                       ? "bg-blue-500"
                                       : item.grade === "B"
-                                        ? "bg-violet-500"
+                                        ? "bg-brand-500"
                                         : "bg-amber-500"
                                 }`}
                               >
@@ -769,7 +808,7 @@ export default function App() {
                         onChange={(e) => setSearch(e.target.value)}
                         placeholder='Search models, families, use cases… (press "/" to focus)'
                         aria-label="Search models"
-                        className="w-full pl-8 pr-8 py-2 text-sm rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-violet-500"
+                        className="w-full pl-8 pr-8 py-2 text-sm rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-brand-500"
                       />
                       {search && (
                         <button
@@ -838,7 +877,7 @@ export default function App() {
                             title={USE_CASE_INFO[uc] ?? uc}
                             className={`text-xs px-3 py-1 rounded-full font-medium transition-colors cursor-pointer ${
                               filterUseCase === uc
-                                ? "bg-violet-600 text-white"
+                                ? "bg-brand-300 text-white"
                                 : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-700"
                             }`}
                           >

@@ -83,7 +83,7 @@ export function GuidedDiscovery() {
             <div
               className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-all ${
                 step === "algorithm" || selectedAlgorithmId
-                  ? "bg-violet-600 text-white"
+                  ? "bg-brand-300 text-white"
                   : "bg-zinc-200 dark:bg-zinc-800 text-zinc-400"
               }`}
             >
@@ -98,7 +98,7 @@ export function GuidedDiscovery() {
           <div
             className={`flex-1 h-1 transition-colors ${
               selectedAlgorithmId
-                ? "bg-violet-600"
+                ? "bg-brand-300"
                 : "bg-zinc-200 dark:bg-zinc-800"
             }`}
           />
@@ -108,7 +108,7 @@ export function GuidedDiscovery() {
             <div
               className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-all ${
                 step === "framework" || selectedFrameworkId
-                  ? "bg-violet-600 text-white"
+                  ? "bg-brand-300 text-white"
                   : "bg-zinc-200 dark:bg-zinc-800 text-zinc-400"
               }`}
             >
@@ -123,7 +123,7 @@ export function GuidedDiscovery() {
           <div
             className={`flex-1 h-1 transition-colors ${
               selectedFrameworkId
-                ? "bg-violet-600"
+                ? "bg-brand-300"
                 : "bg-zinc-200 dark:bg-zinc-800"
             }`}
           />
@@ -133,7 +133,7 @@ export function GuidedDiscovery() {
             <div
               className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-all ${
                 step === "summary"
-                  ? "bg-violet-600 text-white"
+                  ? "bg-brand-300 text-white"
                   : "bg-zinc-200 dark:bg-zinc-800 text-zinc-400"
               }`}
             >
@@ -168,8 +168,8 @@ export function GuidedDiscovery() {
                   onClick={() => setSelectedAlgorithmId(algo.id)}
                   className={`text-left p-4 rounded-xl border-2 transition-all ${
                     selectedAlgorithmId === algo.id
-                      ? "border-violet-600 bg-violet-50 dark:bg-violet-900/20"
-                      : "border-zinc-200 dark:border-zinc-800 hover:border-violet-300 dark:hover:border-violet-700 hover:bg-zinc-50 dark:hover:bg-zinc-800"
+                      ? "border-brand-300 bg-brand-50 dark:bg-brand-500/20"
+                      : "border-zinc-200 dark:border-zinc-800 hover:border-brand-200 dark:hover:border-brand-400 hover:bg-zinc-50 dark:hover:bg-zinc-800"
                   }`}
                 >
                   <p className="font-bold text-zinc-900 dark:text-zinc-100 mb-1">
@@ -205,7 +205,7 @@ export function GuidedDiscovery() {
                       <p className="font-semibold text-blue-800 dark:text-blue-300 mb-2">
                         ✓ Strengths
                       </p>
-                      <ul className="space-y-1 text-blue-700 dark:text-blue-400">
+                      <ul className="space-y-1 text-brand-400 dark:text-brand-accent">
                         {selectedAlgorithm?.pros.slice(0, 2).map((p, i) => (
                           <li key={i}>• {p}</li>
                         ))}
@@ -215,7 +215,7 @@ export function GuidedDiscovery() {
                       <p className="font-semibold text-blue-800 dark:text-blue-300 mb-2">
                         ⚠ Limitations
                       </p>
-                      <ul className="space-y-1 text-blue-700 dark:text-blue-400">
+                      <ul className="space-y-1 text-brand-400 dark:text-brand-accent">
                         {selectedAlgorithm?.cons.slice(0, 2).map((c, i) => (
                           <li key={i}>• {c}</li>
                         ))}
@@ -223,7 +223,7 @@ export function GuidedDiscovery() {
                     </div>
                   </div>
 
-                  <p className="text-xs text-blue-700 dark:text-blue-400 mb-3">
+                  <p className="text-xs text-brand-400 dark:text-brand-accent mb-3">
                     <strong>Best for:</strong>{" "}
                     {selectedAlgorithm?.useCases.join(", ")}
                   </p>
@@ -232,7 +232,7 @@ export function GuidedDiscovery() {
                     href={selectedAlgorithm?.docsUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-xs font-medium text-blue-600 dark:text-blue-400 hover:underline"
+                    className="text-xs font-medium text-brand-300 dark:text-brand-accent hover:underline"
                   >
                     Read full documentation →
                   </a>
@@ -247,7 +247,7 @@ export function GuidedDiscovery() {
             <div>
               <button
                 onClick={() => setStep("algorithm")}
-                className="text-xs text-violet-600 dark:text-violet-400 hover:underline mb-3 font-medium"
+                className="text-xs text-brand-300 dark:text-brand-accent hover:underline mb-3 font-medium"
               >
                 ← Back to algorithm selection
               </button>
@@ -278,8 +278,8 @@ export function GuidedDiscovery() {
                       }}
                       className={`text-left p-4 rounded-xl border-2 transition-all ${
                         selectedFrameworkId === fw.id
-                          ? "border-violet-600 bg-violet-50 dark:bg-violet-900/20"
-                          : "border-zinc-200 dark:border-zinc-800 hover:border-violet-300 dark:hover:border-violet-700"
+                          ? "border-brand-300 bg-brand-50 dark:bg-brand-500/20"
+                          : "border-zinc-200 dark:border-zinc-800 hover:border-brand-200 dark:hover:border-brand-400"
                       }`}
                     >
                       <div className="flex items-start gap-3 mb-2">
@@ -330,7 +330,7 @@ export function GuidedDiscovery() {
             <div>
               <button
                 onClick={() => setStep("framework")}
-                className="text-xs text-violet-600 dark:text-violet-400 hover:underline mb-3 font-medium"
+                className="text-xs text-brand-300 dark:text-brand-accent hover:underline mb-3 font-medium"
               >
                 ← Back to framework selection
               </button>
@@ -352,38 +352,38 @@ export function GuidedDiscovery() {
                 <h4 className="font-bold text-blue-900 dark:text-blue-100 mb-2">
                   {selectedAlgorithm.name}
                 </h4>
-                <p className="text-xs text-blue-800 dark:text-blue-400 mb-3 line-clamp-2">
+                <p className="text-xs text-blue-800 dark:text-brand-accent mb-3 line-clamp-2">
                   {selectedAlgorithm.useCases[0]}
                 </p>
                 <a
                   href={selectedAlgorithm.docsUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-xs font-medium text-blue-600 dark:text-blue-400 hover:underline"
+                  className="text-xs font-medium text-brand-300 dark:text-brand-accent hover:underline"
                 >
                   Learn more →
                 </a>
               </div>
 
               {/* Framework card */}
-              <div className="rounded-xl bg-gradient-to-br from-violet-50 to-violet-100 dark:from-violet-900/30 dark:to-violet-900/10 border border-violet-200 dark:border-violet-900/30 p-4">
-                <div className="text-sm font-semibold text-violet-900 dark:text-violet-300 mb-3">
+              <div className="rounded-xl bg-gradient-to-br from-brand-50 to-brand-100 dark:from-brand-500/30 dark:to-brand-500/10 border border-brand-200 dark:border-brand-500/30 p-4">
+                <div className="text-sm font-semibold text-brand-500 dark:text-brand-200 mb-3">
                   FRAMEWORK
                 </div>
                 <div className="flex items-center gap-2 mb-2">
                   <span className="text-2xl">{selectedFramework.icon}</span>
-                  <h4 className="font-bold text-violet-900 dark:text-violet-100">
+                  <h4 className="font-bold text-brand-500 dark:text-brand-100">
                     {selectedFramework.name}
                   </h4>
                 </div>
-                <p className="text-xs text-violet-800 dark:text-violet-400 mb-3">
+                <p className="text-xs text-brand-400 dark:text-brand-accent mb-3">
                   {selectedFramework.bestFor}
                 </p>
                 <a
                   href={selectedFramework.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-xs font-medium text-violet-600 dark:text-violet-400 hover:underline"
+                  className="text-xs font-medium text-brand-300 dark:text-brand-accent hover:underline"
                 >
                   Visit official site →
                 </a>
@@ -460,7 +460,7 @@ export function GuidedDiscovery() {
                 onClick={() => {
                   window.open(selectedFramework.url, "_blank");
                 }}
-                className="flex-1 px-4 py-2.5 bg-violet-600 hover:bg-violet-700 text-white rounded-lg font-medium text-sm transition-colors"
+                className="flex-1 px-4 py-2.5 bg-brand-300 hover:bg-brand-400 text-white rounded-lg font-medium text-sm transition-colors"
               >
                 Get started with {selectedFramework.name}
               </button>
@@ -513,7 +513,7 @@ export function GuidedDiscovery() {
               disabled={!selectedAlgorithmId}
               className={`px-6 py-2.5 rounded-lg font-medium text-sm transition-colors ${
                 selectedAlgorithmId
-                  ? "bg-violet-600 hover:bg-violet-700 text-white cursor-pointer"
+                  ? "bg-brand-300 hover:bg-brand-400 text-white cursor-pointer"
                   : "bg-zinc-100 dark:bg-zinc-800 text-zinc-400 dark:text-zinc-500 cursor-not-allowed"
               }`}
             >
@@ -529,7 +529,7 @@ export function GuidedDiscovery() {
               disabled={!selectedFrameworkId}
               className={`px-6 py-2.5 rounded-lg font-medium text-sm transition-colors ${
                 selectedFrameworkId
-                  ? "bg-violet-600 hover:bg-violet-700 text-white cursor-pointer"
+                  ? "bg-brand-300 hover:bg-brand-400 text-white cursor-pointer"
                   : "bg-zinc-100 dark:bg-zinc-800 text-zinc-400 dark:text-zinc-500 cursor-not-allowed"
               }`}
             >
@@ -538,7 +538,7 @@ export function GuidedDiscovery() {
           ) : (
             <button
               onClick={handleReset}
-              className="px-6 py-2.5 bg-violet-600 hover:bg-violet-700 text-white rounded-lg font-medium text-sm transition-colors"
+              className="px-6 py-2.5 bg-brand-300 hover:bg-brand-400 text-white rounded-lg font-medium text-sm transition-colors"
             >
               ← Start Over
             </button>

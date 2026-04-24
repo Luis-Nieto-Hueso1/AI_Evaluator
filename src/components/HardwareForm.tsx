@@ -21,12 +21,12 @@ const RAM_OPTIONS = [4, 8, 16, 32, 64, 128];
 const BRAND_COLORS: Record<string, string> = {
   NVIDIA: "text-green-600 dark:text-green-400",
   AMD: "text-red-600 dark:text-red-400",
-  Intel: "text-blue-600 dark:text-blue-400",
+  Intel: "text-brand-300 dark:text-brand-accent",
   Apple: "text-zinc-500 dark:text-zinc-400",
 };
 
 const CPU_BRAND_COLORS: Record<string, string> = {
-  Intel: "text-blue-600 dark:text-blue-400",
+  Intel: "text-brand-300 dark:text-brand-accent",
   AMD: "text-red-600 dark:text-red-400",
 };
 
@@ -337,7 +337,7 @@ export function HardwareForm({ onSubmit, initial }: Props) {
                     ram === gb
                       ? ramNeedsConfirm
                         ? "bg-amber-500 text-white ring-2 ring-amber-400 ring-offset-1"
-                        : "bg-violet-600 text-white"
+                        : "bg-brand-300 text-white"
                       : "bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700"
                   }`}
                 >
@@ -384,7 +384,7 @@ export function HardwareForm({ onSubmit, initial }: Props) {
               role="button"
               aria-expanded={showPicker}
               aria-haspopup="listbox"
-              className="flex items-center justify-between px-3 py-2.5 rounded-xl border border-violet-300 dark:border-violet-700 bg-violet-50 dark:bg-violet-900/20 cursor-pointer hover:border-violet-400 transition-colors focus:outline-none focus:ring-2 focus:ring-violet-500"
+              className="flex items-center justify-between px-3 py-2.5 rounded-xl border border-brand-200 dark:border-brand-400 bg-brand-50 dark:bg-brand-500/20 cursor-pointer hover:border-brand-accent transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500"
             >
               <div>
                 <span
@@ -397,10 +397,10 @@ export function HardwareForm({ onSubmit, initial }: Props) {
                 </p>
               </div>
               <div className="text-right">
-                <span className="text-sm font-bold text-violet-600 dark:text-violet-400">
+                <span className="text-sm font-bold text-brand-300 dark:text-brand-accent">
                   {selectedGpu.vram} GB
                 </span>
-                <p className="text-xs text-violet-500 dark:text-violet-400 font-medium">
+                <p className="text-xs text-brand-500 dark:text-brand-accent font-medium">
                   {selectedGpu.unified ? "unified" : "VRAM — AI limit"}
                 </p>
               </div>
@@ -418,7 +418,7 @@ export function HardwareForm({ onSubmit, initial }: Props) {
               role="button"
               aria-expanded={showPicker}
               aria-haspopup="listbox"
-              className="flex items-center justify-between px-3 py-2.5 rounded-xl border border-dashed border-zinc-300 dark:border-zinc-600 bg-zinc-50 dark:bg-zinc-800/50 cursor-pointer hover:border-violet-400 transition-colors focus:outline-none focus:ring-2 focus:ring-violet-500"
+              className="flex items-center justify-between px-3 py-2.5 rounded-xl border border-dashed border-zinc-300 dark:border-zinc-600 bg-zinc-50 dark:bg-zinc-800/50 cursor-pointer hover:border-brand-accent transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500"
             >
               <span className="text-sm text-zinc-400 dark:text-zinc-500">
                 {noGpu ? "No dedicated GPU (CPU only)" : "Select your GPU…"}
@@ -451,7 +451,7 @@ export function HardwareForm({ onSubmit, initial }: Props) {
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Search GPU…"
                   aria-label="Search GPU"
-                  className="w-full text-sm px-3 py-2 rounded-lg bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent"
+                  className="w-full text-sm px-3 py-2 rounded-lg bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent"
                 />
               </div>
 
@@ -493,9 +493,9 @@ export function HardwareForm({ onSubmit, initial }: Props) {
                           tabIndex={0}
                           role="option"
                           aria-selected={selectedGpu?.id === gpu.id}
-                          className={`flex items-center justify-between px-3 py-2 cursor-pointer text-sm transition-colors focus:outline-none focus:bg-violet-50 dark:focus:bg-violet-900/20 ${
+                          className={`flex items-center justify-between px-3 py-2 cursor-pointer text-sm transition-colors focus:outline-none focus:bg-brand-50 dark:focus:bg-brand-500/20 ${
                             selectedGpu?.id === gpu.id
-                              ? "bg-violet-50 dark:bg-violet-900/20 text-violet-700 dark:text-violet-300"
+                              ? "bg-brand-50 dark:bg-brand-500/20 text-brand-400 dark:text-brand-200"
                               : "hover:bg-zinc-50 dark:hover:bg-zinc-800 text-zinc-700 dark:text-zinc-300"
                           }`}
                         >
@@ -540,7 +540,7 @@ export function HardwareForm({ onSubmit, initial }: Props) {
             <div className="flex items-center justify-between mb-1.5">
               <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
                 GPU VRAM
-                <span className="ml-1.5 text-xs font-normal text-violet-500 dark:text-violet-400">
+                <span className="ml-1.5 text-xs font-normal text-brand-500 dark:text-brand-accent">
                   AI memory limit
                 </span>
               </label>
@@ -569,7 +569,7 @@ export function HardwareForm({ onSubmit, initial }: Props) {
                   }}
                   className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
                     vram === gb
-                      ? "bg-violet-600 text-white"
+                      ? "bg-brand-300 text-white"
                       : "bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700"
                   }`}
                 >
@@ -616,7 +616,7 @@ export function HardwareForm({ onSubmit, initial }: Props) {
                 role="button"
                 aria-expanded={showCpuPicker}
                 aria-haspopup="listbox"
-                className="flex items-center justify-between px-3 py-2.5 rounded-xl border border-violet-300 dark:border-violet-700 bg-violet-50 dark:bg-violet-900/20 cursor-pointer hover:border-violet-400 transition-colors focus:outline-none focus:ring-2 focus:ring-violet-500"
+                className="flex items-center justify-between px-3 py-2.5 rounded-xl border border-brand-200 dark:border-brand-400 bg-brand-50 dark:bg-brand-500/20 cursor-pointer hover:border-brand-accent transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500"
               >
                 <div>
                   <span
@@ -645,7 +645,7 @@ export function HardwareForm({ onSubmit, initial }: Props) {
                 role="button"
                 aria-expanded={showCpuPicker}
                 aria-haspopup="listbox"
-                className="flex items-center justify-between px-3 py-2.5 rounded-xl border border-dashed border-zinc-300 dark:border-zinc-600 bg-zinc-50 dark:bg-zinc-800/50 cursor-pointer hover:border-violet-400 transition-colors focus:outline-none focus:ring-2 focus:ring-violet-500"
+                className="flex items-center justify-between px-3 py-2.5 rounded-xl border border-dashed border-zinc-300 dark:border-zinc-600 bg-zinc-50 dark:bg-zinc-800/50 cursor-pointer hover:border-brand-accent transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500"
               >
                 <span className="text-sm text-zinc-400 dark:text-zinc-500">
                   Select your CPU… (optional)
@@ -676,7 +676,7 @@ export function HardwareForm({ onSubmit, initial }: Props) {
                     onChange={(e) => setCpuSearch(e.target.value)}
                     placeholder="Search CPU…"
                     aria-label="Search CPU"
-                    className="w-full text-sm px-3 py-2 rounded-lg bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent"
+                    className="w-full text-sm px-3 py-2 rounded-lg bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent"
                   />
                 </div>
                 <div className="max-h-72 overflow-y-auto">
@@ -705,9 +705,9 @@ export function HardwareForm({ onSubmit, initial }: Props) {
                             tabIndex={0}
                             role="option"
                             aria-selected={selectedCpu?.id === cpu.id}
-                            className={`flex items-center justify-between px-3 py-2 cursor-pointer text-sm transition-colors focus:outline-none focus:bg-violet-50 dark:focus:bg-violet-900/20 ${
+                            className={`flex items-center justify-between px-3 py-2 cursor-pointer text-sm transition-colors focus:outline-none focus:bg-brand-50 dark:focus:bg-brand-500/20 ${
                               selectedCpu?.id === cpu.id
-                                ? "bg-violet-50 dark:bg-violet-900/20 text-violet-700 dark:text-violet-300"
+                                ? "bg-brand-50 dark:bg-brand-500/20 text-brand-400 dark:text-brand-200"
                                 : "hover:bg-zinc-50 dark:hover:bg-zinc-800 text-zinc-700 dark:text-zinc-300"
                             }`}
                           >
@@ -728,7 +728,7 @@ export function HardwareForm({ onSubmit, initial }: Props) {
 
         <button
           type="submit"
-          className="w-full py-2.5 px-4 bg-violet-600 hover:bg-violet-700 text-white font-medium rounded-xl transition-colors cursor-pointer"
+          className="w-full py-2.5 px-4 bg-brand-300 hover:bg-brand-400 text-white font-medium rounded-xl transition-colors cursor-pointer"
         >
           Find compatible models
         </button>

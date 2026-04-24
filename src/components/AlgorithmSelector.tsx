@@ -1320,8 +1320,8 @@ function OptionButton({
       onClick={onClick}
       className={`w-full text-left px-3 py-2.5 rounded-xl border text-sm transition-colors cursor-pointer ${
         selected
-          ? "border-violet-500 bg-violet-50 dark:bg-violet-900/20 text-violet-700 dark:text-violet-300"
-          : "border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 hover:border-violet-300 dark:hover:border-violet-700"
+          ? "border-brand-500 bg-brand-50 dark:bg-brand-500/20 text-brand-400 dark:text-brand-200"
+          : "border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 hover:border-brand-200 dark:hover:border-brand-400"
       }`}
     >
       {children}
@@ -1390,12 +1390,12 @@ function ComplexityTable({ results }: { results: Scored[] }) {
                   {algo.name}
                 </td>
                 <td className="px-4 py-2">
-                  <code className="text-violet-600 dark:text-violet-400 bg-violet-50 dark:bg-violet-900/20 px-2.5 py-1 rounded">
+                  <code className="text-brand-300 dark:text-brand-accent bg-brand-50 dark:bg-brand-500/20 px-2.5 py-1 rounded">
                     {algo.trainComplexity}
                   </code>
                 </td>
                 <td className="px-4 py-2">
-                  <code className="text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 px-2.5 py-1 rounded">
+                  <code className="text-brand-300 dark:text-brand-accent bg-brand-50 dark:bg-brand-500/20 px-2.5 py-1 rounded">
                     {algo.inferenceComplexity}
                   </code>
                 </td>
@@ -1415,9 +1415,9 @@ function AlgorithmCard({ algo, rank }: { algo: Algorithm; rank: number }) {
     rank === 1
       ? "bg-emerald-500"
       : rank === 2
-        ? "bg-blue-500"
+        ? "bg-brand-500"
         : rank === 3
-          ? "bg-violet-500"
+          ? "bg-brand-500"
           : "bg-zinc-400";
 
   return (
@@ -1442,7 +1442,7 @@ function AlgorithmCard({ algo, rank }: { algo: Algorithm; rank: number }) {
               </span>
             )}
             {algo.highDimOk && (
-              <span className="text-xs px-2.5 py-1 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 font-medium">
+              <span className="text-xs px-2.5 py-1 rounded-full bg-brand-100 dark:bg-brand-500/30 text-brand-400 dark:text-brand-accent font-medium">
                 high-dim ok
               </span>
             )}
@@ -1553,7 +1553,7 @@ function AlgorithmCard({ algo, rank }: { algo: Algorithm; rank: number }) {
             href={algo.docsUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-xs text-violet-600 dark:text-violet-400 hover:underline font-medium"
+            className="inline-flex items-center gap-1 text-xs text-brand-300 dark:text-brand-accent hover:underline font-medium"
           >
             View docs
             <svg
@@ -1784,7 +1784,7 @@ export function AlgorithmSelector() {
           <>
             <div className="flex items-center justify-between mb-3">
               <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                <span className="text-violet-600 dark:text-violet-400 font-bold">
+                <span className="text-brand-300 dark:text-brand-accent font-bold">
                   {results.length}
                 </span>{" "}
                 algorithms ranked for your criteria
@@ -1797,7 +1797,7 @@ export function AlgorithmSelector() {
                 )}
                 <button
                   onClick={() => setShowTable((v) => !v)}
-                  className={`text-xs px-2.5 py-1.5 rounded-lg transition-colors cursor-pointer font-medium ${showTable ? "bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-300" : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700"}`}
+                  className={`text-xs px-2.5 py-1.5 rounded-lg transition-colors cursor-pointer font-medium ${showTable ? "bg-brand-100 dark:bg-brand-500/30 text-brand-400 dark:text-brand-200" : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700"}`}
                 >
                   Complexity
                 </button>

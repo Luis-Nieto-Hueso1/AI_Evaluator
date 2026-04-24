@@ -424,7 +424,7 @@ export function ModelTimeline({ liveModels = [] }: Props) {
             onClick={() => setYearZoom(yearZoom === yr ? null : yr)}
             className={`text-xs px-2.5 py-1 rounded-full font-medium transition-colors cursor-pointer ${
               yearZoom === yr
-                ? "bg-violet-600 text-white"
+                ? "bg-brand-300 text-white"
                 : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-700"
             }`}
           >
@@ -459,8 +459,8 @@ export function ModelTimeline({ liveModels = [] }: Props) {
             onClick={() => setHighlightOnly((v) => !v)}
             className={`text-xs px-3 py-1.5 rounded-full font-medium transition-colors cursor-pointer border ${
               highlightOnly
-                ? "bg-violet-600 text-white border-violet-600"
-                : "border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-400 hover:border-violet-400"
+                ? "bg-brand-300 text-white border-brand-300"
+                : "border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-400 hover:border-brand-accent"
             }`}
           >
             ★ Milestones only
@@ -532,7 +532,7 @@ export function ModelTimeline({ liveModels = [] }: Props) {
                         {event.description}
                       </p>
                       {event.inDb && (
-                        <span className="inline-block mt-1.5 text-xs px-2.5 py-1 rounded-full bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-400 font-medium">
+                        <span className="inline-block mt-1.5 text-xs px-2.5 py-1 rounded-full bg-brand-100 dark:bg-brand-500/30 text-brand-400 dark:text-brand-accent font-medium">
                           in this app
                         </span>
                       )}
@@ -614,7 +614,7 @@ export function ModelTimeline({ liveModels = [] }: Props) {
                               </span>
                             )}
                             {event.inDb && (
-                              <span className="text-xs px-2.5 py-1 rounded-full bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-400 font-medium">
+                              <span className="text-xs px-2.5 py-1 rounded-full bg-brand-100 dark:bg-brand-500/30 text-brand-400 dark:text-brand-accent font-medium">
                                 in this app ↗
                               </span>
                             )}

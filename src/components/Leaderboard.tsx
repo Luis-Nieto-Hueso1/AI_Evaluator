@@ -278,11 +278,11 @@ export function Leaderboard() {
       <th
         onClick={() => toggleSort(col)}
         title={title}
-        className={`px-3 py-2 text-left cursor-pointer hover:text-violet-600 dark:hover:text-violet-400 select-none transition-colors whitespace-nowrap ${className ?? ""}`}
+        className={`px-3 py-2 text-left cursor-pointer hover:text-brand-300 dark:hover:text-brand-accent select-none transition-colors whitespace-nowrap ${className ?? ""}`}
       >
         {label}
         {sortCol === col && (
-          <span className="text-violet-500 ml-0.5">{arrow}</span>
+          <span className="text-brand-500 ml-0.5">{arrow}</span>
         )}
       </th>
     );
@@ -312,7 +312,7 @@ export function Leaderboard() {
             }}
             className={`text-xs px-3 py-1 rounded-full font-medium transition-colors cursor-pointer ${
               source === "static"
-                ? "bg-violet-600 text-white"
+                ? "bg-brand-300 text-white"
                 : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-700"
             }`}
           >
@@ -560,7 +560,7 @@ export function Leaderboard() {
                       {b.scale}
                     </span>
                   </div>
-                  <p className="text-[10px] font-medium text-violet-600 dark:text-violet-400 mb-1.5">
+                  <p className="text-[10px] font-medium text-brand-300 dark:text-brand-accent mb-1.5">
                     {b.full}
                   </p>
                   <p className="text-[11px] leading-relaxed text-zinc-600 dark:text-zinc-400">

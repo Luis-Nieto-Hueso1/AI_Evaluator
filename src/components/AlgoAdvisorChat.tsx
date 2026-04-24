@@ -105,7 +105,7 @@ export function AlgoAdvisorChat({
               <button
                 key={s}
                 onClick={() => sendMessage(s)}
-                className={`block w-full text-left px-2.5 py-1.5 rounded-lg bg-zinc-50 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 hover:bg-violet-50 dark:hover:bg-violet-900/20 hover:text-violet-700 dark:hover:text-violet-300 transition-colors cursor-pointer border border-zinc-200 dark:border-zinc-700 ${expanded ? "text-sm px-3 py-2" : "text-xs"}`}
+                className={`block w-full text-left px-2.5 py-1.5 rounded-lg bg-zinc-50 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 hover:bg-brand-50 dark:hover:bg-brand-500/20 hover:text-brand-400 dark:hover:text-brand-200 transition-colors cursor-pointer border border-zinc-200 dark:border-zinc-700 ${expanded ? "text-sm px-3 py-2" : "text-xs"}`}
               >
                 {s}
               </button>
@@ -121,7 +121,7 @@ export function AlgoAdvisorChat({
             <div
               className={`max-w-[90%] px-3 py-2 rounded-xl leading-relaxed whitespace-pre-wrap ${expanded ? "text-sm" : "text-xs"} ${
                 msg.role === "user"
-                  ? "bg-violet-600 text-white rounded-br-sm"
+                  ? "bg-brand-300 text-white rounded-br-sm"
                   : "bg-zinc-100 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 rounded-bl-sm"
               }`}
             >
@@ -162,12 +162,12 @@ export function AlgoAdvisorChat({
             placeholder="Describe your data or ask a question…"
             disabled={isStreaming}
             rows={expanded ? 2 : 1}
-            className={`flex-1 resize-none px-2.5 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-violet-500 disabled:opacity-50 ${expanded ? "text-sm px-3 py-2" : "text-xs"}`}
+            className={`flex-1 resize-none px-2.5 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-brand-500 disabled:opacity-50 ${expanded ? "text-sm px-3 py-2" : "text-xs"}`}
           />
           <button
             onClick={() => sendMessage(input)}
             disabled={!input.trim() || isStreaming}
-            className={`bg-violet-600 hover:bg-violet-700 disabled:bg-zinc-200 dark:disabled:bg-zinc-700 disabled:text-zinc-400 text-white rounded-lg transition-colors font-medium cursor-pointer disabled:cursor-not-allowed ${expanded ? "px-4 py-2 text-sm" : "px-3 py-1.5 text-xs"}`}
+            className={`bg-brand-300 hover:bg-brand-400 disabled:bg-zinc-200 dark:disabled:bg-zinc-700 disabled:text-zinc-400 text-white rounded-lg transition-colors font-medium cursor-pointer disabled:cursor-not-allowed ${expanded ? "px-4 py-2 text-sm" : "px-3 py-1.5 text-xs"}`}
           >
             {isStreaming ? "…" : "Ask"}
           </button>
@@ -194,7 +194,7 @@ export function AlgoAdvisorChat({
               <span className="text-xs px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 font-medium">
                 AI
               </span>
-              <span className="text-xs px-2.5 py-1 rounded-full bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-400 font-medium">
+              <span className="text-xs px-2.5 py-1 rounded-full bg-brand-100 dark:bg-brand-500/30 text-brand-400 dark:text-brand-accent font-medium">
                 Expanded
               </span>
             </div>

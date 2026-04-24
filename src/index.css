@@ -1,2 +1,12 @@
 @import "tailwindcss";
 @variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-brand-50: #f7f9f9;
+  --color-brand-100: #dbe6f9;
+  --color-brand-200: #3571dd;
+  --color-brand-300: #1f61d9;
+  --color-brand-400: #004ad3;
+  --color-brand-500: #283583;
+  --color-brand-accent: #54d499;
+}

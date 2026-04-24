@@ -246,7 +246,7 @@ export function DeploymentFlowchart() {
     <div className="mb-6">
       <div className="flex items-center gap-3 mb-4 flex-wrap">
         {currentNode?.question && !currentNode.result && (
-          <p className="text-sm font-medium text-violet-700 dark:text-violet-400 bg-violet-50 dark:bg-violet-900/20 px-3 py-1.5 rounded-lg">
+          <p className="text-sm font-medium text-brand-400 dark:text-brand-accent bg-brand-50 dark:bg-brand-500/20 px-3 py-1.5 rounded-lg">
             {currentNode.question}
           </p>
         )}

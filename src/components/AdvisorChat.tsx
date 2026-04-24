@@ -149,7 +149,7 @@ export function AdvisorChat({ hardware, compatible }: Props) {
               <button
                 key={s}
                 onClick={() => sendMessage(s)}
-                className={`block w-full text-left rounded-xl bg-zinc-50 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-violet-50 dark:hover:bg-violet-900/20 hover:text-violet-700 dark:hover:text-violet-300 transition-colors cursor-pointer border border-zinc-200 dark:border-zinc-700 ${expanded ? "text-sm px-4 py-2.5" : "text-sm px-3 py-2"}`}
+                className={`block w-full text-left rounded-xl bg-zinc-50 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-brand-50 dark:hover:bg-brand-500/20 hover:text-brand-400 dark:hover:text-brand-200 transition-colors cursor-pointer border border-zinc-200 dark:border-zinc-700 ${expanded ? "text-sm px-4 py-2.5" : "text-sm px-3 py-2"}`}
               >
                 {s}
               </button>
@@ -165,7 +165,7 @@ export function AdvisorChat({ hardware, compatible }: Props) {
             <div
               className={`max-w-[85%] px-4 py-2.5 rounded-2xl leading-relaxed whitespace-pre-wrap ${expanded ? "text-base" : "text-sm"} ${
                 msg.role === "user"
-                  ? "bg-violet-600 text-white rounded-br-sm"
+                  ? "bg-brand-300 text-white rounded-br-sm"
                   : "bg-zinc-100 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 rounded-bl-sm"
               }`}
             >
@@ -208,12 +208,12 @@ export function AdvisorChat({ hardware, compatible }: Props) {
             placeholder="What use case do you have in mind?"
             disabled={isStreaming}
             rows={expanded ? 2 : 1}
-            className={`flex-1 resize-none rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent disabled:opacity-50 ${expanded ? "text-base px-4 py-3" : "text-sm px-3 py-2"}`}
+            className={`flex-1 resize-none rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent disabled:opacity-50 ${expanded ? "text-base px-4 py-3" : "text-sm px-3 py-2"}`}
           />
           <button
             onClick={() => sendMessage(input)}
             disabled={!input.trim() || isStreaming}
-            className={`bg-violet-600 hover:bg-violet-700 disabled:bg-zinc-200 dark:disabled:bg-zinc-700 disabled:text-zinc-400 text-white rounded-xl transition-colors font-medium cursor-pointer disabled:cursor-not-allowed ${expanded ? "px-5 py-3 text-base" : "px-4 py-2 text-sm"}`}
+            className={`bg-brand-300 hover:bg-brand-400 disabled:bg-zinc-200 dark:disabled:bg-zinc-700 disabled:text-zinc-400 text-white rounded-xl transition-colors font-medium cursor-pointer disabled:cursor-not-allowed ${expanded ? "px-5 py-3 text-base" : "px-4 py-2 text-sm"}`}
           >
             {isStreaming ? "…" : "Ask"}
           </button>
@@ -238,7 +238,7 @@ export function AdvisorChat({ hardware, compatible }: Props) {
               <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
                 AI Advisor
               </h2>
-              <span className="text-xs px-2.5 py-1 rounded-full bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-400 font-medium">
+              <span className="text-xs px-2.5 py-1 rounded-full bg-brand-100 dark:bg-brand-500/30 text-brand-400 dark:text-brand-accent font-medium">
                 Expanded
               </span>
             </div>

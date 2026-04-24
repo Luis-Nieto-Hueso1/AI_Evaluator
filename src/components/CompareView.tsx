@@ -10,8 +10,8 @@ const GRADE_ORDER: Grade[] = ["S", "A", "B", "C", "D", "F"];
 const SCORE_COLOR: (score: number, fits: boolean) => string = (score, fits) => {
   if (!fits) return "bg-zinc-200 dark:bg-zinc-700 text-zinc-500";
   if (score >= 85) return "bg-emerald-500 text-white";
-  if (score >= 70) return "bg-blue-500 text-white";
-  if (score >= 55) return "bg-violet-500 text-white";
+  if (score >= 70) return "bg-brand-500 text-white";
+  if (score >= 55) return "bg-brand-500 text-white";
   if (score >= 40) return "bg-amber-500 text-white";
   if (score >= 20) return "bg-red-500 text-white";
   return "bg-zinc-400 text-white";
@@ -72,7 +72,7 @@ function DevicePicker({
         <button
           type="button"
           onClick={() => setOpen(!open)}
-          className="w-full text-left px-3 py-2 text-sm rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:border-violet-400 transition-colors"
+          className="w-full text-left px-3 py-2 text-sm rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:border-brand-accent transition-colors"
         >
           {selectedGpu
             ? `${selectedGpu.name} (${selectedGpu.vram} GB)`
@@ -111,7 +111,7 @@ function DevicePicker({
                   }}
                   className={`flex items-center justify-between px-3 py-1.5 cursor-pointer text-sm transition-colors ${
                     config.gpuId === gpu.id
-                      ? "bg-violet-50 dark:bg-violet-900/20 text-violet-700 dark:text-violet-300"
+                      ? "bg-brand-50 dark:bg-brand-500/20 text-brand-400 dark:text-brand-200"
                       : "hover:bg-zinc-50 dark:hover:bg-zinc-800 text-zinc-700 dark:text-zinc-300"
                   }`}
                 >
@@ -136,7 +136,7 @@ function DevicePicker({
                 onClick={() => onChange({ ...config, ram: gb })}
                 className={`px-2 py-1 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
                   config.ram === gb
-                    ? "bg-violet-600 text-white"
+                    ? "bg-brand-300 text-white"
                     : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700"
                 }`}
               >
@@ -233,7 +233,7 @@ export function CompareView() {
       {/* Win counters */}
       <div className="flex items-center justify-center gap-4 mb-4 py-3 px-4 bg-zinc-50 dark:bg-zinc-800/50 rounded-2xl">
         <div className="text-center">
-          <p className="text-xl font-black text-blue-600 dark:text-blue-400">
+          <p className="text-xl font-black text-brand-300 dark:text-brand-accent">
             {wins.a}
           </p>
           <p className="text-xs text-zinc-500">A wins</p>
@@ -245,7 +245,7 @@ export function CompareView() {
         </div>
         <div className="h-8 w-px bg-zinc-200 dark:bg-zinc-700" />
         <div className="text-center">
-          <p className="text-xl font-black text-violet-600 dark:text-violet-400">
+          <p className="text-xl font-black text-brand-300 dark:text-brand-accent">
             {wins.b}
           </p>
           <p className="text-xs text-zinc-500">B wins</p>
@@ -300,7 +300,7 @@ export function CompareView() {
                     </span>
                   )}
                   {aWins && (
-                    <span className="text-xs text-blue-500 font-bold mt-0.5">
+                    <span className="text-xs text-brand-300 font-bold mt-0.5">
                       ▲ A
                     </span>
                   )}
@@ -321,7 +321,7 @@ export function CompareView() {
                     </span>
                   )}
                   {bWins && (
-                    <span className="text-xs text-violet-500 font-bold mt-0.5">
+                    <span className="text-xs text-brand-500 font-bold mt-0.5">
                       ▲ B
                     </span>
                   )}

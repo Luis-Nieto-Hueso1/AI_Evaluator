@@ -64,7 +64,7 @@ export function BenchmarkCalibrator({
         </span>
         Calibrate speed estimates
         {calibration && (
-          <span className="ml-1 px-2.5 py-1 rounded-full bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-300 font-medium">
+          <span className="ml-1 px-2.5 py-1 rounded-full bg-brand-100 dark:bg-brand-500/30 text-brand-400 dark:text-brand-200 font-medium">
             {calibration.factor.toFixed(2)}× active
           </span>
         )}
@@ -79,8 +79,8 @@ export function BenchmarkCalibrator({
 
           {/* Current calibration status */}
           {calibration && (
-            <div className="flex items-center justify-between bg-violet-50 dark:bg-violet-900/20 border border-violet-200 dark:border-violet-800 rounded-lg px-2.5 py-1.5">
-              <span className="text-violet-700 dark:text-violet-300">
+            <div className="flex items-center justify-between bg-brand-50 dark:bg-brand-500/20 border border-brand-200 dark:border-brand-500 rounded-lg px-2.5 py-1.5">
+              <span className="text-brand-400 dark:text-brand-200">
                 Calibrated from{" "}
                 <span className="font-medium">{calibration.modelName}</span>
                 {" — "}
@@ -92,7 +92,7 @@ export function BenchmarkCalibrator({
               </span>
               <button
                 onClick={handleClear}
-                className="ml-2 shrink-0 text-xs px-2.5 py-1 rounded bg-violet-100 dark:bg-violet-900/40 text-violet-600 dark:text-violet-400 hover:bg-violet-200 dark:hover:bg-violet-900/60 transition-colors cursor-pointer"
+                className="ml-2 shrink-0 text-xs px-2.5 py-1 rounded bg-brand-100 dark:bg-brand-500/40 text-brand-300 dark:text-brand-accent hover:bg-brand-100 dark:hover:bg-brand-500/60 transition-colors cursor-pointer"
               >
                 Reset
               </button>
@@ -104,7 +104,7 @@ export function BenchmarkCalibrator({
             <select
               value={selectedId}
               onChange={(e) => setSelectedId(e.target.value)}
-              className="flex-1 text-xs bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-violet-500"
+              className="flex-1 text-xs bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-brand-500"
             >
               <option value="">Select model you tested…</option>
               {fittingModels.map((m) => (
@@ -122,12 +122,12 @@ export function BenchmarkCalibrator({
                 value={measured}
                 onChange={(e) => setMeasured(e.target.value)}
                 placeholder="Actual tok/s"
-                className="w-28 text-xs px-2 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-violet-500"
+                className="w-28 text-xs px-2 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-brand-500"
               />
               <button
                 onClick={handleApply}
                 disabled={!selectedId || !measured || parseFloat(measured) <= 0}
-                className="px-3 py-1.5 bg-violet-600 hover:bg-violet-700 disabled:bg-zinc-200 dark:disabled:bg-zinc-700 disabled:text-zinc-400 text-white rounded-lg transition-colors font-medium cursor-pointer disabled:cursor-not-allowed"
+                className="px-3 py-1.5 bg-brand-300 hover:bg-brand-400 disabled:bg-zinc-200 dark:disabled:bg-zinc-700 disabled:text-zinc-400 text-white rounded-lg transition-colors font-medium cursor-pointer disabled:cursor-not-allowed"
               >
                 Apply
               </button>
