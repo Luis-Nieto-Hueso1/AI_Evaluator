@@ -1,0 +1,981 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Model Recommendation Tool | 2i</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              brand: {
+                50: "#f0f4ff",
+                100: "#dbe4ff",
+                200: "#b3c7ff",
+                400: "#5a8aff",
+                500: "#2563eb",
+                600: "#1d4ed8",
+                700: "#1e40af",
+                800: "#1e3a8a",
+                900: "#0f1d42",
+              },
+              accent: { 400: "#34d399", 500: "#10b981" },
+            },
+            fontFamily: { sans: ["Inter", "system-ui", "sans-serif"] },
+          },
+        },
+      };
+    </script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      .card-option {
+        transition: all 0.2s ease;
+      }
+      .card-option:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+      }
+      .card-option.selected {
+        border-color: #2563eb;
+        background: #f0f4ff;
+        box-shadow: 0 0 0 2px #2563eb;
+      }
+      .step-indicator.active {
+        background: #2563eb;
+        color: white;
+      }
+      .step-indicator.completed {
+        background: #10b981;
+        color: white;
+      }
+      .fade-in {
+        animation: fadeIn 0.4s ease-out;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(12px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .badge-recommended {
+        background: #dcfce7;
+        color: #166534;
+      }
+      .badge-possible {
+        background: #fef9c3;
+        color: #854d0e;
+      }
+      .badge-not-ideal {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50 font-sans text-gray-800 antialiased">
+    <!-- Header -->
+    <header class="bg-white border-b border-gray-200">
+      <div
+        class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between"
+      >
+        <div class="flex items-center gap-3">
+          <div
+            class="w-10 h-10 bg-brand-600 rounded-lg flex items-center justify-center"
+          >
+            <span class="text-white font-bold text-lg">2i</span>
+          </div>
+          <div>
+            <h1 class="text-lg font-semibold text-brand-900">
+              AI Model Advisor
+            </h1>
+            <p class="text-xs text-gray-500">
+              Find the right AI for your business
+            </p>
+          </div>
+        </div>
+        <a
+          href="mailto:contact@2i.co.uk"
+          class="hidden sm:inline-flex items-center gap-2 text-sm text-brand-600 hover:text-brand-700 font-medium"
+        >
+          <svg
+            class="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+            />
+          </svg>
+          Get in touch
+        </a>
+      </div>
+    </header>
+
+    <main class="max-w-3xl mx-auto px-6 py-10">
+      <!-- Step Indicators -->
+      <div
+        class="flex items-center justify-center gap-2 mb-10"
+        id="stepIndicators"
+      >
+        <div
+          class="step-indicator w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold bg-gray-200 text-gray-500"
+          data-step="1"
+        >
+          1
+        </div>
+        <div class="w-10 h-px bg-gray-300"></div>
+        <div
+          class="step-indicator w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold bg-gray-200 text-gray-500"
+          data-step="2"
+        >
+          2
+        </div>
+        <div class="w-10 h-px bg-gray-300"></div>
+        <div
+          class="step-indicator w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold bg-gray-200 text-gray-500"
+          data-step="3"
+        >
+          3
+        </div>
+        <div class="w-10 h-px bg-gray-300"></div>
+        <div
+          class="step-indicator w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold bg-gray-200 text-gray-500"
+          data-step="4"
+        >
+          4
+        </div>
+      </div>
+
+      <!-- Step 1: Problem -->
+      <section id="step1" class="fade-in">
+        <h2 class="text-2xl font-bold text-brand-900 mb-1">
+          What problem are you trying to solve?
+        </h2>
+        <p class="text-gray-500 mb-6">
+          Select the use case that best describes your need.
+        </p>
+        <div class="grid sm:grid-cols-2 gap-3" id="problemGrid"></div>
+        <div class="mt-8 flex justify-end">
+          <button
+            onclick="goToStep(2)"
+            id="btn1"
+            disabled
+            class="px-6 py-2.5 bg-brand-600 text-white rounded-lg font-medium hover:bg-brand-700 disabled:opacity-40 disabled:cursor-not-allowed transition"
+          >
+            Continue
+          </button>
+        </div>
+      </section>
+
+      <!-- Step 2: Cloud -->
+      <section id="step2" class="hidden fade-in">
+        <h2 class="text-2xl font-bold text-brand-900 mb-1">
+          Where will this run?
+        </h2>
+        <p class="text-gray-500 mb-6">
+          Select your preferred cloud or infrastructure.
+        </p>
+        <div class="grid sm:grid-cols-2 gap-3" id="cloudGrid"></div>
+        <div class="mt-8 flex justify-between">
+          <button
+            onclick="goToStep(1)"
+            class="px-5 py-2.5 text-gray-600 hover:text-gray-800 font-medium transition"
+          >
+            &larr; Back
+          </button>
+          <button
+            onclick="goToStep(3)"
+            id="btn2"
+            disabled
+            class="px-6 py-2.5 bg-brand-600 text-white rounded-lg font-medium hover:bg-brand-700 disabled:opacity-40 disabled:cursor-not-allowed transition"
+          >
+            Continue
+          </button>
+        </div>
+      </section>
+
+      <!-- Step 3: Constraints -->
+      <section id="step3" class="hidden fade-in">
+        <h2 class="text-2xl font-bold text-brand-900 mb-1">
+          Any environment constraints?
+        </h2>
+        <p class="text-gray-500 mb-6">
+          Select all that apply. You can skip if none apply.
+        </p>
+        <div class="space-y-3" id="constraintList"></div>
+        <div class="mt-8 flex justify-between">
+          <button
+            onclick="goToStep(2)"
+            class="px-5 py-2.5 text-gray-600 hover:text-gray-800 font-medium transition"
+          >
+            &larr; Back
+          </button>
+          <button
+            onclick="generateResults()"
+            class="px-6 py-2.5 bg-brand-600 text-white rounded-lg font-medium hover:bg-brand-700 transition"
+          >
+            Get Recommendations
+          </button>
+        </div>
+      </section>
+
+      <!-- Step 4: Results -->
+      <section id="step4" class="hidden fade-in">
+        <h2 class="text-2xl font-bold text-brand-900 mb-1">
+          Your AI Recommendations
+        </h2>
+        <p class="text-gray-500 mb-6" id="resultSummary"></p>
+        <div id="resultsContainer" class="space-y-4"></div>
+        <div
+          class="mt-8 p-6 bg-brand-50 border border-brand-200 rounded-xl text-center"
+        >
+          <p class="text-brand-800 font-semibold mb-1">
+            Ready to take the next step?
+          </p>
+          <p class="text-sm text-brand-600 mb-4">
+            Our team can provide a detailed assessment, proof-of-concept, and
+            deployment plan tailored to your organisation.
+          </p>
+          <a
+            href="mailto:contact@2i.co.uk?subject=AI%20Assessment%20Request"
+            class="inline-flex items-center gap-2 px-8 py-3 bg-brand-600 text-white rounded-lg font-semibold hover:bg-brand-700 transition shadow-md shadow-brand-600/20"
+          >
+            Contact 2i for a Detailed Assessment
+            <svg
+              class="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M17 8l4 4m0 0l-4 4m4-4H3"
+              />
+            </svg>
+          </a>
+        </div>
+        <div class="mt-6 flex justify-between">
+          <button
+            onclick="goToStep(3)"
+            class="px-5 py-2.5 text-gray-600 hover:text-gray-800 font-medium transition"
+          >
+            &larr; Back
+          </button>
+          <button
+            onclick="resetWizard()"
+            class="px-5 py-2.5 text-brand-600 hover:text-brand-700 font-medium transition"
+          >
+            Start Over
+          </button>
+        </div>
+      </section>
+    </main>
+
+    <footer class="text-center py-8 text-xs text-gray-400">
+      &copy; 2026 2i &mdash; Technology with Purpose
+    </footer>
+
+    <script>
+      const PROBLEMS = [
+        { id: "doc-summary", label: "Document Summarisation", icon: "📄" },
+        { id: "chatbot", label: "Chatbot Support", icon: "💬" },
+        { id: "test-gen", label: "Test Case Generation", icon: "🧪" },
+        { id: "code-review", label: "Code Review", icon: "🔍" },
+        { id: "data-analysis", label: "Data Analysis", icon: "📊" },
+        { id: "accessibility", label: "Accessibility Checking", icon: "♿" },
+        {
+          id: "knowledge-search",
+          label: "Internal Knowledge Search",
+          icon: "🔎",
+        },
+      ];
+
+      const CLOUDS = [
+        { id: "aws", label: "AWS", icon: "☁️" },
+        { id: "azure", label: "Azure", icon: "🔷" },
+        { id: "gcp", label: "Google Cloud", icon: "🌐" },
+        { id: "m365", label: "Microsoft 365", icon: "📋" },
+        { id: "on-prem", label: "On-Premise", icon: "🏢" },
+        { id: "local", label: "Laptop / Local", icon: "💻" },
+        { id: "not-sure", label: "Not Sure", icon: "❓" },
+      ];
+
+      const CONSTRAINTS = [
+        {
+          id: "high-security",
+          label: "High Security Restrictions",
+          desc: "Data cannot leave certain boundaries",
+        },
+        {
+          id: "low-hardware",
+          label: "Low Hardware / RAM",
+          desc: "Limited compute resources available",
+        },
+        {
+          id: "citations",
+          label: "Requires Sources / Citations",
+          desc: "Outputs must reference source documents",
+        },
+        {
+          id: "cloud-only",
+          label: "Cloud-Only",
+          desc: "Must be hosted in the cloud",
+        },
+        {
+          id: "local-only",
+          label: "Local-Only",
+          desc: "Must run entirely on local infrastructure",
+        },
+      ];
+
+      const MODELS = {
+        gpt4o: {
+          name: "Azure OpenAI (GPT-4o)",
+          strengths:
+            "Enterprise-grade compliance, strong reasoning, native Azure integration",
+          limitations: "Requires Azure subscription, usage-based cost",
+          deploy: "Azure OpenAI Service",
+        },
+        claude: {
+          name: "Claude (Anthropic)",
+          strengths:
+            "Exceptional document understanding, strong coding, safety-focused",
+          limitations: "Cloud-dependent unless via API gateway",
+          deploy: "AWS Bedrock / Anthropic API",
+        },
+        nova: {
+          name: "Amazon Nova",
+          strengths:
+            "Cost-effective, native AWS integration, good general tasks",
+          limitations: "Newer model ecosystem, smaller community",
+          deploy: "AWS Bedrock",
+        },
+        llama8b: {
+          name: "Llama 3.1 8B",
+          strengths: "Runs on modest hardware, open-source, privacy-friendly",
+          limitations: "Lower capability vs. large cloud models",
+          deploy: "Local (Ollama / vLLM)",
+        },
+        phi4: {
+          name: "Phi-4 (Microsoft)",
+          strengths: "Very lightweight, strong reasoning for its size",
+          limitations: "Limited multi-turn capability",
+          deploy: "Local / Azure",
+        },
+        gemini: {
+          name: "Gemini Pro (Google)",
+          strengths: "Multimodal, strong data analysis, GCP-native",
+          limitations: "GCP lock-in, newer enterprise track record",
+          deploy: "Google Vertex AI",
+        },
+        mistral: {
+          name: "Mistral Large",
+          strengths: "Strong multilingual, EU data residency options",
+          limitations: "Smaller ecosystem vs. OpenAI/Anthropic",
+          deploy: "Mistral API / Self-hosted",
+        },
+        copilot: {
+          name: "Microsoft Copilot (M365)",
+          strengths: "Deep Office 365 integration, familiar UX",
+          limitations: "Limited customisation, M365 licence required",
+          deploy: "Microsoft 365",
+        },
+      };
+
+      // Recommendation engine: returns { recommended: [], possible: [], notIdeal: [] }
+      function getRecommendations(problem, cloud, constraints) {
+        const r = { recommended: [], possible: [], notIdeal: [] };
+        const c = new Set(constraints);
+        const isLocal =
+          cloud === "local" || cloud === "on-prem" || c.has("local-only");
+        const isSecure = c.has("high-security");
+        const lowHW = c.has("low-hardware");
+        const needsCitations = c.has("citations");
+
+        function add(tier, key, reason) {
+          r[tier].push({ ...MODELS[key], reason });
+        }
+
+        // --- Knowledge Search ---
+        if (problem === "knowledge-search") {
+          if (["azure", "m365"].includes(cloud)) {
+            add(
+              "recommended",
+              "gpt4o",
+              "Strong enterprise compliance and document understanding with native Azure/M365 integration.",
+            );
+            add(
+              "recommended",
+              "claude",
+              "Excellent at parsing long documents and retrieving precise answers.",
+            );
+            add(
+              "possible",
+              "copilot",
+              "Good if already using Microsoft 365 ecosystem.",
+            );
+          } else if (cloud === "aws") {
+            add(
+              "recommended",
+              "claude",
+              "Best-in-class document comprehension, available via Bedrock.",
+            );
+            add("possible", "nova", "Cost-effective alternative within AWS.");
+            add(
+              "possible",
+              "gpt4o",
+              "Strong but requires Azure or API access.",
+            );
+          } else if (cloud === "gcp") {
+            add(
+              "recommended",
+              "gemini",
+              "Native GCP integration with strong document understanding.",
+            );
+            add(
+              "possible",
+              "claude",
+              "Available via API, excellent at knowledge retrieval.",
+            );
+          } else if (isLocal) {
+            add(
+              "recommended",
+              "llama8b",
+              "Open-source, keeps data fully on-premise.",
+            );
+            add(
+              "possible",
+              "phi4",
+              "Lightweight option for basic search tasks.",
+            );
+            add("notIdeal", "gpt4o", "Requires cloud connectivity.");
+          } else {
+            add(
+              "recommended",
+              "claude",
+              "Top-tier document comprehension across platforms.",
+            );
+            add("recommended", "gpt4o", "Versatile and widely supported.");
+            add(
+              "possible",
+              "gemini",
+              "Strong alternative with multimodal capabilities.",
+            );
+          }
+        }
+
+        // --- Code Review ---
+        else if (problem === "code-review") {
+          if (cloud === "aws") {
+            add(
+              "recommended",
+              "claude",
+              "Strong coding logic and native AWS architecture via Bedrock.",
+            );
+            add(
+              "recommended",
+              "nova",
+              "Cost-effective code analysis within AWS.",
+            );
+            add(
+              "possible",
+              "gpt4o",
+              "Excellent code review but requires Azure/API.",
+            );
+          } else if (["azure", "m365"].includes(cloud)) {
+            add(
+              "recommended",
+              "gpt4o",
+              "Excellent code understanding with Azure-native deployment.",
+            );
+            add(
+              "recommended",
+              "claude",
+              "Superior code analysis, available via API.",
+            );
+            add("possible", "copilot", "Integrated into VS Code and GitHub.");
+          } else if (isLocal) {
+            add(
+              "recommended",
+              "llama8b",
+              "Decent code review locally with full privacy.",
+            );
+            add(
+              "possible",
+              "phi4",
+              "Lightweight but limited on complex codebases.",
+            );
+            add(
+              "notIdeal",
+              "claude",
+              "Requires cloud access for best performance.",
+            );
+          } else {
+            add(
+              "recommended",
+              "claude",
+              "Best-in-class code comprehension and review.",
+            );
+            add(
+              "recommended",
+              "gpt4o",
+              "Strong alternative with broad language support.",
+            );
+            add("possible", "gemini", "Good multimodal code analysis.");
+          }
+        }
+
+        // --- Test Case Generation ---
+        else if (problem === "test-gen") {
+          if (isLocal || lowHW) {
+            add(
+              "recommended",
+              "llama8b",
+              "Lightweight enough to run locally on a standard corporate laptop.",
+            );
+            add(
+              "recommended",
+              "phi4",
+              "Very small footprint, good at structured output.",
+            );
+            add(
+              "notIdeal",
+              "gpt4o",
+              "Requires cloud connectivity and higher compute.",
+            );
+          } else if (cloud === "aws") {
+            add(
+              "recommended",
+              "claude",
+              "Excellent at generating structured, edge-case-aware tests.",
+            );
+            add(
+              "possible",
+              "nova",
+              "Good for standard test generation at lower cost.",
+            );
+          } else if (["azure", "m365"].includes(cloud)) {
+            add(
+              "recommended",
+              "gpt4o",
+              "Strong structured output for test frameworks.",
+            );
+            add(
+              "possible",
+              "claude",
+              "Available via API, excellent test coverage.",
+            );
+          } else {
+            add(
+              "recommended",
+              "claude",
+              "Superior at understanding code context for test generation.",
+            );
+            add("recommended", "gpt4o", "Reliable structured test output.");
+            add("possible", "gemini", "Good alternative for GCP users.");
+          }
+        }
+
+        // --- Document Summarisation ---
+        else if (problem === "doc-summary") {
+          if (isLocal) {
+            add(
+              "recommended",
+              "llama8b",
+              "Handles summarisation locally with decent quality.",
+            );
+            add(
+              "possible",
+              "phi4",
+              "Very lightweight but limited on long documents.",
+            );
+          } else if (["azure", "m365"].includes(cloud)) {
+            add(
+              "recommended",
+              "gpt4o",
+              "Excellent summarisation with enterprise compliance.",
+            );
+            add(
+              "recommended",
+              "copilot",
+              "Seamless if documents are in SharePoint/OneDrive.",
+            );
+            add(
+              "possible",
+              "claude",
+              "Best long-document handling, available via API.",
+            );
+          } else if (cloud === "aws") {
+            add(
+              "recommended",
+              "claude",
+              "Handles very long documents (200K+ tokens) natively.",
+            );
+            add("possible", "nova", "Budget-friendly for shorter documents.");
+          } else {
+            add(
+              "recommended",
+              "claude",
+              "Industry-leading long-context document processing.",
+            );
+            add(
+              "recommended",
+              "gpt4o",
+              "Strong summarisation across document types.",
+            );
+            add(
+              "possible",
+              "gemini",
+              "Good multimodal document understanding.",
+            );
+          }
+        }
+
+        // --- Chatbot Support ---
+        else if (problem === "chatbot") {
+          if (isLocal) {
+            add(
+              "recommended",
+              "llama8b",
+              "Runs locally for private chatbot deployments.",
+            );
+            add(
+              "possible",
+              "mistral",
+              "Good multilingual support, self-hostable.",
+            );
+          } else if (["azure", "m365"].includes(cloud)) {
+            add(
+              "recommended",
+              "gpt4o",
+              "Excellent conversational AI with Azure Bot Service integration.",
+            );
+            add(
+              "recommended",
+              "copilot",
+              "Pre-built chatbot experience within M365.",
+            );
+            add(
+              "possible",
+              "claude",
+              "Superior safety and nuance in conversations.",
+            );
+          } else if (cloud === "aws") {
+            add(
+              "recommended",
+              "claude",
+              "Natural, safe conversations via Bedrock.",
+            );
+            add("possible", "nova", "Cost-effective for high-volume chatbots.");
+          } else {
+            add("recommended", "gpt4o", "Industry-standard conversational AI.");
+            add(
+              "recommended",
+              "claude",
+              "Excellent tone and safety for customer-facing use.",
+            );
+            add("possible", "mistral", "Strong multilingual option.");
+          }
+        }
+
+        // --- Data Analysis ---
+        else if (problem === "data-analysis") {
+          if (cloud === "gcp") {
+            add(
+              "recommended",
+              "gemini",
+              "Native BigQuery/GCP integration, strong data reasoning.",
+            );
+            add(
+              "possible",
+              "claude",
+              "Good at interpreting complex datasets via API.",
+            );
+          } else if (["azure", "m365"].includes(cloud)) {
+            add(
+              "recommended",
+              "gpt4o",
+              "Strong data analysis with Code Interpreter capabilities.",
+            );
+            add("possible", "copilot", "Integrates with Excel and Power BI.");
+          } else if (cloud === "aws") {
+            add(
+              "recommended",
+              "claude",
+              "Excellent at structured data reasoning.",
+            );
+            add(
+              "possible",
+              "nova",
+              "Cost-effective for simpler analysis tasks.",
+            );
+          } else if (isLocal) {
+            add(
+              "recommended",
+              "llama8b",
+              "Basic data analysis with full data privacy.",
+            );
+            add(
+              "notIdeal",
+              "gpt4o",
+              "Requires cloud for best data analysis features.",
+            );
+          } else {
+            add(
+              "recommended",
+              "gpt4o",
+              "Best-in-class data analysis with code execution.",
+            );
+            add(
+              "recommended",
+              "gemini",
+              "Strong multimodal data understanding.",
+            );
+            add("possible", "claude", "Good analytical reasoning.");
+          }
+        }
+
+        // --- Accessibility Checking ---
+        else if (problem === "accessibility") {
+          if (["azure", "m365"].includes(cloud)) {
+            add(
+              "recommended",
+              "gpt4o",
+              "Can analyse UI screenshots and code for WCAG compliance.",
+            );
+            add(
+              "possible",
+              "claude",
+              "Strong at reviewing HTML/CSS for accessibility issues.",
+            );
+          } else if (isLocal) {
+            add(
+              "recommended",
+              "llama8b",
+              "Basic accessibility checks locally.",
+            );
+            add(
+              "possible",
+              "phi4",
+              "Lightweight, can handle simple rule-based checks.",
+            );
+          } else {
+            add(
+              "recommended",
+              "claude",
+              "Thorough accessibility analysis with clear explanations.",
+            );
+            add(
+              "recommended",
+              "gpt4o",
+              "Good multimodal accessibility auditing.",
+            );
+            add(
+              "possible",
+              "gemini",
+              "Can analyse screenshots for visual accessibility.",
+            );
+          }
+        }
+
+        // Apply constraint overrides
+        if (isSecure) {
+          r.recommended = r.recommended.filter(
+            (m) =>
+              !["Azure OpenAI (GPT-4o)", "Gemini Pro (Google)"].includes(
+                m.name,
+              ) || ["azure", "gcp"].includes(cloud),
+          );
+          if (r.recommended.length === 0 && !isLocal) {
+            add(
+              "recommended",
+              "mistral",
+              "EU data residency options for high-security requirements.",
+            );
+          }
+        }
+        if (needsCitations) {
+          r.recommended.forEach((m) => {
+            m.reason += " Supports RAG pipelines for source citations.";
+          });
+        }
+
+        return r;
+      }
+
+      // --- State ---
+      let currentStep = 1;
+      let selected = { problem: null, cloud: null, constraints: [] };
+
+      // --- Render ---
+      function renderCards(containerId, items, stateKey) {
+        const grid = document.getElementById(containerId);
+        grid.innerHTML = items
+          .map(
+            (item) => `
+        <button class="card-option p-4 rounded-xl border-2 border-gray-200 bg-white text-left flex items-center gap-3 cursor-pointer"
+                data-id="${item.id}" onclick="selectCard('${containerId}','${item.id}','${stateKey}')">
+            <span class="text-2xl">${item.icon}</span>
+            <span class="font-medium text-gray-800">${item.label}</span>
+        </button>
+    `,
+          )
+          .join("");
+      }
+
+      function renderConstraints() {
+        const list = document.getElementById("constraintList");
+        list.innerHTML = CONSTRAINTS.map(
+          (c) => `
+        <label class="flex items-center gap-4 p-4 rounded-xl border-2 border-gray-200 bg-white cursor-pointer hover:border-brand-300 transition">
+            <input type="checkbox" value="${c.id}" onchange="toggleConstraint(this)" class="w-5 h-5 rounded border-gray-300 text-brand-600 focus:ring-brand-500">
+            <div>
+                <div class="font-medium text-gray-800">${c.label}</div>
+                <div class="text-sm text-gray-500">${c.desc}</div>
+            </div>
+        </label>
+    `,
+        ).join("");
+      }
+
+      function selectCard(containerId, id, stateKey) {
+        selected[stateKey] = id;
+        document
+          .querySelectorAll(`#${containerId} .card-option`)
+          .forEach((el) =>
+            el.classList.toggle("selected", el.dataset.id === id),
+          );
+        const btnId = stateKey === "problem" ? "btn1" : "btn2";
+        document.getElementById(btnId).disabled = false;
+      }
+
+      function toggleConstraint(el) {
+        if (el.checked) selected.constraints.push(el.value);
+        else
+          selected.constraints = selected.constraints.filter(
+            (c) => c !== el.value,
+          );
+      }
+
+      function goToStep(step) {
+        document.getElementById(`step${currentStep}`).classList.add("hidden");
+        document.getElementById(`step${step}`).classList.remove("hidden");
+        document.getElementById(`step${step}`).classList.add("fade-in");
+        currentStep = step;
+        updateIndicators();
+      }
+
+      function updateIndicators() {
+        document.querySelectorAll(".step-indicator").forEach((el) => {
+          const s = parseInt(el.dataset.step);
+          el.className =
+            "step-indicator w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold ";
+          if (s < currentStep) el.className += "completed";
+          else if (s === currentStep) el.className += "active";
+          else el.className += "bg-gray-200 text-gray-500";
+          if (s <= currentStep && s > 1)
+            el.previousElementSibling.classList.replace(
+              "bg-gray-300",
+              "bg-brand-400",
+            );
+        });
+      }
+
+      function generateResults() {
+        const results = getRecommendations(
+          selected.problem,
+          selected.cloud,
+          selected.constraints,
+        );
+        const problemLabel = PROBLEMS.find(
+          (p) => p.id === selected.problem,
+        )?.label;
+        const cloudLabel = CLOUDS.find((c) => c.id === selected.cloud)?.label;
+
+        document.getElementById("resultSummary").textContent =
+          `Based on "${problemLabel}" deployed on "${cloudLabel}"`;
+
+        const container = document.getElementById("resultsContainer");
+        container.innerHTML = "";
+
+        const tiers = [
+          {
+            key: "recommended",
+            label: "Recommended",
+            badge: "badge-recommended",
+          },
+          { key: "possible", label: "Possible", badge: "badge-possible" },
+          { key: "notIdeal", label: "Not Ideal", badge: "badge-not-ideal" },
+        ];
+
+        tiers.forEach((tier) => {
+          results[tier.key].forEach((model) => {
+            container.innerHTML += `
+                <div class="bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
+                    <div class="flex items-start justify-between mb-3">
+                        <h3 class="text-lg font-semibold text-brand-900">${model.name}</h3>
+                        <span class="px-3 py-1 rounded-full text-xs font-semibold ${tier.badge}">${tier.label}</span>
+                    </div>
+                    <p class="text-sm text-gray-600 mb-3">${model.reason}</p>
+                    <div class="grid sm:grid-cols-3 gap-3 text-sm">
+                        <div class="bg-gray-50 rounded-lg p-3">
+                            <div class="text-xs font-semibold text-gray-500 uppercase mb-1">Strengths</div>
+                            <div class="text-gray-700">${model.strengths}</div>
+                        </div>
+                        <div class="bg-gray-50 rounded-lg p-3">
+                            <div class="text-xs font-semibold text-gray-500 uppercase mb-1">Limitations</div>
+                            <div class="text-gray-700">${model.limitations}</div>
+                        </div>
+                        <div class="bg-gray-50 rounded-lg p-3">
+                            <div class="text-xs font-semibold text-gray-500 uppercase mb-1">Deployment</div>
+                            <div class="text-gray-700">${model.deploy}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+          });
+        });
+
+        goToStep(4);
+      }
+
+      function resetWizard() {
+        selected = { problem: null, cloud: null, constraints: [] };
+        document
+          .querySelectorAll(".card-option")
+          .forEach((el) => el.classList.remove("selected"));
+        document
+          .querySelectorAll("#constraintList input")
+          .forEach((el) => (el.checked = false));
+        document.getElementById("btn1").disabled = true;
+        document.getElementById("btn2").disabled = true;
+        // Reset step line colors
+        document.querySelectorAll("#stepIndicators .w-10").forEach((el) => {
+          el.classList.remove("bg-brand-400");
+          el.classList.add("bg-gray-300");
+        });
+        goToStep(1);
+      }
+
+      // Init
+      renderCards("problemGrid", PROBLEMS, "problem");
+      renderCards("cloudGrid", CLOUDS, "cloud");
+      renderConstraints();
+      updateIndicators();
+    </script>
+  </body>
+</html>

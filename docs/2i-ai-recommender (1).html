@@ -1,0 +1,1811 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Model Advisor — 2i Testing</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --2i-navy: #283583;
+        --2i-cobalt: #004ad3;
+        --2i-cornflower: #3561dd;
+        --2i-green: #54d499;
+        --2i-green-dark: #2faa72;
+        --2i-green-pale: #eafaf3;
+        --2i-lavender: #dbe6f9;
+        --2i-slate: #1e2d70;
+        --border: #dce6f7;
+        --muted: #5a6a9a;
+        --bg: #f4f7fc;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Epilogue", sans-serif;
+        background: var(--bg);
+        color: var(--2i-navy);
+        min-height: 100vh;
+      }
+      a {
+        color: var(--2i-cobalt);
+        text-decoration: none;
+      }
+
+      .header {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: var(--2i-navy);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 28px;
+        height: 56px;
+      }
+      .header-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .logo {
+        width: 34px;
+        height: 34px;
+        background: var(--2i-green);
+        color: var(--2i-navy);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 16px;
+        flex-shrink: 0;
+      }
+      .header-title {
+        color: #fff;
+        font-weight: 700;
+        font-size: 16px;
+      }
+      .header-cta {
+        color: var(--2i-green);
+        font-weight: 600;
+        font-size: 13px;
+        white-space: nowrap;
+      }
+      .header-cta:hover {
+        color: var(--2i-green-dark);
+      }
+
+      .progress-wrap {
+        height: 3px;
+        background: var(--border);
+      }
+      .progress-bar {
+        height: 3px;
+        background: var(--2i-cornflower);
+        transition: width 0.4s ease;
+        width: 0%;
+      }
+
+      .step-indicators {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0;
+        padding: 28px 0 8px;
+      }
+      .step-dot {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        border: 2px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 13px;
+        color: var(--muted);
+        background: #fff;
+        position: relative;
+        z-index: 1;
+        transition: all 0.3s;
+      }
+      .step-dot.active {
+        border-color: var(--2i-cornflower);
+        color: var(--2i-cornflower);
+        background: #fff;
+      }
+      .step-dot.completed {
+        border-color: var(--2i-green);
+        background: var(--2i-green);
+        color: #fff;
+      }
+      .step-line {
+        width: 48px;
+        height: 2px;
+        background: var(--border);
+        transition: background 0.3s;
+      }
+      .step-line.completed {
+        background: var(--2i-green);
+      }
+
+      .container {
+        max-width: 780px;
+        margin: 0 auto;
+        padding: 0 20px 40px;
+      }
+      .step-title {
+        text-align: center;
+        font-size: 22px;
+        font-weight: 700;
+        margin: 18px 0 20px;
+        color: var(--2i-navy);
+      }
+
+      .card-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+        gap: 12px;
+        margin-bottom: 24px;
+      }
+      .card {
+        background: #fff;
+        border: 1.5px solid var(--border);
+        border-radius: 12px;
+        padding: 16px;
+        cursor: pointer;
+        transition: all 0.2s;
+        position: relative;
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+      }
+      .card:hover {
+        border-color: var(--2i-cornflower);
+        box-shadow: 0 2px 12px rgba(53, 97, 221, 0.1);
+      }
+      .card.selected {
+        border-color: var(--2i-cornflower);
+        background: var(--2i-lavender);
+      }
+      .card-radio {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        border: 2px solid var(--border);
+        flex-shrink: 0;
+        margin-top: 2px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+      }
+      .card.selected .card-radio {
+        border-color: var(--2i-cornflower);
+      }
+      .card.selected .card-radio::after {
+        content: "";
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--2i-cornflower);
+      }
+      .card-check {
+        width: 18px;
+        height: 18px;
+        border-radius: 5px;
+        border: 2px solid var(--border);
+        flex-shrink: 0;
+        margin-top: 2px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        color: #fff;
+        transition: all 0.2s;
+      }
+      .card.selected .card-check {
+        border-color: var(--2i-cornflower);
+        background: var(--2i-cornflower);
+      }
+      .card-body {
+        flex: 1;
+        min-width: 0;
+      }
+      .card-icon {
+        font-size: 20px;
+        margin-bottom: 4px;
+      }
+      .card-label {
+        font-weight: 700;
+        font-size: 14px;
+        color: var(--2i-navy);
+        margin-bottom: 2px;
+      }
+      .card-desc {
+        font-size: 12px;
+        color: var(--muted);
+        line-height: 1.4;
+      }
+
+      .nav-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 16px;
+      }
+      .btn {
+        padding: 10px 24px;
+        border-radius: 8px;
+        border: none;
+        font-family: "Epilogue", sans-serif;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .btn-primary {
+        background: var(--2i-navy);
+        color: #fff;
+      }
+      .btn-primary:hover {
+        background: var(--2i-slate);
+      }
+      .btn-primary:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+      .btn-outline {
+        background: transparent;
+        color: var(--2i-navy);
+        border: 1.5px solid var(--border);
+      }
+      .btn-outline:hover {
+        border-color: var(--2i-cornflower);
+      }
+      .btn-green {
+        background: var(--2i-green);
+        color: var(--2i-navy);
+        font-weight: 700;
+      }
+      .btn-green:hover {
+        background: var(--2i-green-dark);
+      }
+      .step-label {
+        font-size: 13px;
+        color: var(--muted);
+        font-weight: 500;
+      }
+
+      .summary-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: center;
+        margin-bottom: 24px;
+      }
+      .tag {
+        background: var(--2i-lavender);
+        color: var(--2i-cobalt);
+        border-radius: 6px;
+        padding: 4px 10px;
+        font-size: 11px;
+        font-weight: 700;
+      }
+
+      .tier-label {
+        font-size: 13px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin: 20px 0 10px;
+        padding-left: 4px;
+      }
+      .tier-recommended {
+        color: var(--2i-green-dark);
+      }
+      .tier-possible {
+        color: var(--2i-cobalt);
+      }
+      .tier-not-ideal {
+        color: var(--muted);
+      }
+
+      .rec-card {
+        background: #fff;
+        border: 1.5px solid var(--border);
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 12px;
+      }
+      .rec-card .badge {
+        display: inline-block;
+        border-radius: 6px;
+        padding: 3px 10px;
+        font-size: 11px;
+        font-weight: 700;
+        margin-bottom: 8px;
+      }
+      .badge-rec {
+        background: var(--2i-green-pale);
+        color: var(--2i-green-dark);
+      }
+      .badge-pos {
+        background: var(--2i-lavender);
+        color: var(--2i-cobalt);
+      }
+      .badge-not {
+        background: #f0f0f5;
+        color: var(--muted);
+      }
+      .rec-model {
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 6px;
+      }
+      .rec-reason {
+        font-size: 13px;
+        color: var(--muted);
+        font-style: italic;
+        margin-bottom: 12px;
+        line-height: 1.5;
+      }
+      .rec-section-title {
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+        color: var(--2i-navy);
+        margin: 10px 0 4px;
+      }
+      .rec-list {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 6px;
+      }
+      .rec-list li {
+        font-size: 13px;
+        color: var(--2i-slate);
+        padding: 2px 0 2px 16px;
+        position: relative;
+        line-height: 1.5;
+      }
+      .rec-list li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 9px;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+      }
+      .rec-list.strengths li::before {
+        background: var(--2i-green);
+      }
+      .rec-list.limitations li::before {
+        background: #f0a050;
+      }
+      .rec-deploy {
+        font-size: 13px;
+        color: var(--2i-slate);
+        margin-top: 4px;
+      }
+      .rec-datasafety {
+        background: #eef3ff;
+        border-radius: 8px;
+        padding: 12px;
+        margin-top: 10px;
+        font-size: 12px;
+        color: var(--2i-slate);
+        line-height: 1.5;
+        display: flex;
+        gap: 8px;
+        align-items: flex-start;
+      }
+      .rec-datasafety .lock {
+        font-size: 16px;
+        flex-shrink: 0;
+      }
+      .deploy-link {
+        display: inline-block;
+        margin-top: 10px;
+        color: var(--2i-cobalt);
+        font-weight: 600;
+        font-size: 13px;
+      }
+      .deploy-link:hover {
+        color: var(--2i-cornflower);
+      }
+      .rec-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 8px;
+      }
+
+      .cta-box {
+        background: var(--2i-navy);
+        border-radius: 12px;
+        padding: 32px;
+        text-align: center;
+        margin: 32px 0;
+        color: #fff;
+      }
+      .cta-box h3 {
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 6px;
+      }
+      .cta-box p {
+        font-size: 14px;
+        color: #abb8e0;
+        margin-bottom: 16px;
+      }
+      .cta-box .btn-green {
+        padding: 12px 28px;
+        font-size: 15px;
+      }
+
+      .services-title {
+        text-align: center;
+        font-size: 18px;
+        font-weight: 700;
+        margin: 28px 0 14px;
+      }
+      .service-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+        gap: 12px;
+        margin-bottom: 24px;
+      }
+      .service-card {
+        background: #fff;
+        border: 1.5px solid var(--border);
+        border-radius: 12px;
+        padding: 18px 14px;
+        text-align: center;
+        transition: all 0.2s;
+        text-decoration: none;
+        color: var(--2i-navy);
+      }
+      .service-card:hover {
+        border-color: var(--2i-cornflower);
+        box-shadow: 0 2px 12px rgba(53, 97, 221, 0.1);
+      }
+      .service-card .s-icon {
+        font-size: 24px;
+        margin-bottom: 6px;
+      }
+      .service-card .s-label {
+        font-weight: 700;
+        font-size: 13px;
+      }
+
+      .reset-row {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        margin-top: 8px;
+      }
+
+      @media (max-width: 600px) {
+        .card-grid {
+          grid-template-columns: 1fr;
+        }
+        .service-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+        .container {
+          padding: 0 14px 32px;
+        }
+        .step-title {
+          font-size: 18px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <div class="header-left">
+        <div class="logo">2i</div>
+        <span class="header-title">AI Model Advisor</span>
+      </div>
+      <a
+        class="header-cta"
+        href="https://2itesting.com/contact-us/"
+        target="_blank"
+        >Book a Discovery Session &rarr;</a
+      >
+    </header>
+    <div class="progress-wrap">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <div class="container">
+      <div class="step-indicators" id="stepIndicators"></div>
+      <div id="stepContent"></div>
+      <div class="nav-row" id="navRow">
+        <button class="btn btn-outline" id="btnBack" onclick="prevStep()">
+          Back
+        </button>
+        <span class="step-label" id="stepLabel"></span>
+        <button class="btn btn-primary" id="btnNext" onclick="nextStep()">
+          Next
+        </button>
+      </div>
+    </div>
+
+    <script>
+      function openLink(url) {
+        window.open(url, "_blank");
+      }
+
+      const PROBLEMS = [
+        {
+          id: "doc-summary",
+          label: "Document Summarisation",
+          icon: "\u{1F4C4}",
+          desc: "Condense reports, contracts, or research",
+        },
+        {
+          id: "chatbot",
+          label: "Chatbot Support",
+          icon: "\u{1F4AC}",
+          desc: "Customer-facing or internal support agent",
+        },
+        {
+          id: "test-gen",
+          label: "Test Case Generation",
+          icon: "\u{1F9EA}",
+          desc: "Auto-generate QA test cases from specs",
+        },
+        {
+          id: "code-review",
+          label: "Code Review",
+          icon: "\u{1F50D}",
+          desc: "Automated code analysis and feedback",
+        },
+        {
+          id: "data-analysis",
+          label: "Data Analysis",
+          icon: "\u{1F4CA}",
+          desc: "Interpret datasets and surface insights",
+        },
+        {
+          id: "a11y",
+          label: "Accessibility Checking",
+          icon: "♟️",
+          desc: "Audit UI and content for WCAG compliance",
+        },
+        {
+          id: "knowledge-search",
+          label: "Internal Knowledge Search",
+          icon: "\u{1F5C2}️",
+          desc: "Search across internal docs and wikis",
+        },
+        {
+          id: "req-analysis",
+          label: "Requirements Analysis",
+          icon: "\u{1F4DD}",
+          desc: "Extract, classify, and validate requirements from documents",
+        },
+        {
+          id: "log-analysis",
+          label: "Logs Analysis",
+          icon: "\u{1FAB5}",
+          desc: "Parse and interpret application or system logs",
+        },
+        {
+          id: "test-results",
+          label: "Testing Result Analysis",
+          icon: "\u{1F4CB}",
+          desc: "Analyse test reports, find patterns, and flag regressions",
+        },
+        {
+          id: "synthetic-data",
+          label: "Synthetic Data Generation",
+          icon: "\u{1F9EC}",
+          desc: "Generate GDPR-compliant synthetic test data — no production data exposure",
+        },
+      ];
+      const CLOUDS = [
+        { id: "aws", label: "AWS", icon: "☁️", desc: "Amazon Web Services" },
+        {
+          id: "azure",
+          label: "Azure",
+          icon: "\u{1F537}",
+          desc: "Microsoft Azure",
+        },
+        {
+          id: "gcp",
+          label: "Google Cloud",
+          icon: "\u{1F310}",
+          desc: "Google Cloud Platform",
+        },
+        {
+          id: "m365",
+          label: "Microsoft 365",
+          icon: "\u{1F4E6}",
+          desc: "M365 / SharePoint / Teams",
+        },
+        {
+          id: "on-prem",
+          label: "On-Premise",
+          icon: "\u{1F3E2}",
+          desc: "Self-hosted, air-gapped or data centre",
+        },
+        {
+          id: "local",
+          label: "Laptop / Local",
+          icon: "\u{1F4BB}",
+          desc: "Developer machine or corporate laptop",
+        },
+        {
+          id: "not-sure",
+          label: "Not Sure",
+          icon: "❓",
+          desc: "Not yet decided",
+        },
+      ];
+      const CONSTRAINTS = [
+        {
+          id: "high-security",
+          label: "High Security Restrictions",
+          desc: "GDPR, ISO27001, public sector standards",
+        },
+        {
+          id: "low-hw",
+          label: "Low Hardware / RAM",
+          desc: "Must run on constrained hardware (<16GB RAM)",
+        },
+        {
+          id: "citations",
+          label: "Requires Sources / Citations",
+          desc: "Responses must reference original documents",
+        },
+        {
+          id: "cloud-only",
+          label: "Cloud-Only",
+          desc: "No on-premise or local deployment allowed",
+        },
+        {
+          id: "local-only",
+          label: "Local-Only",
+          desc: "Cannot send data to external cloud APIs",
+        },
+      ];
+      const MODEL_DB = {
+        "azure-openai": {
+          name: "Azure OpenAI (GPT-4o)",
+          strengths: [
+            "Enterprise compliance (SOC2, ISO27001)",
+            "Deep document understanding",
+            "Native M365 / SharePoint integration",
+            "Managed within your Azure tenant",
+          ],
+          limitations: [
+            "Azure subscription required",
+            "Cost scales with volume",
+            "Cloud-only deployment",
+          ],
+          deployment:
+            "Azure OpenAI Service — managed API, deployable within your Azure tenant",
+          tags: ["Cloud", "Enterprise", "Microsoft"],
+          dataSafety:
+            "Data stays within your Azure tenant. SOC2, ISO27001, GDPR compliant. No data used for model training.",
+        },
+        claude: {
+          name: "Claude (Anthropic)",
+          strengths: [
+            "Exceptional reasoning and summarisation",
+            "Long context window (up to 200K tokens)",
+            "Strong safety and constitutional AI model",
+            "Available via AWS Bedrock or Anthropic API",
+          ],
+          limitations: [
+            "Not available for fully on-premise deployment",
+            "Costs vary by model tier",
+          ],
+          deployment:
+            "AWS Bedrock (Claude 3.5 Sonnet/Haiku) or direct Anthropic API",
+          tags: ["Cloud", "AWS Bedrock", "Long Context"],
+          dataSafety:
+            "Via Bedrock: data stays in your AWS account. Direct API: Anthropic does not train on your data. SOC2 Type II certified.",
+        },
+        nova: {
+          name: "Amazon Nova",
+          strengths: [
+            "Native AWS architecture and service integrations",
+            "Cost-effective at scale",
+            "Strong code understanding",
+            "Low latency in AWS regions",
+          ],
+          limitations: [
+            "Less proven than OpenAI/Anthropic for complex reasoning",
+            "AWS-only ecosystem",
+          ],
+          deployment: "Amazon Bedrock — serverless, pay-per-token",
+          tags: ["AWS", "Cost-Effective", "Native"],
+          dataSafety:
+            "Data processed within your AWS account via Bedrock. AWS shared responsibility model applies. No data used for training.",
+        },
+        llama: {
+          name: "Llama 3.1 8B (Meta)",
+          strengths: [
+            "Runs fully locally on a standard corporate laptop",
+            "Zero data egress — fully air-gapped capable",
+            "Open weights — no licensing cost",
+            "Good for code and structured tasks",
+          ],
+          limitations: [
+            "Lower reasoning quality vs GPT-4 class models",
+            "Requires Ollama or similar local runner",
+          ],
+          deployment:
+            "Ollama on local machine, or self-hosted via Docker on-prem",
+          tags: ["Local", "Open Source", "Air-Gapped"],
+          dataSafety:
+            "Fully local — zero data leaves your machine. No external API calls. Complete air-gap capability for maximum data privacy.",
+        },
+        phi4: {
+          name: "Phi-4 (Microsoft)",
+          strengths: [
+            "Extremely lightweight — designed for edge/laptop deployment",
+            "Strong benchmark performance for its size",
+            "Good for structured output and test generation",
+            "Open weights via Hugging Face",
+          ],
+          limitations: [
+            "Not suited for very long documents",
+            "Less robust for open-ended chat",
+          ],
+          deployment:
+            "Ollama, LM Studio, or Azure AI — also runs on CPU-only machines",
+          tags: ["Local", "Lightweight", "Edge"],
+          dataSafety:
+            "Runs fully offline when local. No data egress. Open weights — full auditability of model behaviour.",
+        },
+        gemini: {
+          name: "Gemini (Google)",
+          strengths: [
+            "Deep Google Workspace/Drive/Docs integration",
+            "Multimodal capability (vision + text)",
+            "Strong data analysis and chart generation",
+            "Vertex AI enterprise controls",
+          ],
+          limitations: [
+            "Best value within Google ecosystem only",
+            "Some EU data residency caveats",
+          ],
+          deployment: "Google Vertex AI — managed, serverless, GCP-native",
+          tags: ["GCP", "Google Workspace", "Multimodal"],
+          dataSafety:
+            "Data processed within your GCP project. Vertex AI provides enterprise-grade access controls. Check regional availability for EU data residency.",
+        },
+        mistral: {
+          name: "Mistral (Mistral AI)",
+          strengths: [
+            "European-origin model — strong GDPR alignment",
+            "Available self-hosted or via API",
+            "Good multilingual performance",
+            "Efficient at code and structured tasks",
+          ],
+          limitations: [
+            "Smaller ecosystem vs OpenAI/Anthropic",
+            "Less capable on very complex reasoning tasks",
+          ],
+          deployment: "Self-hosted on-prem or via Mistral La Plateforme API",
+          tags: ["GDPR", "Self-Hosted", "EU"],
+          dataSafety:
+            "EU-headquartered company. Self-hosted option keeps all data on-prem. Strong GDPR alignment and data sovereignty.",
+        },
+        gpt4o: {
+          name: "GPT-4o (OpenAI)",
+          strengths: [
+            "State-of-the-art reasoning and analysis",
+            "Excellent for data interpretation and charts",
+            "Vision + document understanding",
+            "Wide ecosystem and tooling support",
+          ],
+          limitations: [
+            "Data sent to OpenAI — validate DPA for sensitive data",
+            "Highest cost per token",
+          ],
+          deployment: "OpenAI API or Azure OpenAI (for compliant tenants)",
+          tags: ["Cloud", "SOTA", "Analysis"],
+          dataSafety:
+            "Data sent to OpenAI servers — validate your DPA for sensitive data. Via Azure OpenAI: data stays in your tenant. Not used for training with API.",
+        },
+      };
+
+      function getRecommendations(problem, cloud, constraints) {
+        const recs = { recommended: [], possible: [], not_ideal: [] };
+        const localOnly = constraints.includes("local-only");
+        const cloudOnly = constraints.includes("cloud-only");
+        const highSec = constraints.includes("high-security");
+        const lowHW = constraints.includes("low-hw");
+        const needsCitations = constraints.includes("citations");
+
+        if (
+          (localOnly || cloud === "local" || cloud === "on-prem") &&
+          !cloudOnly
+        ) {
+          if (lowHW) {
+            recs.recommended.push({
+              model: "phi4",
+              reason:
+                "Tiny footprint — runs on CPU-only machines. Best choice under 16GB RAM.",
+            });
+            recs.possible.push({
+              model: "llama",
+              reason:
+                "Slightly heavier than Phi-4 but stronger reasoning for complex tasks.",
+            });
+          } else {
+            recs.recommended.push({
+              model: "llama",
+              reason:
+                "Strong open-source model; runs fully air-gapped with no data egress.",
+            });
+            recs.recommended.push({
+              model: "mistral",
+              reason:
+                "European model, excellent GDPR posture; self-hostable via Docker or Ollama.",
+            });
+            recs.possible.push({
+              model: "phi4",
+              reason:
+                "Worth considering if hardware is constrained or startup time matters.",
+            });
+          }
+          recs.not_ideal.push({
+            model: "azure-openai",
+            reason:
+              "Cloud-only SaaS product — cannot be deployed on-premise or locally.",
+          });
+          return finalise(
+            recs,
+            highSec,
+            cloudOnly,
+            lowHW,
+            needsCitations,
+            cloud,
+          );
+        }
+
+        if (cloud === "aws") {
+          if (problem === "code-review") {
+            recs.recommended.push({
+              model: "nova",
+              reason:
+                "Amazon Nova is purpose-built for code tasks on Bedrock — native, fast, cost-effective.",
+            });
+            recs.recommended.push({
+              model: "claude",
+              reason:
+                "Claude 3.5 Sonnet excels at complex multi-file code reasoning via Bedrock.",
+            });
+            recs.possible.push({
+              model: "gpt4o",
+              reason:
+                "Capable, but cross-cloud adds latency and data governance overhead.",
+            });
+          } else if (problem === "test-gen") {
+            recs.recommended.push({
+              model: "nova",
+              reason:
+                "Highly cost-effective for high-volume, templated test case generation on Bedrock.",
+            });
+            recs.possible.push({
+              model: "claude",
+              reason:
+                "Better for complex BDD/Gherkin scenarios requiring nuanced understanding.",
+            });
+          } else if (problem === "data-analysis") {
+            recs.recommended.push({
+              model: "nova",
+              reason:
+                "Native SageMaker and S3 integrations make it the natural AWS data model.",
+            });
+            recs.possible.push({
+              model: "claude",
+              reason:
+                "Strong narrative data summaries and structured report generation via Bedrock.",
+            });
+          } else if (problem === "chatbot") {
+            recs.recommended.push({
+              model: "nova",
+              reason:
+                "Native Amazon Lex integration; lowest latency and cost for AWS chatbot deployments.",
+            });
+            recs.possible.push({
+              model: "claude",
+              reason:
+                "Higher quality responses for complex queries — balance cost vs quality.",
+            });
+          } else if (problem === "doc-summary") {
+            recs.recommended.push({
+              model: "claude",
+              reason:
+                "200K context window handles entire contracts in one call — no chunking needed on Bedrock.",
+            });
+            recs.possible.push({
+              model: "nova",
+              reason:
+                "Cost-efficient for high-volume batch summarisation where depth is less critical.",
+            });
+            recs.not_ideal.push({
+              model: "phi4",
+              reason:
+                "Context window too small for enterprise-length documents.",
+            });
+          } else if (problem === "knowledge-search") {
+            recs.recommended.push({
+              model: "nova",
+              reason:
+                "Deep integration with AWS OpenSearch and Bedrock Knowledge Bases for RAG pipelines.",
+            });
+            recs.recommended.push({
+              model: "claude",
+              reason:
+                "Best reasoning quality over retrieved chunks; excellent at synthesising multi-doc answers.",
+            });
+            recs.possible.push({
+              model: "gpt4o",
+              reason:
+                "Strong retrieval reasoning, but cross-cloud adds architectural complexity.",
+            });
+          } else if (problem === "a11y") {
+            recs.recommended.push({
+              model: "nova",
+              reason:
+                "Good for automated code-level accessibility checks in AWS CI pipelines.",
+            });
+            recs.possible.push({
+              model: "gpt4o",
+              reason:
+                "Vision capability for screenshot analysis and strong WCAG coverage; requires cross-cloud API call.",
+            });
+          } else if (problem === "req-analysis") {
+            recs.recommended.push({
+              model: "claude",
+              reason:
+                "200K context handles full requirement docs; excels at structured extraction via Bedrock.",
+            });
+            recs.recommended.push({
+              model: "nova",
+              reason:
+                "Cost-effective for high-volume requirements parsing within AWS pipelines.",
+            });
+            recs.possible.push({
+              model: "gpt4o",
+              reason:
+                "Strong reasoning but cross-cloud adds governance overhead.",
+            });
+            recs.not_ideal.push({
+              model: "phi4",
+              reason:
+                "Too lightweight for complex requirements analysis; limited structured output.",
+            });
+          } else if (problem === "log-analysis") {
+            recs.recommended.push({
+              model: "nova",
+              reason:
+                "Native CloudWatch and OpenSearch integration for real-time log analysis on AWS.",
+            });
+            recs.possible.push({
+              model: "claude",
+              reason:
+                "Excellent pattern recognition across large log volumes via Bedrock.",
+            });
+            recs.not_ideal.push({
+              model: "phi4",
+              reason:
+                "Local-only model with no cloud log pipeline integration.",
+            });
+          } else if (problem === "test-results") {
+            recs.recommended.push({
+              model: "nova",
+              reason:
+                "Integrates with AWS CodeBuild and CodePipeline for automated test report analysis.",
+            });
+            recs.recommended.push({
+              model: "claude",
+              reason:
+                "Strong at identifying regression patterns and summarising failures across test suites.",
+            });
+            recs.possible.push({
+              model: "gpt4o",
+              reason:
+                "Excellent analytical reasoning but requires cross-cloud API access.",
+            });
+            recs.not_ideal.push({
+              model: "phi4",
+              reason:
+                "Limited analytical depth for complex multi-suite test result correlation.",
+            });
+          } else if (problem === "synthetic-data") {
+            recs.recommended.push({
+              model: "claude",
+              reason:
+                "Excels at generating diverse, realistic synthetic datasets via Bedrock — strong structure and edge-case coverage.",
+            });
+            recs.recommended.push({
+              model: "nova",
+              reason:
+                "Cost-effective for high-volume synthetic data generation within AWS pipelines.",
+            });
+            recs.possible.push({
+              model: "gpt4o",
+              reason:
+                "SOTA data generation quality but cross-cloud adds governance overhead.",
+            });
+            recs.not_ideal.push({
+              model: "phi4",
+              reason:
+                "Limited output diversity and volume capacity for enterprise-scale synthetic data.",
+            });
+          }
+        } else if (["azure", "m365"].includes(cloud)) {
+          if (problem === "knowledge-search") {
+            recs.recommended.push({
+              model: "azure-openai",
+              reason:
+                "Azure AI Search + GPT-4o is the gold standard for M365/SharePoint RAG. Fully compliant.",
+            });
+            recs.possible.push({
+              model: "mistral",
+              reason:
+                "Available on Azure Marketplace; good for multilingual search with EU data residency.",
+            });
+          } else if (problem === "chatbot") {
+            recs.recommended.push({
+              model: "azure-openai",
+              reason:
+                "Powers Microsoft Copilot Studio; native Teams and M365 integration with enterprise SLAs.",
+            });
+            recs.possible.push({
+              model: "mistral",
+              reason:
+                "Available on Azure Marketplace; good if you need European data residency.",
+            });
+          } else if (problem === "doc-summary") {
+            recs.recommended.push({
+              model: "azure-openai",
+              reason:
+                "GPT-4o deployed in your Azure tenant; processes Word/PDF via Document Intelligence.",
+            });
+            recs.possible.push({
+              model: "phi4",
+              reason:
+                "Lightweight option if documents are short and cost is a priority.",
+            });
+          } else if (problem === "code-review") {
+            recs.recommended.push({
+              model: "azure-openai",
+              reason:
+                "GPT-4o via Azure is proven for code review in enterprise DevOps pipelines.",
+            });
+            recs.possible.push({
+              model: "phi4",
+              reason:
+                "Surprisingly capable at code review; available on Azure AI Studio for low-cost use.",
+            });
+          } else if (problem === "test-gen") {
+            recs.recommended.push({
+              model: "azure-openai",
+              reason:
+                "GPT-4o generates high-quality, structured test cases; integrates with Azure DevOps.",
+            });
+            recs.possible.push({
+              model: "phi4",
+              reason:
+                "Cost-effective for simple, templated test generation at volume on Azure AI.",
+            });
+          } else if (problem === "data-analysis") {
+            recs.recommended.push({
+              model: "azure-openai",
+              reason:
+                "Pairs natively with Azure Synapse, Power BI, and Fabric for enterprise data analysis. SOTA reasoning within your tenant boundary.",
+            });
+            recs.possible.push({
+              model: "phi4",
+              reason:
+                "Lightweight Azure AI option for simpler analytics tasks at low cost.",
+            });
+          } else if (problem === "a11y") {
+            recs.recommended.push({
+              model: "azure-openai",
+              reason:
+                "Vision-enabled GPT-4o via Azure; integrates with Azure DevOps accessibility pipelines.",
+            });
+            recs.possible.push({
+              model: "phi4",
+              reason:
+                "Available on Azure AI Studio; good for code-level static accessibility analysis.",
+            });
+          } else if (problem === "req-analysis") {
+            recs.recommended.push({
+              model: "azure-openai",
+              reason:
+                "GPT-4o in your Azure tenant; pairs with Azure DevOps for requirements traceability.",
+            });
+            recs.possible.push({
+              model: "mistral",
+              reason:
+                "Available on Azure Marketplace; strong structured extraction with EU data residency options.",
+            });
+          } else if (problem === "log-analysis") {
+            recs.recommended.push({
+              model: "azure-openai",
+              reason:
+                "Integrates with Azure Monitor, Log Analytics, and Application Insights for real-time log parsing.",
+            });
+            recs.possible.push({
+              model: "phi4",
+              reason:
+                "Lightweight option on Azure AI Studio for simple log pattern detection.",
+            });
+          } else if (problem === "test-results") {
+            recs.recommended.push({
+              model: "azure-openai",
+              reason:
+                "GPT-4o integrates with Azure DevOps Test Plans for automated result analysis and regression detection.",
+            });
+            recs.possible.push({
+              model: "phi4",
+              reason:
+                "Cost-effective on Azure AI for simple pass/fail summaries at volume.",
+            });
+          } else if (problem === "synthetic-data") {
+            recs.recommended.push({
+              model: "azure-openai",
+              reason:
+                "GPT-4o in your Azure tenant generates high-fidelity synthetic data with full compliance controls.",
+            });
+            recs.possible.push({
+              model: "phi4",
+              reason:
+                "Lightweight option on Azure AI for simple synthetic data schemas at low cost.",
+            });
+          }
+        } else if (cloud === "gcp") {
+          if (problem === "data-analysis") {
+            recs.recommended.push({
+              model: "gemini",
+              reason:
+                "Native BigQuery and Looker integration — the obvious choice for GCP data stacks.",
+            });
+            recs.possible.push({
+              model: "gpt4o",
+              reason:
+                "Better raw reasoning for complex statistical problems; cross-cloud via API.",
+            });
+          } else if (problem === "doc-summary") {
+            recs.recommended.push({
+              model: "gemini",
+              reason:
+                "Native Google Drive and Docs integration; handles long documents via Vertex AI.",
+            });
+            recs.possible.push({
+              model: "claude",
+              reason:
+                "Available on Vertex AI; superior summarisation depth for critical documents.",
+            });
+          } else if (problem === "knowledge-search") {
+            recs.recommended.push({
+              model: "gemini",
+              reason:
+                "Vertex AI Search + Gemini is the native GCP RAG stack; tight Drive integration.",
+            });
+            recs.possible.push({
+              model: "claude",
+              reason:
+                "Available via Vertex AI Model Garden; strong multi-document synthesis.",
+            });
+          } else if (problem === "chatbot") {
+            recs.recommended.push({
+              model: "gemini",
+              reason:
+                "Powers Google Agentspace and Dialogflow CX; native GCP/Workspace integration.",
+            });
+            recs.possible.push({
+              model: "gpt4o",
+              reason:
+                "Higher conversational quality for complex support scenarios; available via API.",
+            });
+          } else if (problem === "code-review") {
+            recs.recommended.push({
+              model: "gemini",
+              reason:
+                "Gemini Code Assist is built for GCP DevOps pipelines and Cloud Workstations.",
+            });
+            recs.possible.push({
+              model: "gpt4o",
+              reason:
+                "SOTA code reasoning for complex multi-language review; available cross-cloud via API.",
+            });
+          } else if (problem === "test-gen") {
+            recs.recommended.push({
+              model: "gemini",
+              reason:
+                "Integrated with Cloud Build and Test Lab; Gemini Code Assist generates test suites.",
+            });
+            recs.possible.push({
+              model: "gpt4o",
+              reason:
+                "Stronger at edge-case reasoning for complex test scenario generation.",
+            });
+          } else if (problem === "a11y") {
+            recs.recommended.push({
+              model: "gemini",
+              reason:
+                "Multimodal vision for screenshot analysis; integrates with GCP accessibility tooling.",
+            });
+            recs.possible.push({
+              model: "gpt4o",
+              reason:
+                "Stronger WCAG knowledge base; good for detailed standards-based audits.",
+            });
+          } else if (problem === "req-analysis") {
+            recs.recommended.push({
+              model: "gemini",
+              reason:
+                "Native Google Docs integration; Vertex AI handles long requirement documents natively.",
+            });
+            recs.possible.push({
+              model: "claude",
+              reason:
+                "Available on Vertex AI Model Garden; superior at structured extraction from complex specs.",
+            });
+          } else if (problem === "log-analysis") {
+            recs.recommended.push({
+              model: "gemini",
+              reason:
+                "Native integration with Cloud Logging and BigQuery for scalable log analysis.",
+            });
+            recs.possible.push({
+              model: "gpt4o",
+              reason:
+                "Strong pattern recognition for complex log correlation; available cross-cloud via API.",
+            });
+          } else if (problem === "test-results") {
+            recs.recommended.push({
+              model: "gemini",
+              reason:
+                "Integrates with Cloud Build and Test Lab for automated test result analysis.",
+            });
+            recs.possible.push({
+              model: "gpt4o",
+              reason:
+                "Superior analytical reasoning for complex regression detection; cross-cloud via API.",
+            });
+          } else if (problem === "synthetic-data") {
+            recs.recommended.push({
+              model: "gemini",
+              reason:
+                "Native BigQuery and Vertex AI integration for generating and storing synthetic datasets at scale.",
+            });
+            recs.possible.push({
+              model: "gpt4o",
+              reason:
+                "Superior data diversity and realism; available cross-cloud via API.",
+            });
+          }
+        } else {
+          if (problem === "code-review") {
+            recs.recommended.push({
+              model: "gpt4o",
+              reason:
+                "GPT-4o is the benchmark for code review quality across all languages and frameworks.",
+            });
+            recs.recommended.push({
+              model: "claude",
+              reason:
+                "Exceptional multi-file reasoning and code comprehension; available across major cloud providers.",
+            });
+            recs.possible.push({
+              model: "phi4",
+              reason:
+                "Capable local option if you want no-cost, no-egress code review.",
+            });
+          } else if (problem === "test-gen") {
+            recs.recommended.push({
+              model: "gpt4o",
+              reason:
+                "Best structured output quality for BDD, Gherkin, and unit test generation.",
+            });
+            recs.possible.push({
+              model: "phi4",
+              reason:
+                "Cost-free local option; solid for simple test scaffolding on a laptop.",
+            });
+          } else if (problem === "doc-summary") {
+            recs.recommended.push({
+              model: "claude",
+              reason:
+                "200K context window is unmatched — processes entire legal or technical documents in one pass.",
+            });
+            recs.possible.push({
+              model: "gpt4o",
+              reason:
+                "Excellent comprehension; more widely integrated with document tooling ecosystems.",
+            });
+            recs.not_ideal.push({
+              model: "phi4",
+              reason:
+                "Short context window makes it unsuitable for long enterprise documents.",
+            });
+          } else if (problem === "knowledge-search") {
+            recs.recommended.push({
+              model: "gpt4o",
+              reason:
+                "SOTA retrieval reasoning; wide ecosystem of RAG frameworks (LangChain, LlamaIndex).",
+            });
+            recs.possible.push({
+              model: "mistral",
+              reason:
+                "Strong open option if you need self-hosted RAG with no data leaving your network.",
+            });
+            recs.not_ideal.push({
+              model: "phi4",
+              reason:
+                "Limited context window reduces effectiveness for knowledge retrieval tasks.",
+            });
+          } else if (problem === "chatbot") {
+            recs.recommended.push({
+              model: "gpt4o",
+              reason:
+                "Gold standard for enterprise chatbot deployments; proven at scale globally.",
+            });
+            recs.possible.push({
+              model: "mistral",
+              reason:
+                "Good open-source option if cost or data residency is a concern.",
+            });
+            recs.not_ideal.push({
+              model: "phi4",
+              reason:
+                "Designed for edge use cases — not suitable for high-volume conversational AI.",
+            });
+          } else if (problem === "data-analysis") {
+            recs.recommended.push({
+              model: "gpt4o",
+              reason:
+                "Code Interpreter and data reasoning make GPT-4o the top choice for analytics workloads.",
+            });
+            recs.recommended.push({
+              model: "gemini",
+              reason:
+                "Strong chart and BI tool integration; excellent multimodal data comprehension.",
+            });
+            recs.not_ideal.push({
+              model: "llama",
+              reason:
+                "Local models lack the reasoning depth needed for complex data analysis tasks.",
+            });
+          } else if (problem === "a11y") {
+            recs.recommended.push({
+              model: "gpt4o",
+              reason:
+                "Vision + deep WCAG knowledge; can analyse both code and visual screenshots.",
+            });
+            recs.possible.push({
+              model: "gemini",
+              reason:
+                "Good multimodal alternative; useful for design-phase visual audits.",
+            });
+            recs.not_ideal.push({
+              model: "phi4",
+              reason:
+                "No vision capability and limited accessibility-specific training data.",
+            });
+          } else if (problem === "req-analysis") {
+            recs.recommended.push({
+              model: "claude",
+              reason:
+                "200K context window processes entire requirement documents in one pass with structured extraction.",
+            });
+            recs.recommended.push({
+              model: "gpt4o",
+              reason:
+                "SOTA reasoning for ambiguity detection and requirements classification.",
+            });
+            recs.possible.push({
+              model: "mistral",
+              reason:
+                "Good self-hosted option if requirements contain sensitive IP.",
+            });
+            recs.not_ideal.push({
+              model: "phi4",
+              reason:
+                "Limited context window and reasoning depth for complex requirements documents.",
+            });
+          } else if (problem === "log-analysis") {
+            recs.recommended.push({
+              model: "gpt4o",
+              reason:
+                "Excellent pattern recognition and anomaly detection across structured and unstructured logs.",
+            });
+            recs.possible.push({
+              model: "claude",
+              reason:
+                "Strong at correlating events across large log volumes with long context window.",
+            });
+            recs.not_ideal.push({
+              model: "phi4",
+              reason:
+                "Limited context window makes it unsuitable for large log file analysis.",
+            });
+          } else if (problem === "test-results") {
+            recs.recommended.push({
+              model: "gpt4o",
+              reason:
+                "Best analytical reasoning for identifying failure patterns and regression trends.",
+            });
+            recs.possible.push({
+              model: "claude",
+              reason:
+                "Excellent at summarising test reports and suggesting root causes.",
+            });
+            recs.not_ideal.push({
+              model: "phi4",
+              reason:
+                "Limited reasoning depth for complex multi-suite test analysis.",
+            });
+          } else if (problem === "synthetic-data") {
+            recs.recommended.push({
+              model: "gpt4o",
+              reason:
+                "Best-in-class structured data generation — realistic, diverse, and schema-aware synthetic datasets.",
+            });
+            recs.recommended.push({
+              model: "claude",
+              reason:
+                "Excellent at generating edge-case-rich synthetic data with strong format control.",
+            });
+            recs.possible.push({
+              model: "mistral",
+              reason:
+                "Good self-hosted option if synthetic data must stay fully on-premise.",
+            });
+            recs.not_ideal.push({
+              model: "phi4",
+              reason:
+                "Limited output volume and diversity for enterprise-scale synthetic data generation.",
+            });
+          }
+        }
+        return finalise(recs, highSec, cloudOnly, lowHW, needsCitations, cloud);
+      }
+
+      function finalise(
+        recs,
+        highSec,
+        cloudOnly,
+        lowHW,
+        needsCitations,
+        cloud,
+      ) {
+        if (highSec && !["azure", "m365"].includes(cloud)) {
+          const i = recs.recommended.findIndex((r) => r.model === "gpt4o");
+          if (i > -1) {
+            const item = recs.recommended.splice(i, 1)[0];
+            item.reason +=
+              " (Note: validate your DPA — data leaves to OpenAI servers)";
+            recs.possible.push(item);
+          }
+        }
+        if (cloudOnly) {
+          recs.recommended = recs.recommended.filter(
+            (r) => !["llama", "phi4", "mistral"].includes(r.model),
+          );
+          recs.possible = recs.possible.filter(
+            (r) => !["llama", "phi4", "mistral"].includes(r.model),
+          );
+        }
+        if (lowHW && !recs.recommended.find((r) => r.model === "phi4")) {
+          recs.recommended.unshift({
+            model: "phi4",
+            reason:
+              "Designed for low-resource environments; runs on CPU-only machines.",
+          });
+        }
+        if (
+          needsCitations &&
+          !["azure", "m365"].includes(cloud) &&
+          !recs.recommended.find((r) => r.model === "claude") &&
+          !recs.possible.find((r) => r.model === "claude")
+        ) {
+          recs.possible.unshift({
+            model: "claude",
+            reason:
+              "Excellent at grounded, citation-aware responses — strong source attribution.",
+          });
+        }
+        const seen = new Set();
+        ["recommended", "possible", "not_ideal"].forEach((t) => {
+          recs[t] = recs[t].filter((r) => {
+            if (seen.has(r.model)) return false;
+            seen.add(r.model);
+            return true;
+          });
+        });
+        if (recs.recommended.length === 0 && recs.possible.length > 0)
+          recs.recommended.push(recs.possible.shift());
+        if (recs.recommended.length > 2)
+          recs.recommended = recs.recommended.slice(0, 2);
+        if (recs.possible.length > 1) recs.possible = recs.possible.slice(0, 1);
+        recs.not_ideal = recs.not_ideal.slice(0, 1);
+        return recs;
+      }
+
+      /* ---- UI ---- */
+      let currentStep = 1,
+        selectedProblem = null,
+        selectedCloud = null,
+        selectedConstraints = [];
+
+      function buildStepIndicators() {
+        const c = document.getElementById("stepIndicators");
+        let h = "";
+        for (let i = 1; i <= 4; i++) {
+          if (i > 1)
+            h +=
+              '<div class="step-line' +
+              (currentStep > i - 1 ? " completed" : "") +
+              '" id="line' +
+              i +
+              '"></div>';
+          const cls =
+            i === currentStep ? "active" : i < currentStep ? "completed" : "";
+          h +=
+            '<div class="step-dot ' +
+            cls +
+            '" id="dot' +
+            i +
+            '">' +
+            (i < currentStep ? "✓" : i) +
+            "</div>";
+        }
+        c.innerHTML = h;
+      }
+
+      function updateProgress() {
+        const pct = currentStep === 4 ? 100 : ((currentStep - 1) / 3) * 100;
+        document.getElementById("progressBar").style.width = pct + "%";
+      }
+
+      function buildGrid(items, type) {
+        let h = '<div class="card-grid">';
+        items.forEach((item) => {
+          const sel =
+            type === "radio-problem"
+              ? selectedProblem === item.id
+              : type === "radio-cloud"
+                ? selectedCloud === item.id
+                : selectedConstraints.includes(item.id);
+          const indicator =
+            type === "checkbox"
+              ? '<div class="card-check">' + (sel ? "✓" : "") + "</div>"
+              : '<div class="card-radio"></div>';
+          h +=
+            '<div class="card' +
+            (sel ? " selected" : "") +
+            '" data-id="' +
+            item.id +
+            '" data-type="' +
+            type +
+            '">' +
+            indicator +
+            '<div class="card-body"><div class="card-icon">' +
+            (item.icon || "") +
+            '</div><div class="card-label">' +
+            item.label +
+            '</div><div class="card-desc">' +
+            item.desc +
+            "</div></div></div>";
+        });
+        return h + "</div>";
+      }
+
+      function handleCardClick(e) {
+        const card = e.target.closest(".card");
+        if (!card) return;
+        const id = card.dataset.id,
+          type = card.dataset.type;
+        if (type === "radio-problem") selectedProblem = id;
+        else if (type === "radio-cloud") selectedCloud = id;
+        else if (type === "checkbox") {
+          const idx = selectedConstraints.indexOf(id);
+          if (idx > -1) selectedConstraints.splice(idx, 1);
+          else selectedConstraints.push(id);
+        }
+        renderStep();
+        updateNavButtons();
+      }
+
+      function renderStep() {
+        const sc = document.getElementById("stepContent");
+        if (currentStep === 1)
+          sc.innerHTML =
+            '<h2 class="step-title">What problem are you trying to solve?</h2>' +
+            buildGrid(PROBLEMS, "radio-problem");
+        else if (currentStep === 2)
+          sc.innerHTML =
+            '<h2 class="step-title">Where will this run?</h2>' +
+            buildGrid(CLOUDS, "radio-cloud");
+        else if (currentStep === 3)
+          sc.innerHTML =
+            '<h2 class="step-title">Any environment constraints?</h2>' +
+            buildGrid(CONSTRAINTS, "checkbox");
+        else if (currentStep === 4) buildResults();
+        sc.querySelectorAll(".card").forEach((c) =>
+          c.addEventListener("click", handleCardClick),
+        );
+      }
+
+      function buildResults() {
+        const sc = document.getElementById("stepContent");
+        const recs = getRecommendations(
+          selectedProblem,
+          selectedCloud,
+          selectedConstraints,
+        );
+        const probLabel =
+          PROBLEMS.find((p) => p.id === selectedProblem)?.label || "";
+        const cloudLabel =
+          CLOUDS.find((c) => c.id === selectedCloud)?.label || "";
+
+        let h =
+          '<h2 class="step-title">Your AI Recommendations</h2><div class="summary-tags"><span class="tag">' +
+          probLabel +
+          '</span><span class="tag">' +
+          cloudLabel +
+          "</span>";
+        selectedConstraints.forEach((c) => {
+          const cl = CONSTRAINTS.find((x) => x.id === c);
+          if (cl) h += '<span class="tag">' + cl.label + "</span>";
+        });
+        h += "</div>";
+
+        function renderTier(label, items, tierClass, badgeClass) {
+          if (!items.length) return "";
+          let t =
+            '<div class="tier-label ' + tierClass + '">' + label + "</div>";
+          items.forEach((item) => {
+            const m = MODEL_DB[item.model];
+            if (!m) return;
+            const isRec = tierClass === "tier-recommended";
+            t +=
+              '<div class="rec-card"><span class="badge ' +
+              badgeClass +
+              '">' +
+              label +
+              '</span><div class="rec-model">' +
+              m.name +
+              '</div><div class="rec-reason">“' +
+              item.reason +
+              "”</div>";
+            t +=
+              '<div class="rec-section-title">Strengths</div><ul class="rec-list strengths">' +
+              m.strengths.map((s) => "<li>" + s + "</li>").join("") +
+              "</ul>";
+            t +=
+              '<div class="rec-section-title">Limitations</div><ul class="rec-list limitations">' +
+              m.limitations.map((l) => "<li>" + l + "</li>").join("") +
+              "</ul>";
+            t +=
+              '<div class="rec-section-title">Deployment Route</div><div class="rec-deploy">' +
+              m.deployment +
+              "</div>";
+            t +=
+              '<div class="rec-datasafety"><span class="lock">\u{1F512}</span><span>' +
+              m.dataSafety +
+              "</span></div>";
+            t +=
+              '<div class="rec-tags">' +
+              m.tags
+                .map((tg) => '<span class="tag">' + tg + "</span>")
+                .join("") +
+              "</div>";
+            if (isRec) {
+              if (selectedProblem === "synthetic-data")
+                t +=
+                  '<a class="deploy-link" href="https://2itesting.com/capabilities/quality-assurance-software-testing/synthetic-data/" target="_blank">\u{1F9EC} See 2i Synthetic Data Services →</a>';
+              else
+                t +=
+                  '<a class="deploy-link" href="https://2itesting.com/contact-us/" target="_blank">Deploy this with 2i →</a>';
+            }
+            t += "</div>";
+          });
+          return t;
+        }
+
+        h += renderTier(
+          "Recommended",
+          recs.recommended,
+          "tier-recommended",
+          "badge-rec",
+        );
+        h += renderTier(
+          "Possible",
+          recs.possible,
+          "tier-possible",
+          "badge-pos",
+        );
+        h += renderTier(
+          "Not Ideal",
+          recs.not_ideal,
+          "tier-not-ideal",
+          "badge-not",
+        );
+
+        h +=
+          '<div class="cta-box"><h3>95% of AI pilots fail to reach production.</h3><p>2i makes sure yours isn’t one of them.</p><a class="btn btn-green" href="https://2itesting.com/contact-us/" target="_blank">Book a Free Discovery Session →</a></div>';
+        h +=
+          '<div class="services-title">What 2i can do for you</div><div class="service-grid">';
+        h +=
+          '<a class="service-card" href="https://2itesting.com/capabilities/ai-assurance/" target="_blank"><div class="s-icon">\u{1F6E1}️</div><div class="s-label">AI Assurance</div></a>';
+        h +=
+          '<a class="service-card" href="https://2itesting.com/capabilities/quality-assurance-software-testing/test-automation-services/" target="_blank"><div class="s-icon">⚙️</div><div class="s-label">Test Automation</div></a>';
+        h +=
+          '<a class="service-card" href="https://2itesting.com/capabilities/strategic-test-consultancy/" target="_blank"><div class="s-icon">\u{1F4C8}</div><div class="s-label">Strategic Consultancy</div></a>';
+        h +=
+          '<a class="service-card" href="https://2itesting.com/capabilities/quality-assurance-software-testing/synthetic-data/" target="_blank"><div class="s-icon">\u{1F9EC}</div><div class="s-label">Synthetic Data</div></a>';
+        h += "</div>";
+        h +=
+          '<div class="reset-row"><button class="btn btn-outline" onclick="prevStep()">Back</button><button class="btn btn-primary" onclick="resetWizard()">Start Over</button></div>';
+        sc.innerHTML = h;
+      }
+
+      function updateNavButtons() {
+        const nav = document.getElementById("navRow"),
+          back = document.getElementById("btnBack"),
+          next = document.getElementById("btnNext"),
+          label = document.getElementById("stepLabel");
+        if (currentStep === 4) {
+          nav.style.display = "none";
+          return;
+        }
+        nav.style.display = "flex";
+        back.style.display = currentStep === 1 ? "none" : "inline-block";
+        label.textContent = "Step " + currentStep + " of 3";
+        if (currentStep === 1) next.disabled = !selectedProblem;
+        else if (currentStep === 2) next.disabled = !selectedCloud;
+        else next.disabled = false;
+        next.textContent = currentStep === 3 ? "See Recommendations" : "Next";
+      }
+
+      function showStep(n) {
+        currentStep = n;
+        renderStep();
+        buildStepIndicators();
+        updateProgress();
+        updateNavButtons();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+      function nextStep() {
+        if (currentStep < 4) showStep(currentStep + 1);
+      }
+      function prevStep() {
+        if (currentStep > 1) showStep(currentStep - 1);
+      }
+      function resetWizard() {
+        selectedProblem = null;
+        selectedCloud = null;
+        selectedConstraints = [];
+        showStep(1);
+      }
+
+      showStep(1);
+    </script>
+  </body>
+</html>

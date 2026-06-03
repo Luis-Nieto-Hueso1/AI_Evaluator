@@ -1,0 +1,1244 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Stakeholder AI Cheat Sheet — 2i</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      @font-face {
+        font-family: "Epilogue";
+        src: url("https://fonts.gstatic.com/s/epilogue/v17/O4ZMFGj5hxF0EhjimngomvnCCtqb30OXMDLiDJXVigHPVA.woff2")
+          format("woff2");
+        font-weight: 100 900;
+        font-display: swap;
+      }
+      :root {
+        --2i-lavender: #dbe6f9;
+        --2i-cornflower: #3561dd;
+        --2i-royal: #1f61d9;
+        --2i-cobalt: #004ad3;
+        --2i-navy: #283583;
+        --2i-green: #54d499;
+        --2i-white: #f7f9f9;
+        --2i-green-dark: #2faa72;
+        --2i-green-pale: #eafaf3;
+        --2i-slate: #1e2d70;
+        --border: #dce6f7;
+        --muted: #5a6a9a;
+        --bg: #f4f7fc;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Epilogue", system-ui, sans-serif;
+        color: var(--2i-navy);
+        background: var(--bg);
+        -webkit-font-smoothing: antialiased;
+        line-height: 1.6;
+      }
+      a {
+        color: var(--2i-cobalt);
+        text-decoration: none;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+
+      /* ─── Header (matches recommender) ─── */
+      .site-header {
+        background: var(--2i-navy);
+        padding: 0;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+      .header-inner {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 14px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .logo-mark {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+      }
+      .logo-icon {
+        width: 34px;
+        height: 34px;
+        background: var(--2i-green);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 15px;
+        color: var(--2i-navy);
+        letter-spacing: -0.02em;
+      }
+      .logo-label {
+        color: #fff;
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        opacity: 0.92;
+      }
+      .header-cta {
+        color: var(--2i-green);
+        font-size: 13px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        text-decoration: none;
+        transition: opacity 0.2s;
+      }
+      .header-cta:hover {
+        opacity: 0.8;
+        text-decoration: none;
+      }
+
+      /* ─── Progress bar ─── */
+      .progress-wrap {
+        height: 3px;
+        background: var(--border);
+        position: sticky;
+        top: 62px;
+        z-index: 99;
+      }
+      .progress-bar {
+        height: 100%;
+        background: var(--2i-cornflower);
+        width: 0;
+        transition: width 0.4s ease;
+      }
+
+      /* ─── Tab bar ─── */
+      .tab-bar {
+        background: #fff;
+        border-bottom: 1.5px solid var(--border);
+        position: sticky;
+        top: 65px;
+        z-index: 98;
+        overflow-x: auto;
+      }
+      .tab-inner {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 0 24px;
+        display: flex;
+        gap: 0;
+      }
+      .tab-btn {
+        padding: 13px 22px;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--muted);
+        cursor: pointer;
+        border: none;
+        background: none;
+        border-bottom: 2.5px solid transparent;
+        font-family: inherit;
+        transition: all 0.2s;
+        white-space: nowrap;
+        letter-spacing: -0.01em;
+      }
+      .tab-btn:hover {
+        color: var(--2i-navy);
+      }
+      .tab-btn.active {
+        color: var(--2i-cobalt);
+        border-bottom-color: var(--2i-cobalt);
+      }
+
+      /* ─── Container ─── */
+      .container {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 28px 24px 60px;
+      }
+      .section {
+        display: none;
+      }
+      .section.active {
+        display: block;
+        animation: fadeUp 0.35s ease;
+      }
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(12px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* ─── Hero ─── */
+      .hero {
+        text-align: center;
+        padding: 36px 0 32px;
+      }
+      .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: var(--2i-lavender);
+        color: var(--2i-cobalt);
+        font-size: 11px;
+        font-weight: 700;
+        padding: 5px 14px;
+        border-radius: 20px;
+        margin-bottom: 14px;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+      }
+      .hero h2 {
+        font-size: 28px;
+        font-weight: 800;
+        letter-spacing: -0.025em;
+        line-height: 1.2;
+        margin-bottom: 10px;
+      }
+      .hero p {
+        font-size: 15px;
+        color: var(--muted);
+        max-width: 580px;
+        margin: 0 auto;
+        line-height: 1.6;
+      }
+
+      /* ─── Toolbar ─── */
+      .toolbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+      .tool-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: #fff;
+        border: 1.5px solid var(--border);
+        border-radius: 8px;
+        padding: 7px 14px;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--2i-cobalt);
+        cursor: pointer;
+        font-family: inherit;
+        transition: all 0.2s;
+      }
+      .tool-btn:hover {
+        border-color: var(--2i-cobalt);
+        background: var(--2i-lavender);
+      }
+      .tool-btn svg {
+        width: 14px;
+        height: 14px;
+      }
+      .pill-count {
+        font-size: 12px;
+        color: var(--muted);
+        font-weight: 500;
+      }
+
+      /* ─── Question cards ─── */
+      .q-card {
+        background: #fff;
+        border: 1.5px solid var(--border);
+        border-radius: 12px;
+        padding: 22px 24px;
+        margin-bottom: 14px;
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s;
+      }
+      .q-card:hover {
+        border-color: var(--2i-cornflower);
+        box-shadow: 0 4px 20px rgba(53, 97, 221, 0.06);
+      }
+      .q-top {
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+      }
+      .q-num {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: var(--2i-cobalt);
+        color: #fff;
+        font-size: 12px;
+        font-weight: 700;
+        flex-shrink: 0;
+        margin-top: 1px;
+      }
+      .q-body {
+        flex: 1;
+        min-width: 0;
+      }
+      .q-title {
+        font-size: 16px;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        margin-bottom: 4px;
+      }
+      .q-why {
+        font-size: 13px;
+        color: var(--muted);
+        line-height: 1.55;
+      }
+      .q-why b {
+        color: var(--2i-navy);
+        font-weight: 600;
+      }
+
+      /* ─── Workshop trigger box ─── */
+      .triggers {
+        margin-top: 12px;
+        padding: 14px 16px;
+        background: var(--2i-lavender);
+        border-radius: 10px;
+        border-left: 3px solid var(--2i-cornflower);
+      }
+      .triggers-head {
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--2i-cobalt);
+        margin-bottom: 8px;
+      }
+      .trigger {
+        font-size: 13px;
+        color: var(--2i-navy);
+        padding: 3px 0;
+        display: flex;
+        gap: 8px;
+        align-items: flex-start;
+        line-height: 1.5;
+      }
+      .trigger::before {
+        content: "▸";
+        color: var(--2i-cornflower);
+        font-size: 11px;
+        margin-top: 2px;
+        flex-shrink: 0;
+        font-weight: 700;
+      }
+
+      /* ─── Case study ─── */
+      .case-toggle {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 24px;
+      }
+      .case-pill {
+        padding: 10px 18px;
+        border-radius: 10px;
+        border: 1.5px solid var(--border);
+        background: #fff;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--muted);
+        cursor: pointer;
+        font-family: inherit;
+        transition: all 0.2s;
+      }
+      .case-pill:hover {
+        border-color: var(--2i-cornflower);
+        color: var(--2i-navy);
+      }
+      .case-pill.active {
+        background: var(--2i-cobalt);
+        color: #fff;
+        border-color: var(--2i-cobalt);
+      }
+
+      .case-banner {
+        border-radius: 12px;
+        padding: 20px 24px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        border: 1.5px solid;
+      }
+      .case-banner.hr {
+        background: linear-gradient(135deg, #eef2ff 0%, #f8f9ff 100%);
+        border-color: var(--2i-cornflower);
+      }
+      .case-banner.qa {
+        background: linear-gradient(
+          135deg,
+          var(--2i-green-pale) 0%,
+          #f4fdf8 100%
+        );
+        border-color: var(--2i-green);
+      }
+      .case-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        flex-shrink: 0;
+      }
+      .case-icon.hr {
+        background: var(--2i-lavender);
+      }
+      .case-icon.qa {
+        background: var(--2i-green-pale);
+      }
+      .case-title {
+        font-size: 17px;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+      }
+      .case-sub {
+        font-size: 13px;
+        color: var(--muted);
+        margin-top: 2px;
+      }
+      .case-tags {
+        display: flex;
+        gap: 6px;
+        margin-top: 6px;
+        flex-wrap: wrap;
+      }
+      .case-tag {
+        font-size: 10px;
+        font-weight: 700;
+        padding: 3px 8px;
+        border-radius: 5px;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+      }
+      .case-tag.red {
+        background: #fef2f2;
+        color: #b91c1c;
+        border: 1px solid #fecaca;
+      }
+      .case-tag.amber {
+        background: #fffbeb;
+        color: #92400e;
+        border: 1px solid #fde68a;
+      }
+      .case-tag.green {
+        background: var(--2i-green-pale);
+        color: #065f46;
+        border: 1px solid #a7f3d0;
+      }
+      .case-tag.blue {
+        background: var(--2i-lavender);
+        color: var(--2i-cobalt);
+        border: 1px solid var(--border);
+      }
+
+      .answer-grid {
+        display: grid;
+        gap: 12px;
+      }
+      .answer-card {
+        background: #fff;
+        border: 1.5px solid var(--border);
+        border-radius: 12px;
+        padding: 18px 22px;
+        display: grid;
+        grid-template-columns: 40px 1fr;
+        gap: 4px 14px;
+        transition: border-color 0.2s;
+      }
+      .answer-card:hover {
+        border-color: var(--2i-cornflower);
+      }
+      .answer-card .q-num {
+        width: 26px;
+        height: 26px;
+        font-size: 11px;
+        margin-top: 1px;
+      }
+      .answer-q {
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--2i-cobalt);
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+        grid-column: 2;
+      }
+      .answer-a {
+        font-size: 14px;
+        color: var(--2i-navy);
+        line-height: 1.6;
+        grid-column: 2;
+      }
+      .answer-a b,
+      .answer-a strong {
+        color: var(--2i-navy);
+        font-weight: 700;
+      }
+
+      /* ─── CTA Box (matches recommender) ─── */
+      .cta-box {
+        margin-top: 36px;
+        border-radius: 16px;
+        padding: 36px 28px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+      .cta-box.navy {
+        background: var(--2i-navy);
+        color: #fff;
+      }
+      .cta-box.green {
+        background: linear-gradient(135deg, #0f2b1a 0%, #1a3d2a 100%);
+        color: #fff;
+      }
+      .cta-box h3 {
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 6px;
+        position: relative;
+      }
+      .cta-box p {
+        font-size: 14px;
+        opacity: 0.8;
+        margin-bottom: 20px;
+        max-width: 480px;
+        margin-left: auto;
+        margin-right: auto;
+        position: relative;
+        line-height: 1.6;
+      }
+      .cta-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--2i-green);
+        color: var(--2i-navy);
+        border: none;
+        border-radius: 8px;
+        padding: 13px 26px;
+        font-family: inherit;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        transition:
+          background 0.2s,
+          transform 0.12s;
+        text-decoration: none;
+        letter-spacing: -0.01em;
+        position: relative;
+      }
+      .cta-btn:hover {
+        background: var(--2i-green-dark);
+        transform: translateY(-1px);
+        text-decoration: none;
+      }
+
+      /* ─── Services grid (matches recommender results page) ─── */
+      .services-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 12px;
+        margin-top: 24px;
+      }
+      .service-card {
+        display: block;
+        background: #fff;
+        border: 1.5px solid var(--border);
+        border-radius: 12px;
+        padding: 18px 20px;
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s,
+          transform 0.2s;
+        text-decoration: none;
+        color: var(--2i-navy);
+      }
+      .service-card:hover {
+        border-color: var(--2i-cornflower);
+        box-shadow: 0 4px 20px rgba(53, 97, 221, 0.06);
+        transform: translateY(-2px);
+        text-decoration: none;
+      }
+      .service-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        background: var(--2i-lavender);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 10px;
+        flex-shrink: 0;
+      }
+      .service-icon svg {
+        width: 18px;
+        height: 18px;
+        stroke: var(--2i-cobalt);
+        fill: none;
+        stroke-width: 2.2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .service-name {
+        font-size: 14px;
+        font-weight: 700;
+        margin-bottom: 4px;
+      }
+      .service-desc {
+        font-size: 12px;
+        color: var(--muted);
+        line-height: 1.5;
+        margin-bottom: 8px;
+      }
+      .service-link {
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--2i-cobalt);
+      }
+
+      /* ─── Footer ─── */
+      .site-footer {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 20px 24px 32px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 11px;
+        color: var(--muted);
+        border-top: 1px solid var(--border);
+      }
+      .site-footer a {
+        color: var(--2i-cobalt);
+      }
+
+      /* ─── Responsive ─── */
+      @media (max-width: 640px) {
+        .hero h2 {
+          font-size: 22px;
+        }
+        .tab-btn {
+          padding: 11px 14px;
+          font-size: 12px;
+        }
+        .case-toggle {
+          flex-direction: column;
+        }
+        .case-banner {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 10px;
+        }
+        .services-grid {
+          grid-template-columns: 1fr;
+        }
+        .site-footer {
+          flex-direction: column;
+          gap: 8px;
+          text-align: center;
+        }
+      }
+      @media print {
+        .site-header,
+        .tab-bar,
+        .progress-wrap,
+        .tool-btn,
+        .cta-box,
+        .site-footer,
+        .services-grid {
+          display: none !important;
+        }
+        .section {
+          display: block !important;
+          break-inside: avoid;
+          page-break-inside: avoid;
+        }
+        .q-card,
+        .answer-card {
+          break-inside: avoid;
+          border: 1px solid #ccc;
+          box-shadow: none;
+        }
+        body {
+          background: #fff;
+          font-size: 11px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ═══ HEADER ═══ -->
+    <header class="site-header">
+      <div class="header-inner">
+        <a href="https://2itesting.com" target="_blank" class="logo-mark">
+          <div class="logo-icon">2i</div>
+          <span class="logo-label">Stakeholder AI Cheat Sheet</span>
+        </a>
+        <a
+          href="https://2itesting.com/contact-us/"
+          target="_blank"
+          class="header-cta"
+          >Book a Workshop →</a
+        >
+      </div>
+    </header>
+
+    <!-- ═══ PROGRESS ═══ -->
+    <div class="progress-wrap">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- ═══ TABS ═══ -->
+    <nav class="tab-bar">
+      <div class="tab-inner">
+        <button
+          class="tab-btn active"
+          data-tab="guide"
+          onclick="switchTab('guide')"
+        >
+          Quick Guide
+        </button>
+        <button
+          class="tab-btn"
+          data-tab="workshop"
+          onclick="switchTab('workshop')"
+        >
+          Workshop Templates
+        </button>
+        <button
+          class="tab-btn"
+          data-tab="examples"
+          onclick="switchTab('examples')"
+        >
+          What Good Looks Like
+        </button>
+      </div>
+    </nav>
+
+    <div class="container">
+      <!-- ═══════════════ SECTION 1: QUICK GUIDE ═══════════════ -->
+      <div id="sec-guide" class="section active">
+        <div class="hero">
+          <div class="hero-badge">
+            <span style="font-size: 13px">📋</span> One-Page Quick Guide
+          </div>
+          <h2>
+            10 Questions Every Stakeholder<br />Should Answer Before Building AI
+          </h2>
+          <p>
+            Your engineering team can't build the right solution without these
+            answers. No technical language needed — just clear, honest business
+            context.
+          </p>
+        </div>
+
+        <div class="toolbar">
+          <span class="pill-count">10 questions</span>
+          <button class="tool-btn" onclick="window.print()">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <polyline points="6 9 6 2 18 2 18 9" />
+              <path
+                d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"
+              />
+              <rect x="6" y="14" width="12" height="8" />
+            </svg>
+            Print
+          </button>
+        </div>
+
+        <div id="guide-cards"></div>
+
+        <!-- Services grid -->
+        <div class="services-grid">
+          <a
+            href="https://2itesting.com/capabilities/ai-assurance/"
+            target="_blank"
+            class="service-card"
+          >
+            <div class="service-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              </svg>
+            </div>
+            <div class="service-name">AI Assurance</div>
+            <div class="service-desc">
+              Independent evaluation of accuracy, explainability, performance,
+              and robustness before you scale.
+            </div>
+            <div class="service-link">See AI Assurance →</div>
+          </a>
+          <a
+            href="https://2itesting.com/capabilities/quality-assurance-software-testing/test-automation-services/"
+            target="_blank"
+            class="service-card"
+          >
+            <div class="service-icon">
+              <svg viewBox="0 0 24 24">
+                <polyline points="16 18 22 12 16 6" />
+                <polyline points="8 6 2 12 8 18" />
+              </svg>
+            </div>
+            <div class="service-name">Test Automation</div>
+            <div class="service-desc">
+              Scale testing for AI systems — from regression pipelines to
+              continuous quality gates.
+            </div>
+            <div class="service-link">See Test Automation →</div>
+          </a>
+          <a
+            href="https://2itesting.com/capabilities/strategic-test-consultancy/"
+            target="_blank"
+            class="service-card"
+          >
+            <div class="service-icon">
+              <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="16" x2="12" y2="12" />
+                <line x1="12" y1="8" x2="12.01" y2="8" />
+              </svg>
+            </div>
+            <div class="service-name">Strategic Consultancy</div>
+            <div class="service-desc">
+              From AI readiness assessments to deployment strategy — independent
+              advice you can trust.
+            </div>
+            <div class="service-link">See Consultancy →</div>
+          </a>
+        </div>
+
+        <div class="cta-box navy">
+          <h3>Need help preparing?</h3>
+          <p>
+            2i runs structured AI readiness workshops that turn these 10
+            questions into a clear brief your engineering team can act on.
+          </p>
+          <a
+            href="https://2itesting.com/contact-us/"
+            target="_blank"
+            class="cta-btn"
+            >Book a Free Discovery Session →</a
+          >
+        </div>
+      </div>
+
+      <!-- ═══════════════ SECTION 2: WORKSHOP ═══════════════ -->
+      <div id="sec-workshop" class="section">
+        <div class="hero">
+          <div class="hero-badge">
+            <span style="font-size: 13px">🎯</span> Workshop Facilitator Kit
+          </div>
+          <h2>Workshop Templates</h2>
+          <p>
+            Use these trigger questions to extract the right answers from a room
+            of stakeholders. Each hint uncovers what engineering actually needs.
+          </p>
+        </div>
+
+        <div class="toolbar">
+          <span class="pill-count">10 questions · 30 trigger prompts</span>
+          <button class="tool-btn" onclick="window.print()">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <polyline points="6 9 6 2 18 2 18 9" />
+              <path
+                d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"
+              />
+              <rect x="6" y="14" width="12" height="8" />
+            </svg>
+            Print
+          </button>
+        </div>
+
+        <div id="workshop-cards"></div>
+
+        <div class="cta-box navy">
+          <h3>Want a 2i facilitator in the room?</h3>
+          <p>
+            Our AI consultants run these workshops weekly with enterprise teams
+            — from vague intent to actionable brief in under 2 hours.
+          </p>
+          <a
+            href="https://2itesting.com/contact-us/"
+            target="_blank"
+            class="cta-btn"
+            >Book a Workshop →</a
+          >
+        </div>
+      </div>
+
+      <!-- ═══════════════ SECTION 3: EXAMPLES ═══════════════ -->
+      <div id="sec-examples" class="section">
+        <div class="hero">
+          <div class="hero-badge">
+            <span style="font-size: 13px">✅</span> What Good Looks Like
+          </div>
+          <h2>Completed Examples</h2>
+          <p>
+            See how two real enterprise use cases look when fully answered. Use
+            these as a benchmark for the specificity you should aim for.
+          </p>
+        </div>
+
+        <div class="case-toggle">
+          <button
+            class="case-pill active"
+            data-case="hr"
+            onclick="switchCase('hr')"
+          >
+            🏢 Case A: HR Policy Chatbot
+          </button>
+          <button class="case-pill" data-case="qa" onclick="switchCase('qa')">
+            🧪 Case B: Test Case Generator
+          </button>
+        </div>
+
+        <!-- Case A -->
+        <div id="case-hr" class="case-section">
+          <div class="case-banner hr">
+            <div class="case-icon hr">🏢</div>
+            <div>
+              <div class="case-title">Case A: HR Policy Chatbot</div>
+              <div class="case-sub">
+                Internal SharePoint-based chatbot for employee policy questions
+              </div>
+              <div class="case-tags">
+                <span class="case-tag red">High Security</span>
+                <span class="case-tag amber">Medium Accuracy</span>
+                <span class="case-tag green">Needs Citations</span>
+                <span class="case-tag blue">Azure / M365</span>
+              </div>
+            </div>
+          </div>
+          <div class="answer-grid" id="answers-hr"></div>
+        </div>
+
+        <!-- Case B -->
+        <div id="case-qa" class="case-section" style="display: none">
+          <div class="case-banner qa">
+            <div class="case-icon qa">🧪</div>
+            <div>
+              <div class="case-title">
+                Case B: Automated Test Case Generator
+              </div>
+              <div class="case-sub">
+                AI-powered test case generation for a QA team on AWS
+              </div>
+              <div class="case-tags">
+                <span class="case-tag red">High Accuracy</span>
+                <span class="case-tag green">Low Sensitivity</span>
+                <span class="case-tag blue">AWS / Bedrock</span>
+              </div>
+            </div>
+          </div>
+          <div class="answer-grid" id="answers-qa"></div>
+        </div>
+
+        <!-- Services grid -->
+        <div class="services-grid">
+          <a
+            href="https://2itesting.com/capabilities/ai-assurance/"
+            target="_blank"
+            class="service-card"
+          >
+            <div class="service-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              </svg>
+            </div>
+            <div class="service-name">AI Assurance</div>
+            <div class="service-desc">
+              Board-ready evidence that your AI is accurate, explainable, and
+              robust.
+            </div>
+            <div class="service-link">See AI Assurance →</div>
+          </a>
+          <a
+            href="https://2itesting.com/capabilities/quality-assurance-software-testing/synthetic-data/"
+            target="_blank"
+            class="service-card"
+          >
+            <div class="service-icon">
+              <svg viewBox="0 0 24 24">
+                <ellipse cx="12" cy="5" rx="9" ry="3" />
+                <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3" />
+                <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" />
+              </svg>
+            </div>
+            <div class="service-name">Synthetic Data</div>
+            <div class="service-desc">
+              GDPR-compliant synthetic data — no production data exposure, full
+              coverage.
+            </div>
+            <div class="service-link">See Synthetic Data →</div>
+          </a>
+          <a
+            href="https://2itesting.com/capabilities/strategic-test-consultancy/"
+            target="_blank"
+            class="service-card"
+          >
+            <div class="service-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+              </svg>
+            </div>
+            <div class="service-name">Strategic Consultancy</div>
+            <div class="service-desc">
+              From AI readiness to deployment strategy — independent advice you
+              can trust.
+            </div>
+            <div class="service-link">See Consultancy →</div>
+          </a>
+        </div>
+
+        <div class="cta-box navy">
+          <h3>Ready to fill out yours?</h3>
+          <p>
+            2i helps enterprise teams go from a blank sheet to a
+            production-ready AI brief — with testing, assurance, and governance
+            built in from day one.
+          </p>
+          <a
+            href="https://2itesting.com/contact-us/"
+            target="_blank"
+            class="cta-btn"
+            >Contact 2i for a Detailed Assessment →</a
+          >
+        </div>
+      </div>
+    </div>
+    <!-- /container -->
+
+    <!-- ═══ FOOTER ═══ -->
+    <footer class="site-footer">
+      <span>© 2026 2i — Technology with Purpose</span>
+      <span
+        ><a href="https://2itesting.com" target="_blank">2itesting.com</a> ·
+        <a href="https://2itesting.com/contact-us/" target="_blank"
+          >Contact us</a
+        ></span
+      >
+    </footer>
+
+    <script>
+      const QUESTIONS = [
+        {
+          q: "What problem are you trying to solve?",
+          why: "Engineers need the <b>exact pain point</b> so they can choose the right model architecture — a chatbot requires completely different design to a document analyser.",
+          triggers: [
+            "If this AI didn't exist, what would your team spend the most time doing manually?",
+            "Can you describe the last time this problem cost you time, money, or a missed deadline?",
+            "Is this about speed, accuracy, cost reduction, or all three?",
+          ],
+          hr: "Employees spend 2–3 hours per week searching SharePoint for HR policy answers (leave, expenses, benefits). We need a chatbot that gives instant, accurate answers with links to the source policy document.",
+          qa: "Our QA team manually writes test cases from user stories and acceptance criteria. It takes 4–6 hours per feature. We want an AI tool that auto-generates structured test cases (positive, negative, edge cases) from requirements input.",
+        },
+        {
+          q: "Who will use it?",
+          why: "The user profile determines <b>interface design, access control, and tone</b> — an executive dashboard is different to a developer CLI tool.",
+          triggers: [
+            "Who are the primary daily users? (Role, department, technical ability)",
+            "Will external people (customers, partners) ever interact with it?",
+            "How many concurrent users do you expect at peak?",
+          ],
+          hr: "All 2,400 employees across 3 UK offices. Non-technical users — mostly via a Teams or SharePoint chat widget. HR team (12 people) will manage content and review flagged queries.",
+          qa: "QA engineers and SDETs (around 35 people) on the product delivery team. Technically literate — comfortable with Jira, code repositories, and CI/CD pipelines. No external user access.",
+        },
+        {
+          q: "What goes in? (Input)",
+          why: "Input type and volume determine <b>which models are viable</b> — processing images requires different capabilities than processing text or code.",
+          triggers: [
+            "What format is the information in today? (Documents, spreadsheets, code, images, voice?)",
+            "How large is a typical input? (A sentence? A 50-page report? A codebase?)",
+            "Does the input change frequently, or is it relatively static?",
+          ],
+          hr: "Natural language questions typed by employees (e.g., 'How many days of paternity leave do I get?'). The knowledge base is ~180 HR policy PDFs stored in SharePoint, updated quarterly by the HR team.",
+          qa: "User stories and acceptance criteria from Jira (plain text + structured fields). Occasionally, existing code files (.js, .py) for context. Typical input: 1 user story with 3–8 acceptance criteria.",
+        },
+        {
+          q: "What comes out? (Output)",
+          why: "The output format drives <b>post-processing, validation, and integration</b> work — a JSON API response is very different to a human-readable paragraph.",
+          triggers: [
+            "What should the ideal output look like? (A paragraph? A table? A file? A score?)",
+            "Does a human review the output before it's used, or is it fully automated?",
+            "Can you show me an example of what 'good' output looks like today?",
+          ],
+          hr: "A concise, natural language answer (2–4 sentences) with a clickable citation linking to the specific SharePoint policy document and section. Must include a confidence disclaimer: 'For formal queries, contact HR directly.'",
+          qa: "Structured test cases in a table format: Test ID, Description, Preconditions, Steps, Expected Result, Priority. Output must be copy-pasteable into Jira or exportable as CSV. Human review required before execution.",
+        },
+        {
+          q: "Where is the data stored today?",
+          why: "Data location determines <b>architecture, latency, and compliance</b> — cloud data and on-premise data require very different integration patterns.",
+          triggers: [
+            "Where does the source data physically live right now? (Cloud service, database, file server, SaaS?)",
+            "Is it in one place or spread across multiple systems?",
+            "Who controls access to it today?",
+          ],
+          hr: "SharePoint Online (Microsoft 365 tenant). All policy documents are in a single SharePoint document library with folder-based organisation. Managed by the HR Operations Manager with IT admin access.",
+          qa: "Jira Cloud (Atlassian) for user stories. Bitbucket for code repositories. Both on AWS-backed infrastructure. QA Lead and Scrum Masters manage access. No on-premise data stores.",
+        },
+        {
+          q: "How sensitive is the data?",
+          why: "Sensitivity classification determines <b>which models can be used, where they can run, and what governance is required</b> — this is often the single biggest constraint.",
+          triggers: [
+            "Does the data contain personal information (names, salaries, health data)?",
+            "What would happen if this data leaked? (Embarrassment? Legal action? Regulatory fine?)",
+            "Are there specific compliance requirements? (GDPR, ISO 27001, public sector, financial regulations?)",
+          ],
+          hr: "<strong>High sensitivity.</strong> HR policies reference salary bands, disciplinary procedures, and health-related leave entitlements. Must comply with UK GDPR and internal ISO 27001 certification. Data must not leave the Microsoft 365 tenant boundary. No external API calls with employee data.",
+          qa: "<strong>Low–Medium sensitivity.</strong> User stories describe feature behaviour — no personal data, no financial data. Code files are proprietary but not regulated. Standard NDA-level protection. No specific compliance constraints beyond company IP policy.",
+        },
+        {
+          q: "How accurate does it need to be?",
+          why: "Accuracy requirements determine <b>model size, cost, testing strategy, and whether human review is mandatory</b> — 95% accuracy costs very differently to 99.9%.",
+          triggers: [
+            "What happens if the AI gets it wrong? (Minor inconvenience? Legal risk? Safety issue?)",
+            "Is 'mostly right' acceptable, or does it need to be precise every time?",
+            "Would you rather it says 'I don't know' than gives a wrong answer?",
+          ],
+          hr: "<strong>Medium–High accuracy.</strong> Wrong policy advice could cause employee grievances or legal exposure, but there's a human escalation path (contact HR). The chatbot should say 'I'm not sure — please contact HR directly' rather than guess. Target: 90%+ correct answers on known policy topics.",
+          qa: "<strong>High accuracy.</strong> Generated test cases go into the QA pipeline — poor quality means wasted engineer time or missed defects. However, human review acts as a safety net. Target: 85%+ of generated test cases usable without major edits. False positives (extra tests) are tolerable; false negatives (missed cases) are not.",
+        },
+        {
+          q: "Does it need to show its evidence?",
+          why: "Citation requirements drive <b>retrieval architecture (RAG)</b> — this is one of the most common enterprise requirements and significantly shapes the technical approach.",
+          triggers: [
+            "Do users need to see WHERE the answer came from?",
+            "Is there a regulatory or audit requirement to trace decisions back to source documents?",
+            "Would users trust the output more if they could click through to the original source?",
+          ],
+          hr: "<strong>Yes — mandatory.</strong> Every answer must cite the specific policy document and section. This is both a trust requirement (employees need to verify) and a governance requirement (HR team needs audit trail). Clickable SharePoint links are essential.",
+          qa: "<strong>Nice to have.</strong> It would be helpful to reference which acceptance criterion each test case maps to (traceability), but it's not a hard requirement. The QA team reviews output manually and can trace back themselves.",
+        },
+        {
+          q: "Where will it be used? (Deployment)",
+          why: "The deployment environment determines <b>infrastructure, cost, security boundaries, and which AI providers are even available</b> — this is a hard constraint, not a preference.",
+          triggers: [
+            "Where does your organisation's infrastructure live? (AWS, Azure, GCP, on-prem?)",
+            "Are there restrictions on which cloud providers or regions you can use?",
+            "Does it need to integrate with existing tools? (Teams, Slack, Jira, SAP?)",
+          ],
+          hr: "<strong>Microsoft 365 / Azure.</strong> Must integrate with SharePoint and Microsoft Teams. Organisation is an Azure-first enterprise with existing Azure OpenAI access. Deployment must stay within the corporate Azure tenant. No third-party SaaS without InfoSec approval.",
+          qa: "<strong>AWS.</strong> QA team's toolchain is AWS-native (CodePipeline, CodeBuild, S3). Must integrate with Jira Cloud via API. Preferred deployment: AWS Bedrock for model hosting. A lightweight web UI or Jira plugin for the QA team to interact with.",
+        },
+        {
+          q: "How will you measure success?",
+          why: "Clear success metrics let engineering <b>build the right monitoring, set realistic milestones, and prove ROI</b> — without them, no one knows if the project actually worked.",
+          triggers: [
+            "If this ships and works perfectly, what number changes? (Time saved? Tickets reduced? Revenue up?)",
+            "How will you know it's NOT working? What's the early warning sign?",
+            "What does the 3-month, 6-month, and 12-month success story look like?",
+          ],
+          hr: "<strong>Primary:</strong> Reduce average HR query resolution time from 48 hours to under 5 minutes. <strong>Secondary:</strong> Decrease HR inbox volume by 40% within 6 months. <strong>Leading indicator:</strong> Weekly active users > 500 by month 3. <strong>Failure signal:</strong> Negative feedback rate > 15% on chatbot responses.",
+          qa: "<strong>Primary:</strong> Reduce test case authoring time by 60% (from 5 hours to 2 hours per feature). <strong>Secondary:</strong> Increase test coverage — generated cases should surface 20%+ more edge cases than manual authoring. <strong>Leading indicator:</strong> Team adoption > 80% within 8 weeks. <strong>Failure signal:</strong> More than 50% of generated tests need major rewrites.",
+        },
+      ];
+
+      function renderGuide() {
+        document.getElementById("guide-cards").innerHTML = QUESTIONS.map(
+          (q, i) => `
+    <div class="q-card">
+      <div class="q-top">
+        <div class="q-num">${i + 1}</div>
+        <div class="q-body">
+          <div class="q-title">${q.q}</div>
+          <div class="q-why"><b>Why this matters:</b> ${q.why}</div>
+        </div>
+      </div>
+    </div>`,
+        ).join("");
+      }
+
+      function renderWorkshop() {
+        document.getElementById("workshop-cards").innerHTML = QUESTIONS.map(
+          (q, i) => `
+    <div class="q-card">
+      <div class="q-top">
+        <div class="q-num">${i + 1}</div>
+        <div class="q-body">
+          <div class="q-title">${q.q}</div>
+          <div class="q-why"><b>Why this matters:</b> ${q.why}</div>
+          <div class="triggers">
+            <div class="triggers-head">Trigger Questions for the Facilitator</div>
+            ${q.triggers.map((t) => `<div class="trigger">${t}</div>`).join("")}
+          </div>
+        </div>
+      </div>
+    </div>`,
+        ).join("");
+      }
+
+      function renderCases() {
+        ["hr", "qa"].forEach((key) => {
+          document.getElementById("answers-" + key).innerHTML = QUESTIONS.map(
+            (q, i) => `
+      <div class="answer-card">
+        <div class="q-num">${i + 1}</div>
+        <div class="answer-q">${q.q}</div>
+        <div class="answer-a">${q[key]}</div>
+      </div>`,
+          ).join("");
+        });
+      }
+
+      function switchTab(tab) {
+        document
+          .querySelectorAll(".tab-btn")
+          .forEach((t) => t.classList.toggle("active", t.dataset.tab === tab));
+        document
+          .querySelectorAll(".section")
+          .forEach((s) => s.classList.remove("active"));
+        document.getElementById("sec-" + tab).classList.add("active");
+        const pct = { guide: "33", workshop: "66", examples: "100" };
+        document.getElementById("progressBar").style.width = pct[tab] + "%";
+      }
+
+      function switchCase(key) {
+        document
+          .querySelectorAll(".case-pill")
+          .forEach((p) => p.classList.toggle("active", p.dataset.case === key));
+        document
+          .querySelectorAll(".case-section")
+          .forEach((s) => (s.style.display = "none"));
+        document.getElementById("case-" + key).style.display = "block";
+      }
+
+      renderGuide();
+      renderWorkshop();
+      renderCases();
+      document.getElementById("progressBar").style.width = "33%";
+    </script>
+  </body>
+</html>

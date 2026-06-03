@@ -1,0 +1,1540 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Evaluator — Your Guide to Choosing the Right AI Model</title>
+    <style>
+      :root {
+        --primary: #0d9488;
+        --primary-dark: #0f766e;
+        --primary-light: #99f6e4;
+        --accent: #6366f1;
+        --accent-light: #a5b4fc;
+        --bg: #0f172a;
+        --bg-light: #1e293b;
+        --bg-card: #334155;
+        --text: #f8fafc;
+        --text-muted: #94a3b8;
+        --success: #22c55e;
+        --warning: #f59e0b;
+        --danger: #ef4444;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family:
+          "Segoe UI",
+          system-ui,
+          -apple-system,
+          sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        overflow: hidden;
+        height: 100vh;
+      }
+
+      .presentation {
+        width: 100vw;
+        height: 100vh;
+        position: relative;
+      }
+
+      .slide {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 60px 80px;
+        opacity: 0;
+        transform: translateX(60px);
+        transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        pointer-events: none;
+      }
+
+      .slide.active {
+        opacity: 1;
+        transform: translateX(0);
+        pointer-events: all;
+      }
+
+      .slide.exit {
+        opacity: 0;
+        transform: translateX(-60px);
+      }
+
+      /* ===== SLIDE 1: TITLE ===== */
+      .title-slide {
+        background: radial-gradient(
+          ellipse at center,
+          #1a2744 0%,
+          var(--bg) 70%
+        );
+        text-align: center;
+      }
+
+      .title-slide .logo-circle {
+        width: 140px;
+        height: 140px;
+        margin-bottom: 32px;
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 52px;
+        font-weight: 800;
+        box-shadow: 0 0 80px rgba(13, 148, 136, 0.4);
+        animation: pulse 3s ease-in-out infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          box-shadow: 0 0 60px rgba(13, 148, 136, 0.3);
+        }
+        50% {
+          box-shadow: 0 0 100px rgba(13, 148, 136, 0.6);
+        }
+      }
+
+      .title-slide h1 {
+        font-size: 68px;
+        font-weight: 800;
+        background: linear-gradient(
+          135deg,
+          var(--primary-light),
+          var(--accent-light)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 16px;
+      }
+
+      .title-slide .vision {
+        font-size: 26px;
+        color: var(--text-muted);
+        max-width: 750px;
+        line-height: 1.6;
+        margin-bottom: 32px;
+      }
+
+      .title-slide .vision strong {
+        color: var(--primary-light);
+      }
+
+      .title-slide .tagline {
+        padding: 14px 28px;
+        background: rgba(13, 148, 136, 0.15);
+        border: 1px solid var(--primary);
+        border-radius: 12px;
+        font-size: 18px;
+        color: var(--primary-light);
+      }
+
+      /* ===== SLIDE 2: THE QUESTION ===== */
+      .question-slide {
+        background: radial-gradient(
+          ellipse at center,
+          #2d1b3d 0%,
+          var(--bg) 70%
+        );
+        text-align: center;
+      }
+
+      .question-slide h2 {
+        font-size: 52px;
+        font-weight: 700;
+        margin-bottom: 40px;
+        color: var(--accent-light);
+      }
+
+      .question-cards {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        max-width: 700px;
+        width: 100%;
+      }
+
+      .question-card {
+        background: var(--bg-card);
+        border-radius: 16px;
+        padding: 24px 32px;
+        text-align: left;
+        border-left: 4px solid var(--accent);
+        font-size: 20px;
+        line-height: 1.5;
+      }
+
+      .question-card .q {
+        color: var(--accent-light);
+        font-weight: 700;
+        font-size: 22px;
+      }
+
+      .question-card .p {
+        color: var(--text-muted);
+        margin-top: 6px;
+        font-size: 16px;
+      }
+
+      /* ===== SLIDE 3: THE PROBLEM ===== */
+      .problem-slide {
+        background: radial-gradient(
+          ellipse at center,
+          #3d1b1b 0%,
+          var(--bg) 70%
+        );
+      }
+
+      .slide-header {
+        text-align: center;
+        margin-bottom: 48px;
+      }
+
+      .slide-header h2 {
+        font-size: 44px;
+        font-weight: 700;
+        margin-bottom: 12px;
+      }
+
+      .slide-header p {
+        font-size: 20px;
+        color: var(--text-muted);
+      }
+
+      .problem-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+        max-width: 950px;
+        width: 100%;
+      }
+
+      .problem-card {
+        background: var(--bg-card);
+        border-radius: 16px;
+        padding: 28px;
+        border-left: 4px solid var(--danger);
+      }
+
+      .problem-card .icon {
+        font-size: 36px;
+        margin-bottom: 12px;
+      }
+      .problem-card h3 {
+        font-size: 20px;
+        margin-bottom: 8px;
+      }
+      .problem-card p {
+        font-size: 15px;
+        color: var(--text-muted);
+        line-height: 1.5;
+      }
+
+      /* ===== SLIDE 4: THE VISION ===== */
+      .vision-slide {
+        background: radial-gradient(
+          ellipse at center,
+          #1b3d2d 0%,
+          var(--bg) 70%
+        );
+        text-align: center;
+      }
+
+      .vision-slide h2 {
+        font-size: 48px;
+        font-weight: 700;
+        color: var(--primary-light);
+        margin-bottom: 32px;
+      }
+
+      .vision-statement {
+        max-width: 800px;
+        font-size: 24px;
+        line-height: 1.7;
+        color: var(--text-muted);
+        margin-bottom: 40px;
+      }
+
+      .vision-statement em {
+        color: var(--primary-light);
+        font-style: normal;
+        font-weight: 600;
+      }
+
+      .vision-pillars {
+        display: flex;
+        gap: 24px;
+        max-width: 1000px;
+        width: 100%;
+      }
+
+      .pillar {
+        flex: 1;
+        background: var(--bg-card);
+        border-radius: 16px;
+        padding: 28px;
+        text-align: center;
+      }
+
+      .pillar .icon {
+        font-size: 44px;
+        margin-bottom: 12px;
+      }
+      .pillar h3 {
+        font-size: 20px;
+        margin-bottom: 8px;
+        color: var(--primary-light);
+      }
+      .pillar p {
+        font-size: 15px;
+        color: var(--text-muted);
+        line-height: 1.5;
+      }
+
+      /* ===== SLIDE 5: WHICH MODEL ===== */
+      .which-slide {
+        background: radial-gradient(
+          ellipse at center,
+          #1b2d3d 0%,
+          var(--bg) 70%
+        );
+      }
+
+      .which-slide h2 {
+        font-size: 44px;
+        font-weight: 700;
+        margin-bottom: 40px;
+        color: var(--accent-light);
+      }
+
+      .model-examples {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        max-width: 850px;
+        width: 100%;
+      }
+
+      .model-example {
+        background: var(--bg-card);
+        border-radius: 16px;
+        padding: 24px;
+        display: flex;
+        gap: 20px;
+        align-items: flex-start;
+      }
+
+      .model-example .scenario {
+        flex: 1;
+      }
+
+      .model-example .scenario h3 {
+        font-size: 18px;
+        color: var(--accent-light);
+        margin-bottom: 6px;
+      }
+
+      .model-example .scenario p {
+        font-size: 15px;
+        color: var(--text-muted);
+        line-height: 1.5;
+      }
+
+      .model-example .recommendation {
+        flex: 0 0 280px;
+        background: rgba(13, 148, 136, 0.15);
+        border: 1px solid var(--primary);
+        border-radius: 12px;
+        padding: 16px;
+      }
+
+      .model-example .recommendation h4 {
+        font-size: 16px;
+        color: var(--primary-light);
+        margin-bottom: 6px;
+      }
+
+      .model-example .recommendation p {
+        font-size: 14px;
+        color: var(--text-muted);
+        line-height: 1.4;
+      }
+
+      /* ===== SLIDE 6: HOW IT WORKS ===== */
+      .how-slide {
+        background: radial-gradient(
+          ellipse at center,
+          #3d2d1b 0%,
+          var(--bg) 70%
+        );
+      }
+
+      .how-slide h2 {
+        font-size: 44px;
+        font-weight: 700;
+        margin-bottom: 48px;
+        color: var(--warning);
+      }
+
+      .steps {
+        display: flex;
+        gap: 28px;
+        max-width: 1100px;
+        width: 100%;
+      }
+
+      .step {
+        flex: 1;
+        background: var(--bg-card);
+        border-radius: 16px;
+        padding: 28px;
+        text-align: center;
+        position: relative;
+      }
+
+      .step-num {
+        width: 52px;
+        height: 52px;
+        background: var(--warning);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        font-weight: 800;
+        margin: 0 auto 14px;
+        color: var(--bg);
+      }
+
+      .step h3 {
+        font-size: 18px;
+        margin-bottom: 8px;
+      }
+      .step p {
+        font-size: 14px;
+        color: var(--text-muted);
+        line-height: 1.5;
+      }
+
+      .step-arrow {
+        position: absolute;
+        right: -22px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 28px;
+        color: var(--warning);
+      }
+
+      .step:last-child .step-arrow {
+        display: none;
+      }
+
+      /* ===== SLIDE 7: WHY GRADES ===== */
+      .grades-slide {
+        background: radial-gradient(
+          ellipse at center,
+          #1b3d1b 0%,
+          var(--bg) 70%
+        );
+      }
+
+      .grades-slide h2 {
+        font-size: 44px;
+        font-weight: 700;
+        margin-bottom: 16px;
+        color: var(--success);
+      }
+
+      .grades-subtitle {
+        font-size: 18px;
+        color: var(--text-muted);
+        margin-bottom: 40px;
+        text-align: center;
+      }
+
+      .grade-row {
+        display: flex;
+        gap: 16px;
+        max-width: 1000px;
+        width: 100%;
+      }
+
+      .grade-badge {
+        flex: 1;
+        background: var(--bg-card);
+        border-radius: 14px;
+        padding: 20px 14px;
+        text-align: center;
+      }
+
+      .grade-letter {
+        font-size: 48px;
+        font-weight: 800;
+        margin-bottom: 6px;
+      }
+
+      .grade-s .grade-letter {
+        color: #22c55e;
+      }
+      .grade-a .grade-letter {
+        color: #84cc16;
+      }
+      .grade-b .grade-letter {
+        color: #eab308;
+      }
+      .grade-c .grade-letter {
+        color: #f97316;
+      }
+      .grade-d .grade-letter {
+        color: #ef4444;
+      }
+      .grade-f .grade-letter {
+        color: #7f1d1d;
+      }
+
+      .grade-badge h4 {
+        font-size: 14px;
+        margin-bottom: 6px;
+      }
+      .grade-badge p {
+        font-size: 12px;
+        color: var(--text-muted);
+        line-height: 1.4;
+      }
+
+      /* ===== SLIDE 8: LEARNING PATH ===== */
+      .learning-slide {
+        background: radial-gradient(
+          ellipse at center,
+          #2d1b2d 0%,
+          var(--bg) 70%
+        );
+      }
+
+      .learning-slide h2 {
+        font-size: 44px;
+        font-weight: 700;
+        margin-bottom: 16px;
+        color: var(--accent-light);
+      }
+
+      .learning-subtitle {
+        font-size: 18px;
+        color: var(--text-muted);
+        margin-bottom: 40px;
+        text-align: center;
+      }
+
+      .learning-path {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        max-width: 850px;
+        width: 100%;
+      }
+
+      .learning-step {
+        background: var(--bg-card);
+        border-radius: 16px;
+        padding: 24px;
+        display: flex;
+        gap: 20px;
+        align-items: flex-start;
+      }
+
+      .learning-step .num {
+        width: 48px;
+        height: 48px;
+        background: var(--accent);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        font-weight: 800;
+        flex-shrink: 0;
+      }
+
+      .learning-step h3 {
+        font-size: 18px;
+        margin-bottom: 6px;
+        color: var(--accent-light);
+      }
+      .learning-step p {
+        font-size: 15px;
+        color: var(--text-muted);
+        line-height: 1.5;
+      }
+
+      /* ===== SLIDE 9: AI ADVISOR ===== */
+      .advisor-slide {
+        background: radial-gradient(
+          ellipse at center,
+          #1b2d2d 0%,
+          var(--bg) 70%
+        );
+        text-align: center;
+      }
+
+      .advisor-slide h2 {
+        font-size: 44px;
+        font-weight: 700;
+        margin-bottom: 16px;
+        color: var(--primary-light);
+      }
+
+      .advisor-subtitle {
+        font-size: 18px;
+        color: var(--text-muted);
+        margin-bottom: 40px;
+        max-width: 600px;
+      }
+
+      .chat-demo {
+        background: var(--bg-card);
+        border-radius: 16px;
+        padding: 28px;
+        max-width: 700px;
+        width: 100%;
+        text-align: left;
+      }
+
+      .chat-msg {
+        margin-bottom: 16px;
+      }
+
+      .chat-msg.user {
+        text-align: right;
+      }
+
+      .chat-bubble {
+        display: inline-block;
+        padding: 12px 18px;
+        border-radius: 14px;
+        font-size: 15px;
+        line-height: 1.5;
+        max-width: 85%;
+      }
+
+      .chat-msg.user .chat-bubble {
+        background: var(--accent);
+        color: white;
+        border-bottom-right-radius: 4px;
+      }
+
+      .chat-msg.ai .chat-bubble {
+        background: var(--bg-light);
+        color: var(--text);
+        border-bottom-left-radius: 4px;
+      }
+
+      .chat-label {
+        font-size: 12px;
+        color: var(--text-muted);
+        margin-bottom: 4px;
+        font-weight: 600;
+      }
+
+      /* ===== SLIDE 10: EDUCATIONAL ===== */
+      .edu-slide {
+        background: radial-gradient(
+          ellipse at center,
+          #3d3d1b 0%,
+          var(--bg) 70%
+        );
+      }
+
+      .edu-slide h2 {
+        font-size: 44px;
+        font-weight: 700;
+        margin-bottom: 16px;
+        color: var(--warning);
+      }
+
+      .edu-subtitle {
+        font-size: 18px;
+        color: var(--text-muted);
+        margin-bottom: 40px;
+        text-align: center;
+      }
+
+      .edu-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        max-width: 1000px;
+        width: 100%;
+      }
+
+      .edu-card {
+        background: var(--bg-card);
+        border-radius: 14px;
+        padding: 24px;
+      }
+
+      .edu-card .icon {
+        font-size: 36px;
+        margin-bottom: 10px;
+      }
+      .edu-card h3 {
+        font-size: 17px;
+        margin-bottom: 8px;
+        color: var(--warning);
+      }
+      .edu-card p {
+        font-size: 14px;
+        color: var(--text-muted);
+        line-height: 1.4;
+      }
+
+      /* ===== SLIDE 11: REAL EXAMPLE ===== */
+      .example-slide {
+        background: radial-gradient(
+          ellipse at center,
+          #1b3d3d 0%,
+          var(--bg) 70%
+        );
+      }
+
+      .example-slide h2 {
+        font-size: 44px;
+        font-weight: 700;
+        margin-bottom: 32px;
+        color: var(--primary-light);
+      }
+
+      .example-flow {
+        max-width: 850px;
+        width: 100%;
+      }
+
+      .example-row {
+        background: var(--bg-card);
+        border-radius: 14px;
+        padding: 20px 28px;
+        margin-bottom: 16px;
+        display: flex;
+        gap: 16px;
+        align-items: center;
+      }
+
+      .example-row .label {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--primary-light);
+        min-width: 120px;
+      }
+
+      .example-row .value {
+        font-size: 16px;
+        color: var(--text-muted);
+      }
+
+      .example-row .value strong {
+        color: var(--text);
+      }
+
+      .example-arrow {
+        text-align: center;
+        font-size: 28px;
+        color: var(--primary);
+        margin: 4px 0;
+      }
+
+      /* ===== SLIDE 12: CTA ===== */
+      .cta-slide {
+        background: radial-gradient(
+          ellipse at center,
+          #1a2744 0%,
+          var(--bg) 70%
+        );
+        text-align: center;
+      }
+
+      .cta-slide h2 {
+        font-size: 56px;
+        font-weight: 800;
+        background: linear-gradient(
+          135deg,
+          var(--primary-light),
+          var(--accent-light)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 20px;
+      }
+
+      .cta-slide p {
+        font-size: 22px;
+        color: var(--text-muted);
+        max-width: 650px;
+        margin-bottom: 36px;
+        line-height: 1.6;
+      }
+
+      .cta-buttons {
+        display: flex;
+        gap: 20px;
+      }
+
+      .cta-btn {
+        padding: 14px 28px;
+        border-radius: 12px;
+        font-size: 17px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: transform 0.2s;
+        cursor: pointer;
+        border: none;
+      }
+
+      .cta-btn.primary {
+        background: var(--primary);
+        color: var(--text);
+      }
+
+      .cta-btn.secondary {
+        background: var(--bg-card);
+        color: var(--text);
+        border: 1px solid var(--primary);
+      }
+
+      .cta-btn:hover {
+        transform: translateY(-3px);
+      }
+
+      /* ===== NAV ===== */
+      .progress-bar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 4px;
+        background: var(--primary);
+        transition: width 0.4s ease;
+        z-index: 100;
+      }
+
+      .nav {
+        position: fixed;
+        bottom: 28px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        background: var(--bg-card);
+        padding: 10px 22px;
+        border-radius: 40px;
+        z-index: 100;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+      }
+
+      .nav-btn {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        border: none;
+        background: var(--primary);
+        color: var(--text);
+        font-size: 18px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+      }
+
+      .nav-btn:hover {
+        background: var(--primary-dark);
+        transform: scale(1.1);
+      }
+      .nav-btn:disabled {
+        background: var(--bg-light);
+        color: var(--text-muted);
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .slide-counter {
+        font-size: 15px;
+        color: var(--text-muted);
+        min-width: 56px;
+        text-align: center;
+      }
+
+      .hint {
+        position: fixed;
+        bottom: 82px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 13px;
+        color: var(--text-muted);
+        opacity: 0.6;
+      }
+
+      .hint kbd {
+        background: var(--bg-card);
+        padding: 2px 7px;
+        border-radius: 4px;
+        border: 1px solid var(--text-muted);
+        font-size: 12px;
+      }
+
+      @media (max-width: 768px) {
+        .slide {
+          padding: 32px 20px;
+        }
+        .title-slide h1 {
+          font-size: 38px;
+        }
+        .title-slide .vision {
+          font-size: 18px;
+        }
+        .slide-header h2,
+        .which-slide h2,
+        .how-slide h2,
+        .grades-slide h2,
+        .learning-slide h2,
+        .advisor-slide h2,
+        .edu-slide h2,
+        .example-slide h2 {
+          font-size: 30px;
+        }
+        .problem-grid,
+        .edu-grid {
+          grid-template-columns: 1fr;
+        }
+        .vision-pillars,
+        .steps {
+          flex-direction: column;
+        }
+        .step-arrow {
+          display: none;
+        }
+        .grade-row {
+          flex-wrap: wrap;
+        }
+        .grade-badge {
+          flex: 1 1 calc(33% - 16px);
+        }
+        .model-example {
+          flex-direction: column;
+        }
+        .model-example .recommendation {
+          flex: auto;
+        }
+        .cta-buttons {
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="progress-bar" id="progressBar"></div>
+
+    <div class="presentation" id="presentation">
+      <!-- SLIDE 1: TITLE -->
+      <div class="slide title-slide active" data-slide="0">
+        <div class="logo-circle">AI</div>
+        <h1>AI Evaluator</h1>
+        <p class="vision">
+          <strong
+            >You don't need to be an AI expert to choose the right
+            model.</strong
+          ><br />
+          This tool guides you from "I have no idea which model to use" to
+          "Here's exactly what to run, how to run it, and why it's the best
+          choice for you."
+        </p>
+        <div class="tagline">
+          Your personal guide to understanding and deploying AI models
+        </div>
+      </div>
+
+      <!-- SLIDE 2: THE QUESTION -->
+      <div class="slide question-slide" data-slide="1">
+        <h2>Have You Ever Asked Yourself...</h2>
+        <div class="question-cards">
+          <div class="question-card">
+            <div class="q">
+              "There are hundreds of AI models — which one is right for ME?"
+            </div>
+            <div class="p">
+              You're not alone. Every day, new models are released with
+              confusing names, different sizes, and unclear requirements.
+            </div>
+          </div>
+          <div class="question-card">
+            <div class="q">"Will this model even run on my computer?"</div>
+            <div class="p">
+              Most model documentation assumes you already know your VRAM, RAM,
+              and GPU specs. What if you don't?
+            </div>
+          </div>
+          <div class="question-card">
+            <div class="q">"How do I actually run it once I pick one?"</div>
+            <div class="p">
+              Even after choosing a model, you need to install tools, run
+              commands, and configure settings. It shouldn't be this hard.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 3: THE PROBLEM -->
+      <div class="slide problem-slide" data-slide="2">
+        <div class="slide-header">
+          <h2>Why Is This So Hard?</h2>
+          <p>
+            The AI world moves fast — but understanding it shouldn't require a
+            PhD
+          </p>
+        </div>
+        <div class="problem-grid">
+          <div class="problem-card">
+            <div class="icon">🤯</div>
+            <h3>Too Many Choices</h3>
+            <p>
+              50+ new LLMs released every year. Each has multiple sizes (1B, 7B,
+              70B...) and formats (Q4, Q8, F16...). It's overwhelming.
+            </p>
+          </div>
+          <div class="problem-card">
+            <div class="icon">📖</div>
+            <h3>Confusing Documentation</h3>
+            <p>
+              Model cards use technical jargon. Terms like "quantization," "KV
+              cache," and "context window" are barriers for beginners.
+            </p>
+          </div>
+          <div class="problem-card">
+            <div class="icon">🖥️</div>
+            <h3>Hardware Mystery</h3>
+            <p>
+              Most people don't know their GPU VRAM or RAM bandwidth. And even
+              if they did, matching it to model requirements is guesswork.
+            </p>
+          </div>
+          <div class="problem-card">
+            <div class="icon">⏳</div>
+            <h3>Wasted Time</h3>
+            <p>
+              Teams spend days downloading models that crash, run too slow, or
+              don't fit. Then they start over. And over.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 4: THE VISION -->
+      <div class="slide vision-slide" data-slide="3">
+        <h2>Our Vision</h2>
+        <p class="vision-statement">
+          We believe <em>anyone</em> should be able to find, understand, and run
+          an AI model on their own computer —
+          <em>without needing to be an expert</em>. AI Evaluator is a
+          <em>learning tool</em> that guides you step by step, explains concepts
+          as you go, and gives you
+          <em>clear, personalised recommendations</em> based on your hardware
+          and your needs.
+        </p>
+        <div class="vision-pillars">
+          <div class="pillar">
+            <div class="icon">🎯</div>
+            <h3>Which Model</h3>
+            <p>
+              Instantly see every model that fits your hardware, ranked by
+              performance and graded S through F so you know at a glance what's
+              best.
+            </p>
+          </div>
+          <div class="pillar">
+            <div class="icon">🔧</div>
+            <h3>How to Run It</h3>
+            <p>
+              Copy-paste commands for Ollama, llama.cpp, or LM Studio. No
+              research needed — the exact command for your model and
+              quantization is ready.
+            </p>
+          </div>
+          <div class="pillar">
+            <div class="icon">💡</div>
+            <h3>Why This One</h3>
+            <p>
+              Every recommendation comes with reasoning: why this model fits
+              your use case, why this quantization, and why this runtime is best
+              for you.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 5: WHICH MODEL -->
+      <div class="slide which-slide" data-slide="4">
+        <h2>"Which Model Should I Use?"</h2>
+        <div class="model-examples">
+          <div class="model-example">
+            <div class="scenario">
+              <h3>📝 "I want to write and summarise documents"</h3>
+              <p>
+                You have a laptop with 16 GB RAM and no dedicated GPU. You need
+                a model that handles long texts well.
+              </p>
+            </div>
+            <div class="recommendation">
+              <h4>→ Llama 3.1 8B (Q4_K_M)</h4>
+              <p>
+                <strong>Grade A</strong> · 12 tok/s · Uses 5.2 GB RAM · 128K
+                context · Best for writing tasks on limited hardware
+              </p>
+            </div>
+          </div>
+          <div class="model-example">
+            <div class="scenario">
+              <h3>💻 "I need help with coding and code review"</h3>
+              <p>
+                You have a desktop with RTX 4070 (12 GB VRAM) and 32 GB RAM. You
+                want a model trained on code.
+              </p>
+            </div>
+            <div class="recommendation">
+              <h4>→ Qwen2.5 Coder 14B (Q4_K_M)</h4>
+              <p>
+                <strong>Grade S</strong> · 28 tok/s · Uses 9.1 GB VRAM · Excels
+                at code generation and review
+              </p>
+            </div>
+          </div>
+          <div class="model-example">
+            <div class="scenario">
+              <h3>
+                🔍 "I want to ask questions about my company documents" (RAG)
+              </h3>
+              <p>
+                You have a MacBook M3 with 36 GB unified memory. You need a
+                model that works well with retrieval-augmented generation.
+              </p>
+            </div>
+            <div class="recommendation">
+              <h4>→ Gemma 3 12B (Q8_0)</h4>
+              <p>
+                <strong>Grade S</strong> · 22 tok/s · Uses 13.4 GB · Excellent
+                RAG performance on Apple Silicon
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 6: HOW IT WORKS -->
+      <div class="slide how-slide" data-slide="5">
+        <h2>How It Works — 4 Simple Steps</h2>
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <h3>Tell Us Your Hardware</h3>
+            <p>
+              Enter your RAM, GPU, and CPU — or let the app detect them
+              automatically. No technical knowledge needed.
+            </p>
+            <div class="step-arrow">→</div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <h3>See What Fits</h3>
+            <p>
+              Instantly get every compatible model ranked by score. Each one
+              shows a grade (S–F), speed, and memory usage.
+            </p>
+            <div class="step-arrow">→</div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <h3>Understand Why</h3>
+            <p>
+              Click any model to see all its variants, benchmark scores, and a
+              plain-English explanation of why it's a good fit.
+            </p>
+            <div class="step-arrow">→</div>
+          </div>
+          <div class="step">
+            <div class="step-num">4</div>
+            <h3>Run It</h3>
+            <p>
+              Get copy-paste commands for your chosen runtime. Start running
+              your AI model in under 5 minutes.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 7: WHY GRADES -->
+      <div class="slide grades-slide" data-slide="6">
+        <h2>Simple Grades, Clear Meaning</h2>
+        <p class="grades-subtitle">
+          No technical jargon — just a letter that tells you how well a model
+          will work on your machine
+        </p>
+        <div class="grade-row">
+          <div class="grade-badge grade-s">
+            <div class="grade-letter">S</div>
+            <h4>Excellent</h4>
+            <p>
+              Runs fast, uses reasonable memory.
+              <strong>Best choice</strong> for your hardware.
+            </p>
+          </div>
+          <div class="grade-badge grade-a">
+            <div class="grade-letter">A</div>
+            <h4>Great</h4>
+            <p>
+              Good speed and memory. A <strong>solid choice</strong> for most
+              tasks.
+            </p>
+          </div>
+          <div class="grade-badge grade-b">
+            <div class="grade-letter">B</div>
+            <h4>Good</h4>
+            <p>
+              Works well but may be <strong>slightly slower</strong> or use more
+              memory.
+            </p>
+          </div>
+          <div class="grade-badge grade-c">
+            <div class="grade-letter">C</div>
+            <h4>Adequate</h4>
+            <p>
+              Fits but tight. Consider a <strong>smaller version</strong> of
+              this model.
+            </p>
+          </div>
+          <div class="grade-badge grade-d">
+            <div class="grade-letter">D</div>
+            <h4>Marginal</h4>
+            <p>
+              Very tight fit. May be <strong>slow or unstable</strong> on your
+              hardware.
+            </p>
+          </div>
+          <div class="grade-badge grade-f">
+            <div class="grade-letter">F</div>
+            <h4>Too Heavy</h4>
+            <p>
+              <strong>Won't fit</strong> on your hardware. You need more RAM or
+              a better GPU.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 8: LEARNING PATH -->
+      <div class="slide learning-slide" data-slide="7">
+        <h2>A Tool That Teaches You</h2>
+        <p class="learning-subtitle">
+          Every part of the app is designed to help you learn while you explore
+        </p>
+        <div class="learning-path">
+          <div class="learning-step">
+            <div class="num">1</div>
+            <div>
+              <h3>Learn Banners on Every Tab</h3>
+              <p>
+                Each section of the app has a dismissible banner that explains
+                the key concepts in plain English. What is an LLM? What is
+                quantization? What does "context window" mean? All explained
+                right where you need it.
+              </p>
+            </div>
+          </div>
+          <div class="learning-step">
+            <div class="num">2</div>
+            <div>
+              <h3>Guided Discovery Wizard</h3>
+              <p>
+                Don't know where to start? Answer a few simple questions about
+                what you want to do (writing, coding, analysis...) and the
+                wizard recommends the right algorithm, framework, and deployment
+                strategy — with explanations at every step.
+              </p>
+            </div>
+          </div>
+          <div class="learning-step">
+            <div class="num">3</div>
+            <div>
+              <h3>Glossary with 50+ Terms</h3>
+              <p>
+                Every technical term has a tooltip explanation. The Glossary tab
+                organises 32 use-case categories (RAG, agents, coding, etc.)
+                with detailed explanations and examples.
+              </p>
+            </div>
+          </div>
+          <div class="learning-step">
+            <div class="num">4</div>
+            <div>
+              <h3>AI Advisor Chat</h3>
+              <p>
+                Ask questions in natural language: "Which model should I use for
+                synthetic data generation on my 16 GB machine?" The AI advisor
+                answers with personalised recommendations and explains why.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 9: AI ADVISOR -->
+      <div class="slide advisor-slide" data-slide="8">
+        <h2>Your AI Advisor</h2>
+        <p class="advisor-subtitle">
+          Chat with an AI that knows your hardware and all 60+ models. It gives
+          personalised advice with reasoning.
+        </p>
+        <div class="chat-demo">
+          <div class="chat-msg user">
+            <div class="chat-label">You</div>
+            <div class="chat-bubble">
+              I have a MacBook M3 with 36 GB. I want to build a chatbot that
+              answers questions about my company's documents. Which model should
+              I use?
+            </div>
+          </div>
+          <div class="chat-msg ai">
+            <div class="chat-label">AI Advisor</div>
+            <div class="chat-bubble">
+              For your use case (RAG chatbot on company documents), I recommend
+              <strong>Gemma 3 12B</strong> with Q8_0 quantization.<br /><br />
+              <strong>Why:</strong> It has excellent instruction-following
+              ability, works great with Apple Silicon, and fits comfortably in
+              your 36 GB with room for the context window.<br /><br />
+              <strong>Grade:</strong> S-tier on your hardware ·
+              <strong>Speed:</strong> ~22 tok/s<br /><br />
+              <strong>How to run:</strong> Install Ollama, then run
+              <code>ollama run gemma3:12b</code>. You'll be up and running in 5
+              minutes.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 10: EDUCATIONAL -->
+      <div class="slide edu-slide" data-slide="9">
+        <h2>Built-In Learning</h2>
+        <p class="edu-subtitle">
+          You don't need prior AI knowledge — the app teaches you as you go
+        </p>
+        <div class="edu-grid">
+          <div class="edu-card">
+            <div class="icon">📚</div>
+            <h3>32 Use-Case Tags</h3>
+            <p>
+              RAG, agents, coding, chain-of-thought, function-calling,
+              summarisation... each explained with examples and related models.
+            </p>
+          </div>
+          <div class="edu-card">
+            <div class="icon">💬</div>
+            <h3>50+ Tooltip Definitions</h3>
+            <p>
+              Hover over any technical term (quantization, VRAM, context window,
+              tokens) for an instant plain-English explanation.
+            </p>
+          </div>
+          <div class="edu-card">
+            <div class="icon">🔀</div>
+            <h3>37 Algorithms Explained</h3>
+            <p>
+              From K-Means to Random Forest — each algorithm shows pros, cons,
+              when to use it, and ready-to-run code snippets.
+            </p>
+          </div>
+          <div class="edu-card">
+            <div class="icon">📦</div>
+            <h3>10 Frameworks Compared</h3>
+            <p>
+              PyTorch, TensorFlow, scikit-learn, JAX... ranked by your task,
+              team size, and deployment target with learning curve info.
+            </p>
+          </div>
+          <div class="edu-card">
+            <div class="icon">🚀</div>
+            <h3>7 Deployment Stacks</h3>
+            <p>
+              Ollama, llama.cpp, vLLM, TGI... each with install commands, config
+              flags, and resource requirements explained simply.
+            </p>
+          </div>
+          <div class="edu-card">
+            <div class="icon">📅</div>
+            <h3>Model Timeline</h3>
+            <p>
+              Visual history of AI from ChatGPT (2022) to Qwen 3 (2025).
+              Understand how the field evolved and which model families exist.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 11: REAL EXAMPLE -->
+      <div class="slide example-slide" data-slide="10">
+        <h2>From Zero to Running in Minutes</h2>
+        <div class="example-flow">
+          <div class="example-row">
+            <div class="label">Your Hardware</div>
+            <div class="value">
+              <strong>16 GB RAM</strong> · No GPU · Intel i5 (auto-detected)
+            </div>
+          </div>
+          <div class="example-arrow">↓</div>
+          <div class="example-row">
+            <div class="label">Top Recommendation</div>
+            <div class="value">
+              <strong>Llama 3.1 8B</strong> — Grade A · 8 tok/s · 5.2 GB RAM
+            </div>
+          </div>
+          <div class="example-arrow">↓</div>
+          <div class="example-row">
+            <div class="label">Why This Model?</div>
+            <div class="value">
+              Best <strong>balance of quality and speed</strong> for your
+              hardware. Fits in RAM with room for context. Excellent for writing
+              and general tasks.
+            </div>
+          </div>
+          <div class="example-arrow">↓</div>
+          <div class="example-row">
+            <div class="label">How to Run</div>
+            <div class="value">
+              <code>ollama run llama3.1:8b</code> —
+              <strong>one command</strong>, copy-paste ready
+            </div>
+          </div>
+          <div class="example-arrow">↓</div>
+          <div class="example-row">
+            <div class="label">Result</div>
+            <div class="value">
+              🎉 <strong>Running in under 5 minutes</strong> — no ML expertise
+              needed
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 12: CTA -->
+      <div class="slide cta-slide" data-slide="11">
+        <h2>Start Your AI Journey</h2>
+        <p>
+          You don't need to be an expert. You just need the right guide.<br />AI
+          Evaluator helps you understand which model to use, how to run it, and
+          why it's the right choice.
+        </p>
+        <div class="cta-buttons">
+          <a
+            href="https://github.com/LuisNietoHueso/AI_Evaluator"
+            class="cta-btn primary"
+            target="_blank"
+            >View on GitHub</a
+          >
+          <button class="cta-btn secondary" onclick="goToSlide(0)">
+            Back to Start
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- NAV -->
+    <div class="hint">
+      Use <kbd>←</kbd> <kbd>→</kbd> arrow keys or click the buttons
+    </div>
+    <div class="nav">
+      <button class="nav-btn" id="prevBtn" onclick="prevSlide()" disabled>
+        ←
+      </button>
+      <span class="slide-counter" id="slideCounter">1 / 12</span>
+      <button class="nav-btn" id="nextBtn" onclick="nextSlide()">→</button>
+    </div>
+
+    <script>
+      let currentSlide = 0;
+      const totalSlides = 12;
+      const slides = document.querySelectorAll(".slide");
+      const prevBtn = document.getElementById("prevBtn");
+      const nextBtn = document.getElementById("nextBtn");
+      const counter = document.getElementById("slideCounter");
+      const progressBar = document.getElementById("progressBar");
+
+      function updateSlide() {
+        slides.forEach((slide, index) => {
+          slide.classList.remove("active", "exit");
+          if (index === currentSlide) slide.classList.add("active");
+          else if (index < currentSlide) slide.classList.add("exit");
+        });
+        prevBtn.disabled = currentSlide === 0;
+        nextBtn.disabled = currentSlide === totalSlides - 1;
+        counter.textContent = `${currentSlide + 1} / ${totalSlides}`;
+        progressBar.style.width = `${((currentSlide + 1) / totalSlides) * 100}%`;
+      }
+
+      function nextSlide() {
+        if (currentSlide < totalSlides - 1) {
+          currentSlide++;
+          updateSlide();
+        }
+      }
+      function prevSlide() {
+        if (currentSlide > 0) {
+          currentSlide--;
+          updateSlide();
+        }
+      }
+      function goToSlide(i) {
+        currentSlide = i;
+        updateSlide();
+      }
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowRight" || e.key === " ") {
+          e.preventDefault();
+          nextSlide();
+        } else if (e.key === "ArrowLeft") {
+          e.preventDefault();
+          prevSlide();
+        } else if (e.key === "Home") {
+          e.preventDefault();
+          goToSlide(0);
+        } else if (e.key === "End") {
+          e.preventDefault();
+          goToSlide(totalSlides - 1);
+        }
+      });
+
+      let touchStartX = 0;
+      document.addEventListener("touchstart", (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+      });
+      document.addEventListener("touchend", (e) => {
+        const diff = touchStartX - e.changedTouches[0].screenX;
+        if (Math.abs(diff) > 50) {
+          diff > 0 ? nextSlide() : prevSlide();
+        }
+      });
+
+      updateSlide();
+    </script>
+  </body>
+</html>
