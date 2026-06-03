@@ -1508,37 +1508,56 @@
           desc: "Generate GDPR-compliant synthetic test data — no production data exposure",
         },
       ];
+      const CLOUD_LOGOS = {
+        aws: `<img src="https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/svg/aws.svg" alt="AWS" style="width:22px;height:22px;object-fit:contain;">`,
+        azure: `<img src="https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/svg/azure.svg" alt="Azure" style="width:22px;height:22px;object-fit:contain;">`,
+        gcp: `<img src="https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/svg/google-cloud.svg" alt="GCP" style="width:22px;height:22px;object-fit:contain;">`,
+        m365: `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" style="width:22px;height:22px;flex-shrink:0;"><rect width="40" height="40" rx="8" fill="#D83B01"/><rect x="8" y="8" width="11" height="11" rx="1" fill="#fff"/><rect x="21" y="8" width="11" height="11" rx="1" fill="#fff" opacity=".7"/><rect x="8" y="21" width="11" height="11" rx="1" fill="#fff" opacity=".7"/><rect x="21" y="21" width="11" height="11" rx="1" fill="#fff" opacity=".4"/></svg>`,
+        "on-prem": `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" style="width:22px;height:22px;flex-shrink:0;"><rect width="40" height="40" rx="8" fill="#475569"/><rect x="10" y="8" width="20" height="6" rx="1" fill="#94A3B8"/><circle cx="14" cy="11" r="1.5" fill="#22C55E"/><rect x="10" y="17" width="20" height="6" rx="1" fill="#94A3B8"/><circle cx="14" cy="20" r="1.5" fill="#22C55E"/><rect x="10" y="26" width="20" height="6" rx="1" fill="#94A3B8"/><circle cx="14" cy="29" r="1.5" fill="#22C55E"/></svg>`,
+        local: `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" style="width:22px;height:22px;flex-shrink:0;"><rect width="40" height="40" rx="8" fill="#6366F1"/><rect x="8" y="8" width="24" height="16" rx="2" fill="#fff" opacity=".9"/><rect x="14" y="26" width="12" height="2" rx="1" fill="#fff" opacity=".6"/><rect x="12" y="29" width="16" height="2" rx="1" fill="#fff" opacity=".4"/></svg>`,
+        "not-sure": `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" style="width:22px;height:22px;flex-shrink:0;"><rect width="40" height="40" rx="8" fill="#94A3B8"/><text x="20" y="28" text-anchor="middle" font-family="sans-serif" font-size="22" font-weight="700" fill="#fff">?</text></svg>`,
+      };
       const CLOUDS = [
-        { id: "aws", label: "AWS", icon: "☁️", desc: "Amazon Web Services" },
-        { id: "azure", label: "Azure", icon: "🔷", desc: "Microsoft Azure" },
+        {
+          id: "aws",
+          label: "AWS",
+          icon: CLOUD_LOGOS.aws,
+          desc: "Amazon Web Services",
+        },
+        {
+          id: "azure",
+          label: "Azure",
+          icon: CLOUD_LOGOS.azure,
+          desc: "Microsoft Azure",
+        },
         {
           id: "gcp",
           label: "Google Cloud",
-          icon: "🌐",
+          icon: CLOUD_LOGOS.gcp,
           desc: "Google Cloud Platform",
         },
         {
           id: "m365",
           label: "Microsoft 365",
-          icon: "📦",
+          icon: CLOUD_LOGOS.m365,
           desc: "M365 / SharePoint / Teams",
         },
         {
           id: "on-prem",
           label: "On-Premise",
-          icon: "🏢",
+          icon: CLOUD_LOGOS["on-prem"],
           desc: "Self-hosted, air-gapped or data centre",
         },
         {
           id: "local",
           label: "Laptop / Local",
-          icon: "💻",
+          icon: CLOUD_LOGOS.local,
           desc: "Developer machine or corporate laptop",
         },
         {
           id: "not-sure",
           label: "Not Sure",
-          icon: "❓",
+          icon: CLOUD_LOGOS["not-sure"],
           desc: "Not yet decided",
         },
       ];
@@ -1569,13 +1588,29 @@
           desc: "Cannot send data to external cloud APIs",
         },
       ];
+      const MODEL_LOGOS = {
+        "azure-openai": `<img src="https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/svg/azure.svg" alt="Azure" style="width:26px;height:26px;object-fit:contain;flex-shrink:0;">`,
+        claude: `<img src="https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/svg/anthropic.svg" alt="Anthropic" style="width:26px;height:26px;object-fit:contain;flex-shrink:0;">`,
+        nova: `<img src="https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/svg/aws.svg" alt="AWS" style="width:26px;height:26px;object-fit:contain;flex-shrink:0;">`,
+        llama: `<img src="https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/svg/meta.svg" alt="Meta" style="width:26px;height:26px;object-fit:contain;flex-shrink:0;">`,
+        phi4: `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" style="width:26px;height:26px;flex-shrink:0;"><rect width="40" height="40" rx="8" fill="#00A4EF"/><text x="20" y="26" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="16" font-weight="700" fill="#fff">Phi</text></svg>`,
+        gemini: `<img src="https://cdn.jsdelivr.net/gh/nicehash/demoMinerLogo@master/google-gemini-icon.svg" alt="Gemini" style="width:26px;height:26px;object-fit:contain;flex-shrink:0;" onerror="this.outerHTML='<svg viewBox=\\'0 0 40 40\\' xmlns=\\'http://www.w3.org/2000/svg\\' style=\\'width:26px;height:26px;flex-shrink:0;\\'><defs><linearGradient id=\\'gm1\\' x1=\\'0\\' y1=\\'0\\' x2=\\'40\\' y2=\\'40\\'><stop offset=\\'0\\' stop-color=\\'#4285F4\\'/><stop offset=\\'.5\\' stop-color=\\'#9B72CB\\'/><stop offset=\\'1\\' stop-color=\\'#D96570\\'/></linearGradient></defs><circle cx=\\'20\\' cy=\\'20\\' r=\\'18\\' fill=\\'url(#gm1)\\'/><circle cx=\\'20\\' cy=\\'20\\' r=\\'6\\' fill=\\'#fff\\'/></svg>'">`,
+        mistral: `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" style="width:26px;height:26px;flex-shrink:0;"><rect width="40" height="40" rx="4" fill="#1A1A2E"/><rect x="4" y="6" width="8" height="8" fill="#F7D046"/><rect x="16" y="6" width="8" height="8" fill="#F7D046"/><rect x="28" y="6" width="8" height="8" fill="#F7D046"/><rect x="4" y="16" width="8" height="8" fill="#F7D046"/><rect x="16" y="16" width="8" height="8" fill="#FF7000"/><rect x="28" y="16" width="8" height="8" fill="#F7D046"/><rect x="4" y="26" width="8" height="8" fill="#F7D046"/><rect x="16" y="26" width="8" height="8" fill="#F7D046"/><rect x="28" y="26" width="8" height="8" fill="#F7D046"/></svg>`,
+        gpt4o: `<img src="https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/svg/openai.svg" alt="OpenAI" style="width:26px;height:26px;object-fit:contain;flex-shrink:0;">`,
+        deepseek: `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" style="width:26px;height:26px;flex-shrink:0;"><rect width="40" height="40" rx="8" fill="#4D6BFE"/><path d="M12 20c0-4.4 3.6-8 8-8s8 3.6 8 8-3.6 8-8 8" stroke="#fff" stroke-width="2.5" fill="none" stroke-linecap="round"/><circle cx="20" cy="20" r="3" fill="#fff"/></svg>`,
+        cohere: `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" style="width:26px;height:26px;flex-shrink:0;"><rect width="40" height="40" rx="8" fill="#39594D"/><circle cx="15" cy="20" r="6" fill="#D18EE2"/><circle cx="27" cy="20" r="5" fill="#FF7759"/><circle cx="21" cy="12" r="4" fill="#39594D" stroke="#D18EE2" stroke-width="2"/></svg>`,
+      };
+      // ── Platform-centric model database ──────────────────────────────────────
+      // Each entry represents a cloud platform, not an individual model.
+      // The "best models for this task" line is injected dynamically.
       const MODEL_DB = {
-        "azure-openai": {
-          name: "Azure OpenAI (GPT-4o)",
+        "azure-foundry": {
+          name: "Azure AI Foundry",
+          logo: "azure-openai",
           strengths: [
-            "Enterprise compliance (SOC2, ISO27001)",
-            "Deep document understanding",
-            "Native M365 / SharePoint integration",
+            "Enterprise compliance (SOC2, ISO27001, GDPR)",
+            null, // placeholder — replaced at render time with task-specific models
+            "Native M365 / SharePoint / Copilot integration",
             "Managed within your Azure tenant",
           ],
           limitations: [
@@ -1584,132 +1619,297 @@
             "Cloud-only deployment",
           ],
           deployment:
-            "Azure OpenAI Service — managed API, deployable within your Azure tenant",
+            "Azure AI Foundry — all models deployable within your Azure tenant",
           tags: ["Cloud", "Enterprise", "Microsoft"],
           dataSafety:
             "Data stays within your Azure tenant. SOC2, ISO27001, GDPR compliant. No data used for model training.",
         },
-        claude: {
-          name: "Claude (Anthropic)",
-          strengths: [
-            "Exceptional reasoning and summarisation",
-            "Long context window (up to 200K tokens)",
-            "Strong safety and constitutional AI model",
-            "Available via AWS Bedrock or Anthropic API",
-          ],
-          limitations: [
-            "Not available for fully on-premise deployment",
-            "Costs vary by model tier",
-          ],
-          deployment:
-            "AWS Bedrock (Claude 3.5 Sonnet/Haiku) or direct Anthropic API",
-          tags: ["Cloud", "AWS Bedrock", "Long Context"],
-          dataSafety:
-            "Via Bedrock: data stays in your AWS account. Direct API: Anthropic does not train on your data. SOC2 Type II certified.",
-        },
-        nova: {
-          name: "Amazon Nova",
+        "aws-bedrock": {
+          name: "AWS Bedrock",
+          logo: "nova",
           strengths: [
             "Native AWS architecture and service integrations",
-            "Cost-effective at scale",
-            "Strong code understanding",
-            "Low latency in AWS regions",
+            null,
+            "Serverless, pay-per-token — scales to zero",
+            "Deep integration with S3, SageMaker, CloudWatch, and OpenSearch",
           ],
           limitations: [
-            "Less proven than OpenAI/Anthropic for complex reasoning",
-            "AWS-only ecosystem",
-          ],
-          deployment: "Amazon Bedrock — serverless, pay-per-token",
-          tags: ["AWS", "Cost-Effective", "Native"],
-          dataSafety:
-            "Data processed within your AWS account via Bedrock. AWS shared responsibility model applies. No data used for training.",
-        },
-        llama: {
-          name: "Llama 3.1 8B (Meta)",
-          strengths: [
-            "Runs fully locally on a standard corporate laptop",
-            "Zero data egress — fully air-gapped capable",
-            "Open weights — no licensing cost",
-            "Good for code and structured tasks",
-          ],
-          limitations: [
-            "Lower reasoning quality vs GPT-4 class models",
-            "Requires Ollama or similar local runner",
+            "AWS account and IAM configuration required",
+            "Some models may have regional availability limits",
           ],
           deployment:
-            "Ollama on local machine, or self-hosted via Docker on-prem",
+            "Amazon Bedrock — serverless, pay-per-token, fully managed",
+          tags: ["Cloud", "AWS", "Serverless"],
+          dataSafety:
+            "Data processed within your AWS account. AWS shared responsibility model applies. No data used for model training.",
+        },
+        "gcp-vertex": {
+          name: "Google Cloud Vertex AI",
+          logo: "gemini",
+          strengths: [
+            "Deep Google Workspace / Drive / Docs integration",
+            null,
+            "Native BigQuery, Looker, and Cloud Build integration",
+            "Vertex AI enterprise controls and Model Garden marketplace",
+          ],
+          limitations: [
+            "Best value within Google ecosystem",
+            "Some EU data residency caveats",
+          ],
+          deployment: "Google Vertex AI — managed, serverless, GCP-native",
+          tags: ["Cloud", "GCP", "Google Workspace"],
+          dataSafety:
+            "Data processed within your GCP project. Vertex AI provides enterprise-grade access controls. Check regional availability for EU data residency.",
+        },
+        "local-oss": {
+          name: "Local / On-Premise (Open Source)",
+          logo: "llama",
+          strengths: [
+            "Zero data egress — fully air-gapped capable",
+            null,
+            "Open weights — no licensing cost, full auditability",
+            "No cloud subscription or API costs",
+          ],
+          limitations: [
+            "Requires local GPU or CPU infrastructure",
+            "Lower reasoning quality vs frontier cloud models",
+            "No managed scaling — you handle ops",
+          ],
+          deployment:
+            "Ollama, vLLM, or LM Studio on local machine or on-prem Docker/Kubernetes",
           tags: ["Local", "Open Source", "Air-Gapped"],
           dataSafety:
             "Fully local — zero data leaves your machine. No external API calls. Complete air-gap capability for maximum data privacy.",
         },
-        phi4: {
-          name: "Phi-4 (Microsoft)",
+        "openai-direct": {
+          name: "OpenAI Platform (Direct API)",
+          logo: "gpt4o",
           strengths: [
-            "Extremely lightweight — designed for edge/laptop deployment",
-            "Strong benchmark performance for its size",
-            "Good for structured output and test generation",
-            "Open weights via Hugging Face",
+            "Access to the latest OpenAI frontier models",
+            null,
+            "Wide ecosystem and tooling support (LangChain, etc.)",
+            "Vision, code interpreter, and function calling built-in",
           ],
           limitations: [
-            "Not suited for very long documents",
-            "Less robust for open-ended chat",
+            "Data sent to OpenAI servers — validate your DPA",
+            "Highest cost per token for frontier models",
+            "No tenant-level isolation (use Azure OpenAI for that)",
           ],
-          deployment:
-            "Ollama, LM Studio, or Azure AI — also runs on CPU-only machines",
-          tags: ["Local", "Lightweight", "Edge"],
+          deployment: "OpenAI API — direct access, pay-per-token",
+          tags: ["Cloud", "SOTA", "OpenAI"],
           dataSafety:
-            "Runs fully offline when local. No data egress. Open weights — full auditability of model behaviour.",
+            "Data sent to OpenAI servers — validate your DPA for sensitive data. API data is not used for training. For tenant isolation, use Azure OpenAI instead.",
         },
-        gemini: {
-          name: "Gemini (Google)",
-          strengths: [
-            "Deep Google Workspace/Drive/Docs integration",
-            "Multimodal capability (vision + text)",
-            "Strong data analysis and chart generation",
-            "Vertex AI enterprise controls",
-          ],
-          limitations: [
-            "Best value within Google ecosystem only",
-            "Some EU data residency caveats",
-          ],
-          deployment: "Google Vertex AI — managed, serverless, GCP-native",
-          tags: ["GCP", "Google Workspace", "Multimodal"],
-          dataSafety:
-            "Data processed within your GCP project. Vertex AI provides enterprise-grade access controls. Check regional availability for EU data residency.",
+      };
+
+      // ── Task-specific model recommendations per platform ─────────────────────
+      const TASK_MODELS = {
+        "azure-foundry": {
+          "doc-summary":
+            "GPT-5.5, Claude Opus 4.8, DeepSeek-V4-Pro, Mistral Large 3",
+          chatbot: "GPT-5.5, Claude Sonnet 4.6, Kimi-K2.6, Mistral Large 3",
+          "test-gen":
+            "GPT-5.3-codex, Claude Sonnet 4.6, DeepSeek-V4-Pro, GPT-5.5",
+          "code-review":
+            "GPT-5.3-codex, Claude Opus 4.8, DeepSeek-V4-Pro, Grok-4",
+          "data-analysis":
+            "GPT-5.5, Claude Opus 4.8, DeepSeek-V4-Pro, Kimi-K2.6",
+          a11y: "GPT-5.5, Claude Opus 4.8, Grok-4",
+          "knowledge-search":
+            "GPT-5.5, Claude Sonnet 4.6, Mistral Large 3, DeepSeek-V4-Pro",
+          "req-analysis":
+            "Claude Opus 4.8, GPT-5.5, DeepSeek-V4-Pro, Mistral Large 3",
+          "log-analysis": "GPT-5.5, Claude Sonnet 4.6, DeepSeek-V4-Pro, Grok-4",
+          "test-results": "GPT-5.5, Claude Sonnet 4.6, DeepSeek-V4-Pro",
+          "synthetic-data":
+            "GPT-5.5, Claude Opus 4.8, DeepSeek-V4-Pro, Mistral Large 3",
         },
-        mistral: {
-          name: "Mistral (Mistral AI)",
-          strengths: [
-            "European-origin model — strong GDPR alignment",
-            "Available self-hosted or via API",
-            "Good multilingual performance",
-            "Efficient at code and structured tasks",
-          ],
-          limitations: [
-            "Smaller ecosystem vs OpenAI/Anthropic",
-            "Less capable on very complex reasoning tasks",
-          ],
-          deployment: "Self-hosted on-prem or via Mistral La Plateforme API",
-          tags: ["GDPR", "Self-Hosted", "EU"],
-          dataSafety:
-            "EU-headquartered company. Self-hosted option keeps all data on-prem. Strong GDPR alignment and data sovereignty.",
+        "aws-bedrock": {
+          "doc-summary":
+            "Claude Opus 4.8, GPT-5.5, Nova Premier, Cohere Command R+",
+          chatbot: "Claude Sonnet 4.6, GPT-5.5, Nova 2 Lite, Mistral Large 3",
+          "test-gen":
+            "Claude Sonnet 4.6, Devstral 2 123B, Nova Pro, DeepSeek-V3.2",
+          "code-review":
+            "Claude Opus 4.8, GPT-5.5, Devstral 2 123B, DeepSeek-V3.2",
+          "data-analysis": "Claude Opus 4.8, GPT-5.5, Nova Premier, Qwen3 235B",
+          a11y: "Claude Opus 4.8, GPT-5.5, Nova Pro, Llama 4 Maverick",
+          "knowledge-search":
+            "Cohere Command R+, Claude Sonnet 4.6, GPT-5.5, Nova Pro",
+          "req-analysis":
+            "Claude Opus 4.8, GPT-5.5, Nova Premier, Cohere Command R+",
+          "log-analysis": "Claude Sonnet 4.6, GPT-5.5, Nova Pro, DeepSeek-V3.2",
+          "test-results":
+            "Claude Sonnet 4.6, GPT-5.5, Nova Premier, DeepSeek-V3.2",
+          "synthetic-data":
+            "Claude Opus 4.8, GPT-5.5, Nova Premier, Llama 4 Maverick",
         },
-        gpt4o: {
-          name: "GPT-4o (OpenAI)",
-          strengths: [
-            "State-of-the-art reasoning and analysis",
-            "Excellent for data interpretation and charts",
-            "Vision + document understanding",
-            "Wide ecosystem and tooling support",
-          ],
-          limitations: [
-            "Data sent to OpenAI — validate DPA for sensitive data",
-            "Highest cost per token",
-          ],
-          deployment: "OpenAI API or Azure OpenAI (for compliant tenants)",
-          tags: ["Cloud", "SOTA", "Analysis"],
-          dataSafety:
-            "Data sent to OpenAI servers — validate your DPA for sensitive data. Via Azure OpenAI: data stays in your tenant. Not used for training with API.",
+        "gcp-vertex": {
+          "doc-summary":
+            "Gemini 2.5 Pro, Claude Opus 4.8, Llama 4 Maverick, Mistral Large 3",
+          chatbot: "Gemini 2.5 Flash, Claude Sonnet 4.6, Llama 4 Maverick",
+          "test-gen": "Gemini 2.5 Pro, Claude Sonnet 4.6, Llama 4 Scout",
+          "code-review":
+            "Gemini 2.5 Pro, Claude Opus 4.8, DeepSeek-R1, Llama 4 Maverick",
+          "data-analysis": "Gemini 2.5 Pro, Claude Opus 4.8, Llama 4 Maverick",
+          a11y: "Gemini 2.5 Pro, Claude Opus 4.8",
+          "knowledge-search":
+            "Gemini 2.5 Pro, Claude Sonnet 4.6, Llama 4 Maverick",
+          "req-analysis": "Claude Opus 4.8, Gemini 2.5 Pro, Mistral Large 3",
+          "log-analysis": "Gemini 2.5 Pro, Claude Sonnet 4.6, DeepSeek-R1",
+          "test-results": "Gemini 2.5 Pro, Claude Sonnet 4.6, DeepSeek-R1",
+          "synthetic-data": "Gemini 2.5 Pro, Claude Opus 4.8, Llama 4 Maverick",
+        },
+        "local-oss": {
+          "doc-summary":
+            "Llama 4 Maverick, Qwen3 32B, DeepSeek-V3.2, Mistral Large 3",
+          chatbot: "Llama 4 Maverick, Qwen3 32B, Mistral Large 3, Phi-4",
+          "test-gen": "DeepSeek-R1, Llama 4 Scout, Qwen3 Coder 30B, Phi-4",
+          "code-review":
+            "DeepSeek-R1, Qwen3 Coder 30B, Llama 4 Maverick, Devstral 2 123B",
+          "data-analysis":
+            "Llama 4 Maverick, DeepSeek-V3.2, Qwen3 235B, Mistral Large 3",
+          a11y: "Llama 4 Maverick, Qwen3 235B, DeepSeek-V3.2",
+          "knowledge-search":
+            "Llama 4 Maverick, Qwen3 235B, DeepSeek-V3.2, Mistral Large 3",
+          "req-analysis":
+            "DeepSeek-R1, Llama 4 Maverick, Qwen3 235B, Mistral Large 3",
+          "log-analysis": "Llama 4 Scout, DeepSeek-R1, Qwen3 32B, Phi-4",
+          "test-results": "DeepSeek-R1, Llama 4 Scout, Qwen3 32B, Phi-4",
+          "synthetic-data":
+            "Llama 4 Maverick, DeepSeek-V3.2, Qwen3 235B, Mistral Large 3",
+        },
+        "openai-direct": {
+          "doc-summary": "GPT-5.5, GPT-5.4, o4-mini",
+          chatbot: "GPT-5.5, GPT-5.4, o4-mini",
+          "test-gen": "GPT-5.3-codex, GPT-5.5, o4-mini",
+          "code-review": "GPT-5.3-codex, GPT-5.5, o3-pro",
+          "data-analysis": "GPT-5.5, o3-pro, o4-mini",
+          a11y: "GPT-5.5, o4-mini",
+          "knowledge-search": "GPT-5.5, GPT-5.4, o4-mini",
+          "req-analysis": "GPT-5.5, o3-pro, o4-mini",
+          "log-analysis": "GPT-5.5, o4-mini, GPT-5.4",
+          "test-results": "GPT-5.5, o4-mini, GPT-5.4",
+          "synthetic-data": "GPT-5.5, o4-mini, GPT-5.4",
+        },
+      };
+
+      // ── Task-specific reason per platform ────────────────────────────────────
+      const TASK_REASONS = {
+        "azure-foundry": {
+          "doc-summary":
+            "Models in your Azure tenant; processes Word/PDF via Document Intelligence.",
+          chatbot:
+            "Powers Microsoft Copilot Studio; native Teams and M365 integration with enterprise SLAs.",
+          "test-gen":
+            "Models in your Azure tenant; integrates with Azure DevOps for test management.",
+          "code-review":
+            "Models in your Azure tenant; proven in enterprise DevOps pipelines.",
+          "data-analysis":
+            "Pairs natively with Azure Synapse, Power BI, and Fabric for enterprise data analysis.",
+          a11y: "Vision-enabled models via Azure; integrates with Azure DevOps accessibility pipelines.",
+          "knowledge-search":
+            "Azure AI Search + AI Foundry models is the gold standard for M365/SharePoint RAG.",
+          "req-analysis":
+            "Models in your Azure tenant; pairs with Azure DevOps for requirements traceability.",
+          "log-analysis":
+            "Integrates with Azure Monitor, Log Analytics, and Application Insights for real-time log parsing.",
+          "test-results":
+            "Models in your Azure tenant; integrates with Azure DevOps Test Plans for automated result analysis.",
+          "synthetic-data":
+            "Models in your Azure tenant; generates high-fidelity synthetic data with full compliance controls.",
+        },
+        "aws-bedrock": {
+          "doc-summary":
+            "Multiple frontier models on Bedrock; 200K+ context windows handle entire contracts in one call.",
+          chatbot:
+            "Native Amazon Lex integration; lowest latency and cost for AWS chatbot deployments.",
+          "test-gen":
+            "Cost-effective models for high-volume test generation within AWS pipelines.",
+          "code-review":
+            "Frontier code models on Bedrock; integrates with CodeBuild and CodePipeline.",
+          "data-analysis":
+            "Native SageMaker and S3 integrations make Bedrock the natural AWS data platform.",
+          a11y: "Vision-capable models on Bedrock for automated accessibility checks in AWS CI pipelines.",
+          "knowledge-search":
+            "Deep integration with AWS OpenSearch and Bedrock Knowledge Bases for RAG pipelines.",
+          "req-analysis":
+            "200K+ context models handle full requirement docs; cost-effective parsing within AWS pipelines.",
+          "log-analysis":
+            "Native CloudWatch and OpenSearch integration for real-time log analysis on AWS.",
+          "test-results":
+            "Integrates with AWS CodeBuild and CodePipeline for automated test report analysis.",
+          "synthetic-data":
+            "Cost-effective high-volume synthetic data generation within AWS pipelines.",
+        },
+        "gcp-vertex": {
+          "doc-summary":
+            "Native Google Drive and Docs integration; handles long documents via Vertex AI.",
+          chatbot:
+            "Powers Google Agentspace and Dialogflow CX; native GCP/Workspace integration.",
+          "test-gen":
+            "Integrated with Cloud Build and Test Lab for automated test suite generation.",
+          "code-review":
+            "Gemini Code Assist and frontier models built for GCP DevOps pipelines.",
+          "data-analysis":
+            "Native BigQuery and Looker integration — the obvious choice for GCP data stacks.",
+          a11y: "Multimodal vision models for screenshot analysis; integrates with GCP accessibility tooling.",
+          "knowledge-search":
+            "Vertex AI Search + Model Garden is the native GCP RAG stack; tight Drive integration.",
+          "req-analysis":
+            "Native Google Docs integration; Vertex AI handles long requirement documents natively.",
+          "log-analysis":
+            "Native integration with Cloud Logging and BigQuery for scalable log analysis.",
+          "test-results":
+            "Integrates with Cloud Build and Test Lab for automated test result analysis.",
+          "synthetic-data":
+            "Native BigQuery and Vertex AI integration for generating and storing synthetic datasets at scale.",
+        },
+        "local-oss": {
+          "doc-summary":
+            "Runs fully air-gapped — processes sensitive documents with zero data egress.",
+          chatbot:
+            "Self-hosted chatbot with zero cloud dependency; full control over data and latency.",
+          "test-gen":
+            "Cost-free local test generation; no API costs even at high volume.",
+          "code-review":
+            "Air-gapped code review — no source code leaves your network.",
+          "data-analysis":
+            "Analyse sensitive datasets locally; no data transmitted to external services.",
+          a11y: "Local accessibility analysis; no screenshots or code sent externally.",
+          "knowledge-search":
+            "Self-hosted RAG pipeline; all data stays within your infrastructure.",
+          "req-analysis":
+            "Process sensitive requirement documents with zero data egress.",
+          "log-analysis":
+            "Parse logs locally — no sensitive system data leaves your infrastructure.",
+          "test-results":
+            "Analyse test results on-prem; integrates with local CI/CD pipelines.",
+          "synthetic-data":
+            "Generate synthetic data locally — guarantees no production data exposure.",
+        },
+        "openai-direct": {
+          "doc-summary":
+            "Frontier reasoning for complex document comprehension and structured extraction.",
+          chatbot:
+            "Gold standard for enterprise chatbot deployments; proven at scale globally.",
+          "test-gen":
+            "Best structured output quality for BDD, Gherkin, and unit test generation.",
+          "code-review":
+            "SOTA code reasoning across all languages and frameworks.",
+          "data-analysis":
+            "Code Interpreter and deep reasoning make this the top choice for analytics workloads.",
+          a11y: "Vision + deep WCAG knowledge; analyses both code and visual screenshots.",
+          "knowledge-search":
+            "SOTA retrieval reasoning; wide ecosystem of RAG frameworks (LangChain, LlamaIndex).",
+          "req-analysis":
+            "SOTA reasoning for ambiguity detection and requirements classification.",
+          "log-analysis":
+            "Excellent pattern recognition and anomaly detection across structured and unstructured logs.",
+          "test-results":
+            "Best analytical reasoning for identifying failure patterns and regression trends.",
+          "synthetic-data":
+            "Best-in-class structured data generation — realistic, diverse, and schema-aware.",
         },
       };
 
@@ -1719,836 +1919,113 @@
         const cloudOnly = constraints.includes("cloud-only");
         const highSec = constraints.includes("high-security");
         const lowHW = constraints.includes("low-hw");
-        const needsCitations = constraints.includes("citations");
 
-        // ── Local / on-prem: open-source models win outright ──────────────────────
+        // ── Local / on-prem ───────────────────────────────────────────────────────
         if (
           (localOnly || cloud === "local" || cloud === "on-prem") &&
           !cloudOnly
         ) {
-          if (lowHW) {
-            recs.recommended.push({
-              model: "phi4",
-              reason:
-                "Tiny footprint — runs on CPU-only machines. Best choice under 16GB RAM.",
-            });
+          recs.recommended.push({
+            model: "local-oss",
+            reason:
+              TASK_REASONS["local-oss"][problem] ||
+              "Self-hosted open-source models for maximum data privacy.",
+          });
+          if (!localOnly) {
             recs.possible.push({
-              model: "llama",
+              model: "azure-foundry",
               reason:
-                "Slightly heavier than Phi-4 but stronger reasoning for complex tasks.",
-            });
-          } else {
-            recs.recommended.push({
-              model: "llama",
-              reason:
-                "Strong open-source model; runs fully air-gapped with no data egress.",
-            });
-            recs.recommended.push({
-              model: "mistral",
-              reason:
-                "European model, excellent GDPR posture; self-hostable via Docker or Ollama.",
-            });
-            recs.possible.push({
-              model: "phi4",
-              reason:
-                "Worth considering if hardware is constrained or startup time matters.",
+                "Consider if you later need managed scale — all models also available on Azure AI Foundry.",
             });
           }
           recs.not_ideal.push({
-            model: "azure-openai",
+            model: "openai-direct",
             reason:
-              "Cloud-only SaaS product — cannot be deployed on-premise or locally.",
+              "Sends data to OpenAI servers — incompatible with on-premise / air-gapped requirements.",
           });
-          return finalise(
-            recs,
-            highSec,
-            cloudOnly,
-            lowHW,
-            needsCitations,
-            cloud,
-          );
+          return finalise(recs, problem);
         }
 
         // ── AWS ───────────────────────────────────────────────────────────────────
         if (cloud === "aws") {
-          if (problem === "code-review") {
-            recs.recommended.push({
-              model: "nova",
-              reason:
-                "Amazon Nova is purpose-built for code tasks on Bedrock — native, fast, cost-effective.",
-            });
-            recs.recommended.push({
-              model: "claude",
-              reason:
-                "Claude 3.5 Sonnet excels at complex multi-file code reasoning via Bedrock.",
-            });
-            recs.possible.push({
-              model: "gpt4o",
-              reason:
-                "Capable, but cross-cloud adds latency and data governance overhead.",
-            });
-          } else if (problem === "test-gen") {
-            recs.recommended.push({
-              model: "nova",
-              reason:
-                "Highly cost-effective for high-volume, templated test case generation on Bedrock.",
-            });
-            recs.possible.push({
-              model: "claude",
-              reason:
-                "Better for complex BDD/Gherkin scenarios requiring nuanced understanding.",
-            });
-            recs.not_ideal.push({
-              model: "gemini",
-              reason:
-                "No native AWS integration; adds unnecessary cross-cloud complexity.",
-            });
-          } else if (problem === "data-analysis") {
-            recs.recommended.push({
-              model: "nova",
-              reason:
-                "Native SageMaker and S3 integrations make it the natural AWS data model.",
-            });
-            recs.recommended.push({
-              model: "gpt4o",
-              reason:
-                "Superior statistical reasoning; worth the cross-cloud call for complex analysis.",
-            });
-            recs.possible.push({
-              model: "claude",
-              reason:
-                "Good at narrative data summaries and structured report generation.",
-            });
-          } else if (problem === "chatbot") {
-            recs.recommended.push({
-              model: "nova",
-              reason:
-                "Native Amazon Lex integration; lowest latency and cost for AWS chatbot deployments.",
-            });
-            recs.possible.push({
-              model: "claude",
-              reason:
-                "Higher quality responses for complex queries — balance cost vs quality.",
-            });
-            recs.not_ideal.push({
-              model: "azure-openai",
-              reason:
-                "No native AWS integration; cross-cloud adds latency and compliance risk.",
-            });
-          } else if (problem === "doc-summary") {
-            recs.recommended.push({
-              model: "claude",
-              reason:
-                "200K context window handles entire contracts in one call — no chunking needed on Bedrock.",
-            });
-            recs.possible.push({
-              model: "nova",
-              reason:
-                "Cost-efficient for high-volume batch summarisation where depth is less critical.",
-            });
-            recs.not_ideal.push({
-              model: "phi4",
-              reason:
-                "Context window too small for enterprise-length documents.",
-            });
-          } else if (problem === "knowledge-search") {
-            recs.recommended.push({
-              model: "nova",
-              reason:
-                "Deep integration with AWS OpenSearch and Bedrock Knowledge Bases for RAG pipelines.",
-            });
-            recs.recommended.push({
-              model: "claude",
-              reason:
-                "Best reasoning quality over retrieved chunks; excellent at synthesising multi-doc answers.",
-            });
-            recs.possible.push({
-              model: "gpt4o",
-              reason:
-                "Strong retrieval reasoning, but cross-cloud adds architectural complexity.",
-            });
-          } else if (problem === "a11y") {
-            recs.recommended.push({
-              model: "gpt4o",
-              reason:
-                "Vision capability lets it analyse screenshots directly; strong WCAG rule coverage.",
-            });
-            recs.possible.push({
-              model: "nova",
-              reason:
-                "Good for automated code-level accessibility checks in CI pipelines on AWS.",
-            });
-            recs.not_ideal.push({
-              model: "phi4",
-              reason:
-                "No multimodal vision — limited to text/code analysis only.",
-            });
-          } else if (problem === "req-analysis") {
-            recs.recommended.push({
-              model: "claude",
-              reason:
-                "200K context handles full requirement docs; excels at structured extraction via Bedrock.",
-            });
-            recs.recommended.push({
-              model: "nova",
-              reason:
-                "Cost-effective for high-volume requirements parsing within AWS pipelines.",
-            });
-            recs.possible.push({
-              model: "gpt4o",
-              reason:
-                "Strong reasoning but cross-cloud adds governance overhead.",
-            });
-            recs.not_ideal.push({
-              model: "phi4",
-              reason:
-                "Too lightweight for complex requirements analysis; limited structured output.",
-            });
-          } else if (problem === "log-analysis") {
-            recs.recommended.push({
-              model: "nova",
-              reason:
-                "Native CloudWatch and OpenSearch integration for real-time log analysis on AWS.",
-            });
-            recs.possible.push({
-              model: "claude",
-              reason:
-                "Excellent pattern recognition across large log volumes via Bedrock.",
-            });
-            recs.not_ideal.push({
-              model: "phi4",
-              reason:
-                "Local-only model with no cloud log pipeline integration.",
-            });
-          } else if (problem === "test-results") {
-            recs.recommended.push({
-              model: "nova",
-              reason:
-                "Integrates with AWS CodeBuild and CodePipeline for automated test report analysis.",
-            });
-            recs.recommended.push({
-              model: "claude",
-              reason:
-                "Strong at identifying regression patterns and summarising failures across test suites.",
-            });
-            recs.possible.push({
-              model: "gpt4o",
-              reason:
-                "Excellent analytical reasoning but requires cross-cloud API access.",
-            });
-            recs.not_ideal.push({
-              model: "phi4",
-              reason:
-                "Limited analytical depth for complex multi-suite test result correlation.",
-            });
-          } else if (problem === "synthetic-data") {
-            recs.recommended.push({
-              model: "claude",
-              reason:
-                "Excels at generating diverse, realistic synthetic datasets via Bedrock — strong structure and edge-case coverage.",
-            });
-            recs.recommended.push({
-              model: "nova",
-              reason:
-                "Cost-effective for high-volume synthetic data generation within AWS pipelines.",
-            });
-            recs.possible.push({
-              model: "gpt4o",
-              reason:
-                "SOTA data generation quality but cross-cloud adds governance overhead.",
-            });
-            recs.not_ideal.push({
-              model: "phi4",
-              reason:
-                "Limited output diversity and volume capacity for enterprise-scale synthetic data.",
-            });
-          }
+          recs.recommended.push({
+            model: "aws-bedrock",
+            reason:
+              TASK_REASONS["aws-bedrock"][problem] ||
+              "Native AWS model platform with serverless, pay-per-token pricing.",
+          });
+          recs.possible.push({
+            model: "local-oss",
+            reason:
+              "Open-source alternative — host Llama 4, DeepSeek, or Qwen3 on-prem for zero data egress and no API costs.",
+          });
+          return finalise(recs, problem);
         }
 
         // ── Azure / M365 ──────────────────────────────────────────────────────────
-        else if (["azure", "m365"].includes(cloud)) {
-          if (problem === "knowledge-search") {
-            recs.recommended.push({
-              model: "azure-openai",
-              reason:
-                "Azure AI Search + GPT-4o is the gold standard for M365/SharePoint RAG. Fully compliant.",
-            });
-            recs.possible.push({
-              model: "claude",
-              reason:
-                "Available via Azure Marketplace; strong long-context document reasoning.",
-            });
+        if (["azure", "m365"].includes(cloud)) {
+          recs.recommended.push({
+            model: "azure-foundry",
+            reason:
+              TASK_REASONS["azure-foundry"][problem] ||
+              "Models deployed within your Azure tenant with full enterprise compliance.",
+          });
+          recs.possible.push({
+            model: "local-oss",
+            reason:
+              "Open-source alternative — self-host Llama 4, DeepSeek, or Qwen3 for air-gapped environments with no cloud dependency.",
+          });
+          if (highSec) {
             recs.not_ideal.push({
-              model: "llama",
+              model: "openai-direct",
               reason:
-                "Open-source models lack enterprise connectors for M365 and SharePoint.",
-            });
-          } else if (problem === "chatbot") {
-            recs.recommended.push({
-              model: "azure-openai",
-              reason:
-                "Powers Microsoft Copilot Studio; native Teams and M365 integration with enterprise SLAs.",
-            });
-            recs.possible.push({
-              model: "mistral",
-              reason:
-                "Available on Azure Marketplace; good if you need European data residency.",
-            });
-            recs.not_ideal.push({
-              model: "nova",
-              reason:
-                "AWS-native product — no meaningful Azure integration path.",
-            });
-          } else if (problem === "doc-summary") {
-            recs.recommended.push({
-              model: "azure-openai",
-              reason:
-                "GPT-4o deployed in your Azure tenant; processes Word/PDF via Document Intelligence.",
-            });
-            recs.possible.push({
-              model: "phi4",
-              reason:
-                "Lightweight option if documents are short and cost is a priority.",
-            });
-            recs.not_ideal.push({
-              model: "nova",
-              reason:
-                "AWS-only — no native path into Azure document pipelines.",
-            });
-          } else if (problem === "code-review") {
-            recs.recommended.push({
-              model: "azure-openai",
-              reason:
-                "GPT-4o via Azure is proven for code review in enterprise DevOps pipelines.",
-            });
-            recs.possible.push({
-              model: "phi4",
-              reason:
-                "Surprisingly capable at code review; available on Azure AI Studio for low-cost use.",
-            });
-            recs.not_ideal.push({
-              model: "nova",
-              reason: "No Azure integration — AWS-native only.",
-            });
-          } else if (problem === "test-gen") {
-            recs.recommended.push({
-              model: "azure-openai",
-              reason:
-                "GPT-4o generates high-quality, structured test cases; integrates with Azure DevOps.",
-            });
-            recs.possible.push({
-              model: "phi4",
-              reason:
-                "Cost-effective for simple, templated test generation at volume on Azure AI.",
-            });
-            recs.not_ideal.push({
-              model: "gemini",
-              reason: "GCP-native — no meaningful Azure DevOps integration.",
-            });
-          } else if (problem === "data-analysis") {
-            recs.recommended.push({
-              model: "azure-openai",
-              reason:
-                "Pairs natively with Azure Synapse, Power BI, and Fabric for enterprise data analysis.",
-            });
-            recs.recommended.push({
-              model: "gpt4o",
-              reason:
-                "SOTA reasoning; deploy via Azure OpenAI to keep data within your tenant boundary.",
-            });
-            recs.not_ideal.push({
-              model: "nova",
-              reason: "AWS-native — no path into Azure data services.",
-            });
-          } else if (problem === "a11y") {
-            recs.recommended.push({
-              model: "azure-openai",
-              reason:
-                "Vision-enabled GPT-4o via Azure; integrates with Azure DevOps accessibility pipelines.",
-            });
-            recs.possible.push({
-              model: "phi4",
-              reason:
-                "Available on Azure AI Studio; good for code-level static accessibility analysis.",
-            });
-            recs.not_ideal.push({
-              model: "nova",
-              reason: "No Azure integration and limited accessibility tooling.",
-            });
-          } else if (problem === "req-analysis") {
-            recs.recommended.push({
-              model: "azure-openai",
-              reason:
-                "GPT-4o in your Azure tenant; pairs with Azure DevOps for requirements traceability.",
-            });
-            recs.possible.push({
-              model: "claude",
-              reason:
-                "Available via Azure Marketplace; excels at long-document requirements extraction.",
-            });
-            recs.not_ideal.push({
-              model: "nova",
-              reason: "AWS-native — no Azure DevOps integration path.",
-            });
-          } else if (problem === "log-analysis") {
-            recs.recommended.push({
-              model: "azure-openai",
-              reason:
-                "Integrates with Azure Monitor, Log Analytics, and Application Insights for real-time log parsing.",
-            });
-            recs.possible.push({
-              model: "phi4",
-              reason:
-                "Lightweight option on Azure AI Studio for simple log pattern detection.",
-            });
-            recs.not_ideal.push({
-              model: "nova",
-              reason: "AWS-only — no Azure log pipeline integration.",
-            });
-          } else if (problem === "test-results") {
-            recs.recommended.push({
-              model: "azure-openai",
-              reason:
-                "GPT-4o integrates with Azure DevOps Test Plans for automated result analysis and regression detection.",
-            });
-            recs.possible.push({
-              model: "phi4",
-              reason:
-                "Cost-effective on Azure AI for simple pass/fail summaries at volume.",
-            });
-            recs.not_ideal.push({
-              model: "gemini",
-              reason: "GCP-native — no meaningful Azure DevOps integration.",
-            });
-          } else if (problem === "synthetic-data") {
-            recs.recommended.push({
-              model: "azure-openai",
-              reason:
-                "GPT-4o in your Azure tenant generates high-fidelity synthetic data with full compliance controls.",
-            });
-            recs.possible.push({
-              model: "phi4",
-              reason:
-                "Lightweight option on Azure AI for simple synthetic data schemas at low cost.",
-            });
-            recs.not_ideal.push({
-              model: "nova",
-              reason:
-                "AWS-native — no Azure integration for data pipeline generation.",
+                "Sends data to OpenAI servers outside your tenant — use Azure AI Foundry for tenant isolation instead.",
             });
           }
+          return finalise(recs, problem);
         }
 
         // ── Google Cloud ──────────────────────────────────────────────────────────
-        else if (cloud === "gcp") {
-          if (problem === "data-analysis") {
-            recs.recommended.push({
-              model: "gemini",
-              reason:
-                "Native BigQuery and Looker integration — the obvious choice for GCP data stacks.",
-            });
-            recs.possible.push({
-              model: "gpt4o",
-              reason:
-                "Better raw reasoning for complex statistical problems; cross-cloud via API.",
-            });
-            recs.not_ideal.push({
-              model: "nova",
-              reason: "AWS-native with no GCP data integrations.",
-            });
-          } else if (problem === "doc-summary") {
-            recs.recommended.push({
-              model: "gemini",
-              reason:
-                "Native Google Drive and Docs integration; handles long documents via Vertex AI.",
-            });
-            recs.possible.push({
-              model: "claude",
-              reason:
-                "Available on Vertex AI; superior summarisation depth for critical documents.",
-            });
-            recs.not_ideal.push({
-              model: "azure-openai",
-              reason:
-                "Azure-hosted — cross-cloud adds latency and governance overhead.",
-            });
-          } else if (problem === "knowledge-search") {
-            recs.recommended.push({
-              model: "gemini",
-              reason:
-                "Vertex AI Search + Gemini is the native GCP RAG stack; tight Drive integration.",
-            });
-            recs.possible.push({
-              model: "claude",
-              reason:
-                "Available via Vertex AI Model Garden; strong multi-document synthesis.",
-            });
-            recs.not_ideal.push({
-              model: "nova",
-              reason: "AWS Bedrock product — no GCP integration path.",
-            });
-          } else if (problem === "chatbot") {
-            recs.recommended.push({
-              model: "gemini",
-              reason:
-                "Powers Google Agentspace and Dialogflow CX; native GCP/Workspace integration.",
-            });
-            recs.possible.push({
-              model: "gpt4o",
-              reason:
-                "Higher conversational quality for complex support scenarios; available via API.",
-            });
-            recs.not_ideal.push({
-              model: "nova",
-              reason: "AWS-only product with no GCP deployment option.",
-            });
-          } else if (problem === "code-review") {
-            recs.recommended.push({
-              model: "gemini",
-              reason:
-                "Gemini Code Assist is built for GCP DevOps pipelines and Cloud Workstations.",
-            });
-            recs.recommended.push({
-              model: "gpt4o",
-              reason:
-                "SOTA code reasoning for complex multi-language review beyond Gemini strengths.",
-            });
-            recs.not_ideal.push({
-              model: "nova",
-              reason: "AWS-native — no meaningful GCP toolchain integration.",
-            });
-          } else if (problem === "test-gen") {
-            recs.recommended.push({
-              model: "gemini",
-              reason:
-                "Integrated with Cloud Build and Test Lab; Gemini Code Assist generates test suites.",
-            });
-            recs.possible.push({
-              model: "gpt4o",
-              reason:
-                "Stronger at edge-case reasoning for complex test scenario generation.",
-            });
-            recs.not_ideal.push({
-              model: "llama",
-              reason:
-                "Local model — no cloud integration and requires separate hosting.",
-            });
-          } else if (problem === "a11y") {
-            recs.recommended.push({
-              model: "gemini",
-              reason:
-                "Multimodal vision for screenshot analysis; integrates with GCP accessibility tooling.",
-            });
-            recs.possible.push({
-              model: "gpt4o",
-              reason:
-                "Stronger WCAG knowledge base; good for detailed standards-based audits.",
-            });
-            recs.not_ideal.push({
-              model: "phi4",
-              reason:
-                "No vision capability; limited to code-only accessibility checks.",
-            });
-          } else if (problem === "req-analysis") {
-            recs.recommended.push({
-              model: "gemini",
-              reason:
-                "Native Google Docs integration; Vertex AI handles long requirement documents natively.",
-            });
-            recs.possible.push({
-              model: "claude",
-              reason:
-                "Available on Vertex AI Model Garden; superior at structured extraction from complex specs.",
-            });
-            recs.not_ideal.push({
-              model: "nova",
-              reason: "AWS-native — no GCP integration path.",
-            });
-          } else if (problem === "log-analysis") {
-            recs.recommended.push({
-              model: "gemini",
-              reason:
-                "Native integration with Cloud Logging and BigQuery for scalable log analysis.",
-            });
-            recs.possible.push({
-              model: "gpt4o",
-              reason:
-                "Strong pattern recognition for complex log correlation; available cross-cloud via API.",
-            });
-            recs.not_ideal.push({
-              model: "nova",
-              reason: "AWS-native with no GCP log pipeline integration.",
-            });
-          } else if (problem === "test-results") {
-            recs.recommended.push({
-              model: "gemini",
-              reason:
-                "Integrates with Cloud Build and Test Lab for automated test result analysis.",
-            });
-            recs.possible.push({
-              model: "gpt4o",
-              reason:
-                "Superior analytical reasoning for complex regression detection; cross-cloud via API.",
-            });
-            recs.not_ideal.push({
-              model: "nova",
-              reason: "AWS-only — no GCP CI/CD integration.",
-            });
-          } else if (problem === "synthetic-data") {
-            recs.recommended.push({
-              model: "gemini",
-              reason:
-                "Native BigQuery and Vertex AI integration for generating and storing synthetic datasets at scale.",
-            });
-            recs.possible.push({
-              model: "gpt4o",
-              reason:
-                "Superior data diversity and realism; available cross-cloud via API.",
-            });
-            recs.not_ideal.push({
-              model: "nova",
-              reason: "AWS-native — no GCP data pipeline integration.",
-            });
-          }
+        if (cloud === "gcp") {
+          recs.recommended.push({
+            model: "gcp-vertex",
+            reason:
+              TASK_REASONS["gcp-vertex"][problem] ||
+              "Native GCP model platform with Vertex AI enterprise controls.",
+          });
+          recs.possible.push({
+            model: "local-oss",
+            reason:
+              "Open-source alternative — self-host Llama 4, DeepSeek, or Qwen3 on-prem for full data sovereignty.",
+          });
+          return finalise(recs, problem);
         }
 
         // ── Not Sure / generic ────────────────────────────────────────────────────
-        else {
-          if (problem === "code-review") {
-            recs.recommended.push({
-              model: "gpt4o",
-              reason:
-                "GPT-4o is the benchmark for code review quality across all languages and frameworks.",
-            });
-            recs.recommended.push({
-              model: "nova",
-              reason:
-                "Strong cost-to-quality ratio for automated code analysis in CI pipelines.",
-            });
-            recs.possible.push({
-              model: "phi4",
-              reason:
-                "Capable local option if you want no-cost, no-egress code review.",
-            });
-          } else if (problem === "test-gen") {
-            recs.recommended.push({
-              model: "gpt4o",
-              reason:
-                "Best structured output quality for BDD, Gherkin, and unit test generation.",
-            });
-            recs.possible.push({
-              model: "phi4",
-              reason:
-                "Cost-free local option; solid for simple test scaffolding on a laptop.",
-            });
-            recs.not_ideal.push({
-              model: "gemini",
-              reason:
-                "Test generation is not a primary strength versus GPT-4o class models.",
-            });
-          } else if (problem === "doc-summary") {
-            recs.recommended.push({
-              model: "claude",
-              reason:
-                "200K context window is unmatched — processes entire legal or technical documents in one pass.",
-            });
-            recs.possible.push({
-              model: "gpt4o",
-              reason:
-                "Excellent comprehension; more widely integrated with document tooling ecosystems.",
-            });
-            recs.not_ideal.push({
-              model: "phi4",
-              reason:
-                "Short context window makes it unsuitable for long enterprise documents.",
-            });
-          } else if (problem === "knowledge-search") {
-            recs.recommended.push({
-              model: "gpt4o",
-              reason:
-                "SOTA retrieval reasoning; wide ecosystem of RAG frameworks (LangChain, LlamaIndex).",
-            });
-            recs.possible.push({
-              model: "mistral",
-              reason:
-                "Strong open option if you need self-hosted RAG with no data leaving your network.",
-            });
-            recs.not_ideal.push({
-              model: "phi4",
-              reason:
-                "Limited context window reduces effectiveness for knowledge retrieval tasks.",
-            });
-          } else if (problem === "chatbot") {
-            recs.recommended.push({
-              model: "gpt4o",
-              reason:
-                "Gold standard for enterprise chatbot deployments; proven at scale globally.",
-            });
-            recs.possible.push({
-              model: "mistral",
-              reason:
-                "Good open-source option if cost or data residency is a concern.",
-            });
-            recs.not_ideal.push({
-              model: "phi4",
-              reason:
-                "Designed for edge use cases — not suitable for high-volume conversational AI.",
-            });
-          } else if (problem === "data-analysis") {
-            recs.recommended.push({
-              model: "gpt4o",
-              reason:
-                "Code Interpreter and data reasoning make GPT-4o the top choice for analytics workloads.",
-            });
-            recs.recommended.push({
-              model: "gemini",
-              reason:
-                "Strong chart and BI tool integration; excellent multimodal data comprehension.",
-            });
-            recs.not_ideal.push({
-              model: "llama",
-              reason:
-                "Local models lack the reasoning depth needed for complex data analysis tasks.",
-            });
-          } else if (problem === "a11y") {
-            recs.recommended.push({
-              model: "gpt4o",
-              reason:
-                "Vision + deep WCAG knowledge; can analyse both code and visual screenshots.",
-            });
-            recs.possible.push({
-              model: "gemini",
-              reason:
-                "Good multimodal alternative; useful for design-phase visual audits.",
-            });
-            recs.not_ideal.push({
-              model: "phi4",
-              reason:
-                "No vision capability and limited accessibility-specific training data.",
-            });
-          } else if (problem === "req-analysis") {
-            recs.recommended.push({
-              model: "claude",
-              reason:
-                "200K context window processes entire requirement documents in one pass with structured extraction.",
-            });
-            recs.recommended.push({
-              model: "gpt4o",
-              reason:
-                "SOTA reasoning for ambiguity detection and requirements classification.",
-            });
-            recs.possible.push({
-              model: "mistral",
-              reason:
-                "Good self-hosted option if requirements contain sensitive IP.",
-            });
-            recs.not_ideal.push({
-              model: "phi4",
-              reason:
-                "Limited context window and reasoning depth for complex requirements documents.",
-            });
-          } else if (problem === "log-analysis") {
-            recs.recommended.push({
-              model: "gpt4o",
-              reason:
-                "Excellent pattern recognition and anomaly detection across structured and unstructured logs.",
-            });
-            recs.possible.push({
-              model: "claude",
-              reason:
-                "Strong at correlating events across large log volumes with long context window.",
-            });
-            recs.not_ideal.push({
-              model: "phi4",
-              reason:
-                "Limited context window makes it unsuitable for large log file analysis.",
-            });
-          } else if (problem === "test-results") {
-            recs.recommended.push({
-              model: "gpt4o",
-              reason:
-                "Best analytical reasoning for identifying failure patterns and regression trends.",
-            });
-            recs.possible.push({
-              model: "claude",
-              reason:
-                "Excellent at summarising test reports and suggesting root causes.",
-            });
-            recs.not_ideal.push({
-              model: "phi4",
-              reason:
-                "Limited reasoning depth for complex multi-suite test analysis.",
-            });
-          } else if (problem === "synthetic-data") {
-            recs.recommended.push({
-              model: "gpt4o",
-              reason:
-                "Best-in-class structured data generation — realistic, diverse, and schema-aware synthetic datasets.",
-            });
-            recs.recommended.push({
-              model: "claude",
-              reason:
-                "Excellent at generating edge-case-rich synthetic data with strong format control.",
-            });
-            recs.possible.push({
-              model: "mistral",
-              reason:
-                "Good self-hosted option if synthetic data must stay fully on-premise.",
-            });
-            recs.not_ideal.push({
-              model: "phi4",
-              reason:
-                "Limited output volume and diversity for enterprise-scale synthetic data generation.",
-            });
-          }
-        }
-
-        return finalise(recs, highSec, cloudOnly, lowHW, needsCitations, cloud);
+        recs.recommended.push({
+          model: "azure-foundry",
+          reason:
+            "Widest model catalog with enterprise compliance — the safe default for most organisations.",
+        });
+        recs.recommended.push({
+          model: "aws-bedrock",
+          reason:
+            "Strong alternative if your infrastructure is AWS-centric; excellent Claude and Nova models.",
+        });
+        recs.possible.push({
+          model: "gcp-vertex",
+          reason:
+            "Best choice if you're in the Google ecosystem; strong Gemini and Claude models.",
+        });
+        recs.possible.push({
+          model: "local-oss",
+          reason:
+            "Consider if data sensitivity or air-gap requirements are paramount.",
+        });
+        return finalise(recs, problem);
       }
 
-      function finalise(
-        recs,
-        highSec,
-        cloudOnly,
-        lowHW,
-        needsCitations,
-        cloud,
-      ) {
-        if (highSec && !["azure", "m365"].includes(cloud)) {
-          const i = recs.recommended.findIndex((r) => r.model === "gpt4o");
-          if (i > -1) {
-            const item = recs.recommended.splice(i, 1)[0];
-            item.reason +=
-              " (Note: validate your DPA — data leaves to OpenAI servers)";
-            recs.possible.push(item);
-          }
-        }
-        if (cloudOnly) {
-          recs.recommended = recs.recommended.filter(
-            (r) => !["llama", "phi4", "mistral"].includes(r.model),
-          );
-          recs.possible = recs.possible.filter(
-            (r) => !["llama", "phi4", "mistral"].includes(r.model),
-          );
-        }
-        if (lowHW && !recs.recommended.find((r) => r.model === "phi4")) {
-          recs.recommended.unshift({
-            model: "phi4",
-            reason:
-              "Designed for low-resource environments; runs on CPU-only machines.",
-          });
-        }
-        if (
-          needsCitations &&
-          !recs.recommended.find((r) => r.model === "claude") &&
-          !recs.possible.find((r) => r.model === "claude")
-        ) {
-          recs.possible.unshift({
-            model: "claude",
-            reason:
-              "Excellent at grounded, citation-aware responses in RAG pipelines.",
-          });
-        }
+      function finalise(recs, problem) {
         const seen = new Set();
         ["recommended", "possible", "not_ideal"].forEach((t) => {
           recs[t] = recs[t].filter((r) => {
@@ -2561,7 +2038,7 @@
           recs.recommended.push(recs.possible.shift());
         if (recs.recommended.length > 2)
           recs.recommended = recs.recommended.slice(0, 2);
-        if (recs.possible.length > 1) recs.possible = recs.possible.slice(0, 1);
+        if (recs.possible.length > 2) recs.possible = recs.possible.slice(0, 2);
         recs.not_ideal = recs.not_ideal.slice(0, 1);
         return recs;
       }
@@ -2738,6 +2215,17 @@
             const model = MODEL_DB[rec.model];
             if (!model) return;
             hasContent = true;
+            const taskModels =
+              (TASK_MODELS[rec.model] &&
+                TASK_MODELS[rec.model][selectedProblem]) ||
+              null;
+            const strengths = model.strengths
+              .map((s) =>
+                s === null && taskModels
+                  ? `<b>Best models for this task:</b> ${taskModels}`
+                  : s,
+              )
+              .filter(Boolean);
             const card = document.createElement("div");
             card.className = "rec-card" + (tier.topCard ? " top" : "");
             if (tier.topCard) card.style.borderColor = tier.borderColor;
@@ -2745,7 +2233,7 @@
         <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px;">
           <div>
             <span class="badge ${tier.cls}" style="margin-bottom:8px;display:inline-block;">${tier.dot} ${tier.label}</span>
-            <h3 style="font-size:19px;margin:0;font-weight:700;letter-spacing:-0.01em">${model.name}</h3>
+            <h3 style="font-size:19px;margin:0;font-weight:700;letter-spacing:-0.01em;display:flex;align-items:center;gap:8px;">${model.logo && MODEL_LOGOS[model.logo] ? MODEL_LOGOS[model.logo] : ""}${model.name}</h3>
           </div>
           <div style="display:flex;flex-wrap:wrap;gap:6px;">${model.tags.map((t) => `<span class="tag">${t}</span>`).join("")}</div>
         </div>
@@ -2755,7 +2243,7 @@
         <div class="rec-meta-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
           <div>
             <div style="font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Strengths</div>
-            <ul style="margin:0;padding-left:0;list-style:none;">${model.strengths.map((s) => `<li style="font-size:13px;color:var(--2i-navy);padding:2px 0;display:flex;gap:6px;align-items:flex-start;"><span style="color:var(--2i-cornflower);font-size:12px;margin-top:1px;flex-shrink:0;">▲</span>${s}</li>`).join("")}</ul>
+            <ul style="margin:0;padding-left:0;list-style:none;">${strengths.map((s) => `<li style="font-size:13px;color:var(--2i-navy);padding:2px 0;display:flex;gap:6px;align-items:flex-start;"><span style="color:var(--2i-cornflower);font-size:12px;margin-top:1px;flex-shrink:0;">▲</span>${s}</li>`).join("")}</ul>
           </div>
           <div>
             <div style="font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Limitations</div>
