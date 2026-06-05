@@ -1681,6 +1681,66 @@
           dataSafety:
             "Fully local — zero data leaves your machine. No external API calls. Complete air-gap capability for maximum data privacy.",
         },
+        "selfhost-azure": {
+          name: "Azure Compute — Self-Managed Open Source",
+          logo: "azure-openai",
+          strengths: [
+            "Full control over model selection and configuration",
+            null,
+            "Open weights — no per-token API costs, predictable compute billing",
+            "Data stays within your Azure tenant and virtual network",
+          ],
+          limitations: [
+            "You manage infrastructure, scaling, and updates",
+            "Requires GPU VMs (NC/ND-series) — availability may vary by region",
+            "May involve external API calls depending on serving framework",
+          ],
+          deployment:
+            "Azure VMs (NC/ND-series), Azure Container Instances, AKS, or Azure Container Registry with vLLM/Ollama/TGI",
+          tags: ["Cloud", "Open Source", "Azure"],
+          dataSafety:
+            "Data stays within your Azure tenant and VNET. You control the full stack. Model weights are open — fully auditable. External calls depend on your serving configuration.",
+        },
+        "selfhost-aws": {
+          name: "AWS EC2 / ECS — Self-Managed Open Source",
+          logo: "nova",
+          strengths: [
+            "Full control over model selection and configuration",
+            null,
+            "Open weights — no per-token API costs, predictable compute billing",
+            "Data stays within your AWS VPC",
+          ],
+          limitations: [
+            "You manage infrastructure, scaling, and updates",
+            "Requires GPU instances (p4d/p5/g5) — capacity limits may apply",
+            "May involve external API calls depending on serving framework",
+          ],
+          deployment:
+            "EC2 GPU instances, ECS/EKS with ECR, or SageMaker endpoints running vLLM/Ollama/TGI",
+          tags: ["Cloud", "Open Source", "AWS"],
+          dataSafety:
+            "Data stays within your AWS VPC. You control the full stack. Model weights are open — fully auditable. External calls depend on your serving configuration.",
+        },
+        "selfhost-gcp": {
+          name: "GCP Compute — Self-Managed Open Source",
+          logo: "gemini",
+          strengths: [
+            "Full control over model selection and configuration",
+            null,
+            "Open weights — no per-token API costs, predictable compute billing",
+            "Data stays within your GCP project and VPC",
+          ],
+          limitations: [
+            "You manage infrastructure, scaling, and updates",
+            "Requires GPU VMs (A100/H100) — availability may vary by zone",
+            "May involve external API calls depending on serving framework",
+          ],
+          deployment:
+            "Compute Engine GPU VMs, GKE with Artifact Registry, or Vertex AI custom containers running vLLM/Ollama/TGI",
+          tags: ["Cloud", "Open Source", "GCP"],
+          dataSafety:
+            "Data stays within your GCP project and VPC. You control the full stack. Model weights are open — fully auditable. External calls depend on your serving configuration.",
+        },
         "openai-direct": {
           name: "OpenAI Platform (Direct API)",
           logo: "gpt4o",
@@ -1955,9 +2015,9 @@
               "Native AWS model platform with serverless, pay-per-token pricing.",
           });
           recs.possible.push({
-            model: "local-oss",
+            model: "selfhost-aws",
             reason:
-              "Open-source alternative — host Llama 4, DeepSeek, or Qwen3 on-prem for zero data egress and no API costs.",
+              "Self-managed alternative — deploy Llama 4, DeepSeek, or Qwen3 on EC2/ECS within your VPC for full control and predictable costs.",
           });
           return finalise(recs, problem);
         }
@@ -1971,9 +2031,9 @@
               "Models deployed within your Azure tenant with full enterprise compliance.",
           });
           recs.possible.push({
-            model: "local-oss",
+            model: "selfhost-azure",
             reason:
-              "Open-source alternative — self-host Llama 4, DeepSeek, or Qwen3 for air-gapped environments with no cloud dependency.",
+              "Self-managed alternative — deploy Llama 4, DeepSeek, or Qwen3 on Azure VMs/AKS within your tenant for full control and predictable costs.",
           });
           if (highSec) {
             recs.not_ideal.push({
@@ -1994,9 +2054,9 @@
               "Native GCP model platform with Vertex AI enterprise controls.",
           });
           recs.possible.push({
-            model: "local-oss",
+            model: "selfhost-gcp",
             reason:
-              "Open-source alternative — self-host Llama 4, DeepSeek, or Qwen3 on-prem for full data sovereignty.",
+              "Self-managed alternative — deploy Llama 4, DeepSeek, or Qwen3 on Compute Engine/GKE within your VPC for full control and predictable costs.",
           });
           return finalise(recs, problem);
         }
@@ -2215,10 +2275,15 @@
             const model = MODEL_DB[rec.model];
             if (!model) return;
             hasContent = true;
+            const tmKey = TASK_MODELS[rec.model]
+              ? rec.model
+              : rec.model.startsWith("selfhost-")
+                ? "local-oss"
+                : null;
             const taskModels =
-              (TASK_MODELS[rec.model] &&
-                TASK_MODELS[rec.model][selectedProblem]) ||
-              null;
+              tmKey && TASK_MODELS[tmKey]
+                ? TASK_MODELS[tmKey][selectedProblem] || null
+                : null;
             const strengths = model.strengths
               .map((s) =>
                 s === null && taskModels

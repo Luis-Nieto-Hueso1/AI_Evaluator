@@ -683,6 +683,20 @@
           font-size: 11px;
         }
       }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .ai-spinner {
+        width: 32px;
+        height: 32px;
+        border: 3px solid var(--border);
+        border-top-color: var(--2i-cobalt);
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+        margin: 0 auto;
+      }
     </style>
   </head>
   <body>
@@ -1175,8 +1189,12 @@
                 >
                   ← Back
                 </button>
-                <button class="cta-btn" onclick="wizSubmit()">
-                  Submit Answer →
+                <button
+                  class="cta-btn"
+                  id="wiz-submit-btn"
+                  onclick="wizSubmit()"
+                >
+                  Next →
                 </button>
               </div>
             </div>
@@ -1223,6 +1241,10 @@
             </div>
           </div>
           <div id="wiz-final-output" style="margin-top: 16px"></div>
+
+          <!-- AI Recommendation Panel -->
+          <div id="wiz-ai-recs" style="margin-top: 24px"></div>
+
           <div
             style="
               display: flex;
@@ -1249,6 +1271,22 @@
                 <rect x="6" y="14" width="12" height="8" />
               </svg>
               Print
+            </button>
+            <button class="tool-btn" onclick="wizDownload()">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                style="width: 14px; height: 14px"
+              >
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+              Download TXT
             </button>
             <button class="tool-btn" onclick="wizCopy()">
               📋 Copy to Clipboard
@@ -1589,6 +1627,8 @@
         document.getElementById("wiz-answer").value = wizAnswers[wizStep] || "";
         document.getElementById("wiz-back-btn").style.visibility =
           wizStep > 0 ? "visible" : "hidden";
+        document.getElementById("wiz-submit-btn").textContent =
+          wizStep === 9 ? "Finish & Get Recommendations →" : "Next →";
         document.getElementById("wiz-feedback").style.display = "none";
         document.getElementById("wiz-active").style.display = "block";
         document.getElementById("wiz-answer").focus();
@@ -1602,45 +1642,19 @@
           return;
         }
         wizAnswers[wizStep] = ans;
-
-        const t = WIZ_TECH[wizStep];
-        const isLast = wizStep === 9;
-        let html = "";
-        html +=
-          '<div style="margin-bottom:14px;"><div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--2i-cobalt);margin-bottom:6px;">🧠 What This Means for Your Engineering Team</div>';
-        html +=
-          '<div style="font-size:14px;color:var(--2i-navy);line-height:1.6;">' +
-          t.tech +
-          "</div></div>";
-        html +=
-          '<div style="margin-bottom:14px;padding:14px 16px;background:var(--2i-green-pale);border-radius:10px;border-left:3px solid var(--2i-green);">';
-        html +=
-          '<div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--2i-green-dark);margin-bottom:6px;">💡 Optimization Tips</div>';
-        html +=
-          '<ul style="margin:0;padding-left:18px;font-size:13px;color:var(--2i-navy);line-height:1.6;">';
-        t.tips.forEach((tip) => {
-          html += '<li style="margin-bottom:4px;">' + tip + "</li>";
-        });
-        html += "</ul></div>";
-        html +=
-          '<div style="padding:12px 16px;background:var(--2i-lavender);border-radius:10px;border-left:3px solid var(--2i-cornflower);">';
-        html +=
-          '<div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--2i-cobalt);margin-bottom:4px;">✅ Your Answer (Saved)</div>';
-        html +=
-          '<div style="font-size:13px;color:var(--2i-navy);line-height:1.5;font-style:italic;">"' +
-          ans.replace(/</g, "&lt;") +
-          '"</div></div>';
-
-        document.getElementById("wiz-feedback-content").innerHTML = html;
-        document.getElementById("wiz-next-btn").textContent = isLast
-          ? "🎉 See Your Complete Cheat Sheet"
-          : "🚀 Next: Step " + (wizStep + 2) + " →";
-        document.getElementById("wiz-active").style.display = "none";
-        document.getElementById("wiz-feedback").style.display = "block";
-
-        // Add to log
         renderWizLog();
         renderWizDots();
+
+        if (wizStep >= 9) {
+          wizFinish();
+          return;
+        }
+        wizStep++;
+        showWizQuestion();
+        window.scrollTo({
+          top: document.getElementById("wiz-active").offsetTop - 120,
+          behavior: "smooth",
+        });
       }
 
       function renderWizLog() {
@@ -1722,12 +1736,14 @@
             "</div>";
         });
         document.getElementById("wiz-final-output").innerHTML = html;
+        renderAIRecommendations();
       }
 
       function wizRestart() {
         wizStep = 0;
         wizAnswers = [];
         document.getElementById("wiz-summary").style.display = "none";
+        document.getElementById("wiz-ai-recs").innerHTML = "";
         document.getElementById("wiz-log").style.display = "block";
         document.getElementById("wiz-log").innerHTML = "";
         document.getElementById("wiz-intro").style.display = "block";
@@ -1752,6 +1768,572 @@
             btn.textContent = "📋 Copy to Clipboard";
           }, 2000);
         });
+      }
+
+      // ═══════════════ AI RECOMMENDATION ENGINE ═══════════════
+
+      const PLATFORMS = {
+        "azure-foundry": {
+          name: "Azure AI Foundry",
+          icon: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/svg/azure.svg",
+          color: "#0078d4",
+          desc: "Enterprise-grade models within your Azure tenant — GPT-4o, Llama 4, Phi-4, and more with full compliance controls.",
+        },
+        "aws-bedrock": {
+          name: "AWS Bedrock",
+          icon: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/svg/aws.svg",
+          color: "#ff9900",
+          desc: "Serverless model platform on AWS — Claude, Nova, Llama 4, and Mistral with pay-per-token pricing.",
+        },
+        "gcp-vertex": {
+          name: "Google Vertex AI",
+          icon: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/svg/google-cloud.svg",
+          color: "#4285f4",
+          desc: "Google's AI platform — Gemini 2.5, Claude, and Llama models with enterprise controls.",
+        },
+        "local-oss": {
+          name: "Self-Hosted Open Source",
+          icon: "",
+          color: "#6b21a8",
+          desc: "Run Llama 4, DeepSeek, Qwen3, or Mistral on your own infrastructure for maximum data control.",
+        },
+        "openai-direct": {
+          name: "OpenAI Direct",
+          icon: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/svg/openai.svg",
+          color: "#10a37f",
+          desc: "Direct OpenAI API access — GPT-4o, o3, and DALL-E with the latest features first.",
+        },
+      };
+
+      function analyzeAnswers() {
+        const all = wizAnswers.map((a) => (a || "").toLowerCase()).join(" ");
+        const a = (i) => (wizAnswers[i] || "").toLowerCase();
+
+        // Detect cloud platform — Q9 (deployment) takes priority over Q5 (data location)
+        let cloud = "not-sure";
+        const deployText = a(8);
+        const dataText = a(4);
+        if (/aws|amazon|bedrock|s3|ec2|lambda/.test(deployText)) cloud = "aws";
+        else if (/azure|microsoft|m365|teams/.test(deployText)) cloud = "azure";
+        else if (/google|gcp|vertex|bigquery/.test(deployText)) cloud = "gcp";
+        else if (/on.?prem|local|air.?gap|self.?host/.test(deployText))
+          cloud = "local";
+        else if (/aws|amazon|bedrock|s3|ec2|lambda/.test(dataText))
+          cloud = "aws";
+        else if (/azure|microsoft|m365|teams|sharepoint/.test(dataText))
+          cloud = "azure";
+        else if (/google|gcp|vertex|bigquery/.test(dataText)) cloud = "gcp";
+        else if (/on.?prem|local|air.?gap|self.?host/.test(dataText))
+          cloud = "local";
+
+        // Detect sensitivity from Q6
+        const highSec =
+          /high|gdpr|hipaa|pii|personal|confidential|regulated|iso.?27001|sensitive|legal|salary|health/.test(
+            a(5),
+          );
+        const localOnly =
+          /on.?prem|air.?gap|must not leave|cannot leave|no external|no third.?party|local only/.test(
+            a(5) + " " + a(8),
+          );
+
+        // Detect use case type from Q1
+        let taskType = "general";
+        const problemText = a(0);
+        if (/chat|question|answer|faq|support|help.?desk/.test(problemText))
+          taskType = "chatbot";
+        else if (/test|qa|quality|automat/.test(problemText))
+          taskType = "test-gen";
+        else if (/document|summar|report|analys/.test(problemText))
+          taskType = "doc-analysis";
+        else if (/code|develop|review|generat/.test(problemText))
+          taskType = "code-gen";
+        else if (/classif|categoriz|sort|label|triage/.test(problemText))
+          taskType = "classification";
+        else if (/search|retriev|find|knowledge/.test(problemText))
+          taskType = "knowledge-search";
+        else if (/data|extract|parse|structur/.test(problemText))
+          taskType = "data-analysis";
+
+        // Detect citation/RAG need from Q8
+        const needsRAG =
+          /yes|mandatory|must|cite|citation|source|evidence|audit|trace/.test(
+            a(7),
+          );
+
+        // Detect accuracy requirement from Q7
+        const highAccuracy =
+          /high|99|precise|critical|safety|legal|medical/.test(a(6));
+
+        // Detect scale from Q2
+        const largeScale =
+          /thousand|[5-9]\d{2,}|[1-9]\d{3,}|enterprise|company.?wide|all employee/.test(
+            a(1),
+          );
+
+        // Build recommendations
+        const recs = {
+          recommended: [],
+          good_alternatives: [],
+          considerations: [],
+        };
+
+        const taskReasons = {
+          chatbot: {
+            primary:
+              "Conversational AI with context retention and natural dialogue.",
+            rag: "Combined with RAG architecture for grounded, cited answers.",
+          },
+          "test-gen": {
+            primary:
+              "Structured output generation for test cases with high precision.",
+            rag: "",
+          },
+          "doc-analysis": {
+            primary:
+              "Large context windows for document processing and summarisation.",
+            rag: "RAG enables retrieval across large document collections.",
+          },
+          "code-gen": {
+            primary:
+              "Code-aware models with strong reasoning for generation and review.",
+            rag: "",
+          },
+          classification: {
+            primary: "Fast, accurate classification and categorisation tasks.",
+            rag: "",
+          },
+          "knowledge-search": {
+            primary: "Semantic search and retrieval-augmented generation.",
+            rag: "RAG architecture is essential for this use case.",
+          },
+          "data-analysis": {
+            primary:
+              "Analytical reasoning over structured and unstructured data.",
+            rag: "",
+          },
+          general: {
+            primary:
+              "Versatile model capabilities for general-purpose AI tasks.",
+            rag: "",
+          },
+        };
+
+        const reason = taskReasons[taskType] || taskReasons.general;
+
+        if (localOnly || cloud === "local") {
+          recs.recommended.push({
+            key: "local-oss",
+            reason:
+              "Self-hosted deployment keeps all data within your infrastructure — required for your data sensitivity and deployment constraints.",
+          });
+          if (!localOnly)
+            recs.good_alternatives.push({
+              key: "azure-foundry",
+              reason:
+                "If you can use managed cloud with tenant isolation, Azure AI Foundry offers enterprise compliance.",
+            });
+          recs.considerations.push(
+            "On-premise deployment requires GPU infrastructure (NVIDIA A100/H100 recommended). Consider vLLM or Ollama for serving.",
+          );
+        } else if (cloud === "aws") {
+          recs.recommended.push({
+            key: "aws-bedrock",
+            reason:
+              "Native AWS integration with your existing infrastructure. " +
+              reason.primary,
+          });
+          recs.good_alternatives.push({
+            key: "local-oss",
+            reason:
+              "Self-host Llama 4 or DeepSeek on EC2/ECS within your VPC for full control and predictable costs.",
+          });
+          if (!highSec)
+            recs.good_alternatives.push({
+              key: "openai-direct",
+              reason: "OpenAI's latest models if you don't need VPC isolation.",
+            });
+        } else if (cloud === "azure") {
+          recs.recommended.push({
+            key: "azure-foundry",
+            reason:
+              "Enterprise-grade deployment within your Azure tenant. " +
+              reason.primary,
+          });
+          recs.good_alternatives.push({
+            key: "local-oss",
+            reason:
+              "Self-host on Azure VMs/AKS for full control within your tenant.",
+          });
+          if (highSec)
+            recs.considerations.push(
+              "With high-sensitivity data, ensure models are deployed within your tenant boundary — Azure AI Foundry supports this natively.",
+            );
+          else
+            recs.good_alternatives.push({
+              key: "openai-direct",
+              reason:
+                "Direct OpenAI access for the latest models, if data policy allows.",
+            });
+        } else if (cloud === "gcp") {
+          recs.recommended.push({
+            key: "gcp-vertex",
+            reason:
+              "Native GCP integration with Vertex AI enterprise controls. " +
+              reason.primary,
+          });
+          recs.good_alternatives.push({
+            key: "local-oss",
+            reason:
+              "Self-host on Compute Engine/GKE for full model control within your VPC.",
+          });
+        } else {
+          recs.recommended.push({
+            key: "azure-foundry",
+            reason:
+              "Widest model catalog with enterprise compliance — the safe default for most organisations. " +
+              reason.primary,
+          });
+          recs.good_alternatives.push({
+            key: "aws-bedrock",
+            reason: "Strong alternative with excellent Claude and Nova models.",
+          });
+          recs.good_alternatives.push({
+            key: "gcp-vertex",
+            reason: "Best choice if you're in the Google ecosystem.",
+          });
+        }
+
+        // Architecture recommendations
+        const archNotes = [];
+        if (needsRAG)
+          archNotes.push({
+            icon: "📚",
+            title: "RAG Architecture Required",
+            desc: "Your citation requirements mean you'll need Retrieval-Augmented Generation — a vector database (e.g., Pinecone, Weaviate, pgvector) to index source documents and ground answers with citations.",
+          });
+        if (highAccuracy)
+          archNotes.push({
+            icon: "🎯",
+            title: "High-Accuracy Pipeline",
+            desc: "Consider a multi-stage pipeline: initial generation → self-verification → confidence scoring. Set up evaluation benchmarks early with domain-specific test cases.",
+          });
+        if (largeScale)
+          archNotes.push({
+            icon: "⚡",
+            title: "Scale Considerations",
+            desc: "With your user base, plan for auto-scaling infrastructure, response caching, and rate limiting. Serverless options (Bedrock, Azure AI) handle this natively.",
+          });
+        if (taskType === "chatbot")
+          archNotes.push({
+            icon: "💬",
+            title: "Conversational Memory",
+            desc: "Chatbots need conversation history management — consider sliding window context or summary-based memory to keep costs manageable.",
+          });
+        if (taskType === "test-gen" || taskType === "code-gen")
+          archNotes.push({
+            icon: "🔧",
+            title: "Structured Output",
+            desc: "Use JSON mode or function calling to ensure outputs conform to your required schema. Add schema validation in your pipeline.",
+          });
+        if (highSec)
+          archNotes.push({
+            icon: "🔒",
+            title: "Data Security",
+            desc: "Your sensitivity level requires data encryption at rest and in transit, audit logging, and potentially a private endpoint / VPC deployment.",
+          });
+
+        return { recs, archNotes, taskType, cloud, needsRAG, highSec };
+      }
+
+      let lastAIResponse = "";
+
+      function renderAIRecommendations() {
+        const container = document.getElementById("wiz-ai-recs");
+        const storedKey = localStorage.getItem("2i_hf_key") || "";
+
+        let html = "";
+        html +=
+          '<div class="q-card" style="border-color:var(--2i-cobalt);border-width:2px;background:linear-gradient(135deg,#f0f4ff 0%,#f8f9ff 100%);">';
+        html +=
+          '<div style="text-align:center;padding:8px 0 16px;"><div style="font-size:28px;margin-bottom:6px;">🤖</div>';
+        html +=
+          '<div class="q-title" style="font-size:20px;">Get AI-Powered Recommendations</div>';
+        html +=
+          '<p style="color:var(--muted);margin-top:6px;font-size:13px;">Submit your answers to an AI model for a personalised platform and architecture recommendation tailored to your project.</p></div>';
+
+        html += '<div style="max-width:480px;margin:0 auto;">';
+        html +=
+          '<label style="font-size:12px;font-weight:600;color:var(--2i-navy);display:block;margin-bottom:6px;">HuggingFace Token <span style="font-size:11px;color:var(--2i-green-dark);font-weight:500;">(Free tier)</span></label>';
+        html += '<div style="display:flex;gap:8px;">';
+        html +=
+          '<input type="password" id="ai-api-key" value="' +
+          storedKey.replace(/"/g, "&quot;") +
+          '" placeholder="hf_..." style="flex:1;padding:10px 14px;border:1.5px solid var(--border);border-radius:8px;font-family:inherit;font-size:13px;color:var(--2i-navy);outline:none;" onfocus="this.style.borderColor=\'var(--2i-cornflower)\'" onblur="this.style.borderColor=\'var(--border)\'">';
+        html +=
+          '<button class="cta-btn" style="padding:10px 20px;font-size:13px;white-space:nowrap;" onclick="runAIAnalysis()">Analyse with AI</button>';
+        html += "</div>";
+        html +=
+          '<div style="display:flex;align-items:center;gap:6px;margin-top:8px;">';
+        html +=
+          '<input type="checkbox" id="ai-save-key" ' +
+          (storedKey ? "checked" : "") +
+          ' style="accent-color:var(--2i-cobalt);">';
+        html +=
+          '<label for="ai-save-key" style="font-size:11px;color:var(--muted);cursor:pointer;">Remember key in this browser</label>';
+        html += "</div>";
+        html +=
+          '<p style="font-size:11px;color:var(--muted);margin-top:8px;line-height:1.4;">Uses Qwen 2.5 7B via HuggingFace Inference API (free). Your key is sent directly to HuggingFace. <a href="https://huggingface.co/settings/tokens" target="_blank">Get a free token</a></p>';
+        html += "</div>";
+
+        html += '<div id="ai-result" style="margin-top:20px;"></div>';
+        html += "</div>";
+        container.innerHTML = html;
+      }
+
+      async function runAIAnalysis() {
+        const key = document.getElementById("ai-api-key").value.trim();
+        if (!key) {
+          document.getElementById("ai-api-key").style.borderColor = "#ef4444";
+          return;
+        }
+
+        if (document.getElementById("ai-save-key").checked)
+          localStorage.setItem("2i_hf_key", key);
+        else localStorage.removeItem("2i_hf_key");
+
+        const resultDiv = document.getElementById("ai-result");
+        resultDiv.innerHTML =
+          '<div style="text-align:center;padding:32px;"><div class="ai-spinner"></div><div style="font-size:14px;color:var(--muted);margin-top:12px;">Analysing your requirements...</div><div style="font-size:12px;color:var(--muted);margin-top:4px;">This may take 15–30 seconds on the free tier</div></div>';
+
+        let questionsText = "";
+        QUESTIONS.forEach((q, i) => {
+          questionsText +=
+            "Q" +
+            (i + 1) +
+            ": " +
+            q.q +
+            "\nAnswer: " +
+            (wizAnswers[i] || "Not answered") +
+            "\n\n";
+        });
+
+        const systemPrompt = `You are an expert AI solutions architect. A stakeholder has completed a 10-question AI scoping workshop to define their AI project requirements.
+
+CRITICAL RULES:
+- Do NOT assume or name the stakeholder's company. Refer to them as "your organisation" or "your team".
+- Pay very close attention to the SPECIFIC answers given. If the stakeholder says AWS, recommend AWS-based solutions (e.g. AWS Bedrock, SageMaker), NOT Azure or GCP. If they say Azure, recommend Azure. Match their stated infrastructure.
+- Base every recommendation directly on their answers. Do not invent requirements they didn't mention.
+- Name specific AI models (e.g. Claude Sonnet 4 on Bedrock, GPT-4o on Azure, Llama 4 Scout self-hosted, Gemini 2.5 Pro on Vertex) and explain why each fits.
+
+Provide a structured recommendation with these sections:
+
+## EXECUTIVE SUMMARY
+2-3 sentences summarising the core need and recommended approach.
+
+## RECOMMENDED AI PLATFORM & MODELS
+Pick the best-fit platform(s) based on the stakeholder's stated deployment environment. For each, name specific models and justify why. Include a primary recommendation and one alternative.
+
+## ARCHITECTURE BLUEPRINT
+Key technical components needed (e.g. RAG pipeline, vector database, document parsing, structured output, conversation memory, caching). Explain how they connect.
+
+## DATA & SECURITY STRATEGY
+Based on their stated data sensitivity, storage locations, and compliance needs.
+
+## SUCCESS METRICS & KPIs
+Concrete, measurable milestones derived directly from their answer to Q10. Include leading indicators and failure signals.
+
+## ESTIMATED COMPLEXITY
+Rate as Low / Medium / High with clear justification based on number of integrations, data sources, and accuracy requirements.
+
+## RECOMMENDED NEXT STEPS
+3-5 specific, actionable items in priority order.
+
+Format with clear ## section headers and bullet points using - prefix. Be specific, practical, and concise.`;
+
+        try {
+          const resp = await fetch(
+            "https://router.huggingface.co/v1/chat/completions",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: "Bearer " + key,
+              },
+              body: JSON.stringify({
+                model: "Qwen/Qwen2.5-7B-Instruct",
+                messages: [
+                  { role: "system", content: systemPrompt },
+                  {
+                    role: "user",
+                    content:
+                      "Here are the stakeholder answers:\n\n" +
+                      questionsText +
+                      "\nProvide a comprehensive, structured recommendation.",
+                  },
+                ],
+                max_tokens: 2048,
+                temperature: 0.7,
+                stream: false,
+              }),
+            },
+          );
+
+          if (!resp.ok) {
+            const errText = await resp.text().catch(() => resp.statusText);
+            throw new Error(
+              "HuggingFace API error " + resp.status + ": " + errText,
+            );
+          }
+
+          const data = await resp.json();
+          const rawText = data.choices?.[0]?.message?.content || "";
+          lastAIResponse = rawText;
+
+          // Convert markdown-ish text to styled HTML
+          const aiHTML = formatAIResponse(rawText);
+
+          resultDiv.innerHTML =
+            '<div style="border-top:2px solid var(--2i-cobalt);padding-top:20px;margin-top:8px;">' +
+            '<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--2i-cobalt);margin-bottom:12px;display:flex;align-items:center;gap:6px;">✨ AI Analysis</div>' +
+            '<div id="ai-response-body" style="font-size:14px;line-height:1.7;color:var(--2i-navy);">' +
+            aiHTML +
+            "</div>" +
+            '<div style="text-align:center;margin-top:20px;"><button class="tool-btn" onclick="runAIAnalysis()" style="margin-right:8px;">🔄 Re-analyse</button></div>' +
+            "</div>";
+        } catch (err) {
+          resultDiv.innerHTML =
+            '<div style="padding:16px;background:#fef2f2;border:1.5px solid #fecaca;border-radius:10px;text-align:center;">' +
+            '<div style="font-size:14px;font-weight:600;color:#b91c1c;margin-bottom:4px;">Analysis Failed</div>' +
+            '<div style="font-size:13px;color:#991b1b;">' +
+            err.message.replace(/</g, "&lt;").slice(0, 300) +
+            "</div>" +
+            '<div style="font-size:12px;color:var(--muted);margin-top:8px;">Check your HuggingFace token and try again. <a href="https://huggingface.co/settings/tokens" target="_blank">Get a free token</a></div>' +
+            "</div>";
+        }
+      }
+
+      function formatAIResponse(text) {
+        let html = text;
+        // Escape HTML entities
+        html = html
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;");
+        // Section headers (=== or ### or **HEADER**)
+        html = html.replace(
+          /^={3,}\s*\n?(.+?)\n?\s*={3,}$/gm,
+          '<div style="margin:24px 0 12px;padding:12px 16px;background:var(--2i-lavender);border-radius:10px;border-left:3px solid var(--2i-cobalt);font-size:16px;font-weight:700;color:var(--2i-cobalt);">$1</div>',
+        );
+        html = html.replace(
+          /^###\s+(.+)$/gm,
+          '<div style="margin:20px 0 8px;font-size:16px;font-weight:700;color:var(--2i-cobalt);border-bottom:2px solid var(--border);padding-bottom:6px;">$1</div>',
+        );
+        html = html.replace(
+          /^##\s+(.+)$/gm,
+          '<div style="margin:24px 0 10px;padding:12px 16px;background:var(--2i-lavender);border-radius:10px;border-left:3px solid var(--2i-cobalt);font-size:16px;font-weight:700;color:var(--2i-cobalt);">$1</div>',
+        );
+        html = html.replace(
+          /^#\s+(.+)$/gm,
+          '<div style="margin:20px 0 12px;font-size:18px;font-weight:800;color:var(--2i-navy);">$1</div>',
+        );
+        // Bold
+        html = html.replace(
+          /\*\*(.+?)\*\*/g,
+          '<strong style="color:var(--2i-navy);font-weight:700;">$1</strong>',
+        );
+        // Horizontal rules
+        html = html.replace(
+          /^-{3,}$/gm,
+          '<hr style="border:none;border-top:1.5px solid var(--border);margin:16px 0;">',
+        );
+        // Bullet points
+        html = html.replace(
+          /^[\-\*]\s+(.+)$/gm,
+          '<div style="display:flex;gap:8px;padding:3px 0;"><span style="color:var(--2i-cornflower);font-weight:700;flex-shrink:0;">▸</span><span>$1</span></div>',
+        );
+        // Numbered items
+        html = html.replace(
+          /^(\d+)\.\s+(.+)$/gm,
+          '<div style="display:flex;gap:10px;padding:4px 0;"><span style="background:var(--2i-cobalt);color:#fff;width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">$1</span><span>$2</span></div>',
+        );
+        // Paragraphs (double newline)
+        html = html.replace(/\n\n+/g, '</p><p style="margin:8px 0;">');
+        // Single newlines within paragraphs
+        html = html.replace(/\n/g, "<br>");
+        html = '<p style="margin:8px 0;">' + html + "</p>";
+        return html;
+      }
+
+      function wizDownload() {
+        let text = "═══════════════════════════════════════════════════════\n";
+        text += "   AI CHEAT SHEET — Generated by 2i Workshop Tool\n";
+        text +=
+          "   Date: " +
+          new Date().toLocaleDateString("en-GB", {
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+          }) +
+          "\n";
+        text += "═══════════════════════════════════════════════════════\n\n";
+
+        QUESTIONS.forEach((q, i) => {
+          text += "────────────────────────────────────────────────────\n";
+          text += "Q" + (i + 1) + ": " + q.q + "\n";
+          text += "────────────────────────────────────────────────────\n";
+          text += (wizAnswers[i] || "Not answered") + "\n\n";
+        });
+
+        if (lastAIResponse) {
+          text += "\n═══════════════════════════════════════════════════════\n";
+          text += "   AI-POWERED RECOMMENDATIONS\n";
+          text += "═══════════════════════════════════════════════════════\n\n";
+          const tmp = document.createElement("div");
+          tmp.innerHTML = lastAIResponse;
+          text += tmp.textContent || tmp.innerText || "";
+          text += "\n\n";
+        } else {
+          const analysis = analyzeAnswers();
+          text += "\n═══════════════════════════════════════════════════════\n";
+          text += "   AI-POWERED RECOMMENDATIONS\n";
+          text += "═══════════════════════════════════════════════════════\n\n";
+          if (analysis.recs.recommended.length) {
+            text += "RECOMMENDED PLATFORM(S):\n";
+            analysis.recs.recommended.forEach((r) => {
+              text +=
+                "  ✅ " + PLATFORMS[r.key].name + "\n     " + r.reason + "\n\n";
+            });
+          }
+          if (analysis.recs.good_alternatives.length) {
+            text += "GOOD ALTERNATIVES:\n";
+            analysis.recs.good_alternatives.forEach((r) => {
+              text +=
+                "  🔄 " + PLATFORMS[r.key].name + "\n     " + r.reason + "\n\n";
+            });
+          }
+          if (analysis.archNotes.length) {
+            text += "ARCHITECTURE INSIGHTS:\n";
+            analysis.archNotes.forEach((n) => {
+              text +=
+                "  " + n.icon + " " + n.title + "\n     " + n.desc + "\n\n";
+            });
+          }
+        }
+
+        text += "───────────────────────────────────────────────────────\n";
+        text +=
+          "Generated at 2itesting.com — Book a workshop: https://2itesting.com/contact-us/\n";
+
+        const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download =
+          "AI-Cheat-Sheet-" + new Date().toISOString().slice(0, 10) + ".txt";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
       }
 
       renderGuide();
